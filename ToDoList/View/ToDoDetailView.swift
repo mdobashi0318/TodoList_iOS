@@ -93,7 +93,7 @@ class ToDoDetailView: UIView, UITableViewDelegate, UITableViewDataSource {
         case 0:
             headerLabel.text = "タイトル"
         case 1:
-            headerLabel.text = "日付"
+            headerLabel.text = "期限"
         case 2:
             headerLabel.text = "詳細"
         default:

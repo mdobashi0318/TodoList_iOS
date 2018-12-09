@@ -13,7 +13,7 @@ import RealmSwift
 class TodoInputView: UIView, UITextFieldDelegate, UIPickerViewDelegate, UITableViewDelegate, UITableViewDataSource {
     
     let textField:UITextField = UITextField()
-    let DateTextField:UITextField = UITextField()
+    let dateTextField:UITextField = UITextField()
     let textViwe:UITextView = UITextView()
     let datePicker:UIDatePicker = UIDatePicker()
     
@@ -82,7 +82,7 @@ class TodoInputView: UIView, UITextFieldDelegate, UIPickerViewDelegate, UITableV
         
         if todoId != nil {
             textField.text = realm.objects(ToDoModel.self)[todoId!].toDoName
-            DateTextField.text = realm.objects(ToDoModel.self)[todoId!].todoDate
+            dateTextField.text = realm.objects(ToDoModel.self)[todoId!].todoDate
             textViwe.text = realm.objects(ToDoModel.self)[todoId!].toDo
         }
         
@@ -96,16 +96,16 @@ class TodoInputView: UIView, UITextFieldDelegate, UIPickerViewDelegate, UITableV
             textField.trailingAnchor.constraint(equalTo: cell.trailingAnchor).isActive = true
             textField.bottomAnchor.constraint(equalTo: cell.bottomAnchor).isActive = true
         case 1:
-            DateTextField.inputView = datePicker
-            DateTextField.delegate = self
+            dateTextField.inputView = datePicker
+            dateTextField.delegate = self
             datePicker.addTarget(self, action: #selector(onDidChangeDate(sender:)), for: .valueChanged)
-            cell.addSubview(DateTextField)
+            cell.addSubview(dateTextField)
             
-            DateTextField.translatesAutoresizingMaskIntoConstraints = false
-            DateTextField.topAnchor.constraint(equalTo: cell.topAnchor).isActive = true
-            DateTextField.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: leading).isActive = true
-            DateTextField.trailingAnchor.constraint(equalTo: cell.trailingAnchor).isActive = true
-            DateTextField.bottomAnchor.constraint(equalTo: cell.bottomAnchor).isActive = true
+            dateTextField.translatesAutoresizingMaskIntoConstraints = false
+            dateTextField.topAnchor.constraint(equalTo: cell.topAnchor).isActive = true
+            dateTextField.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: leading).isActive = true
+            dateTextField.trailingAnchor.constraint(equalTo: cell.trailingAnchor).isActive = true
+            dateTextField.bottomAnchor.constraint(equalTo: cell.bottomAnchor).isActive = true
         case 2:
             cell.addSubview(textViwe)
             textViwe.translatesAutoresizingMaskIntoConstraints = false
@@ -140,7 +140,7 @@ class TodoInputView: UIView, UITextFieldDelegate, UIPickerViewDelegate, UITableV
         case 0:
             headerLabel.text = "タイトル"
         case 1:
-            headerLabel.text = "日付"
+            headerLabel.text = "期限"
         case 2:
             headerLabel.text = "詳細"
         default:
@@ -177,7 +177,7 @@ class TodoInputView: UIView, UITextFieldDelegate, UIPickerViewDelegate, UITableV
         
         let s_Date:String = formatter.string(from: sender.date)
         datePicker.minimumDate = Date()
-        DateTextField.text = s_Date
+        dateTextField.text = s_Date
         
     }
     
@@ -188,7 +188,7 @@ class TodoInputView: UIView, UITextFieldDelegate, UIPickerViewDelegate, UITableV
         
         toDoModel.id = String(realm.objects(ToDoModel.self).count + 1)
         toDoModel.toDoName = textField.text!
-        toDoModel.todoDate = DateTextField.text
+        toDoModel.todoDate = dateTextField.text
         toDoModel.toDo = textViwe.text
         
         try! realm.write() {
@@ -201,7 +201,7 @@ class TodoInputView: UIView, UITextFieldDelegate, UIPickerViewDelegate, UITableV
  
         try! realm.write() {
             realm.objects(ToDoModel.self)[todoId!].toDoName = textField.text!
-            realm.objects(ToDoModel.self)[todoId!].todoDate = DateTextField.text
+            realm.objects(ToDoModel.self)[todoId!].todoDate = dateTextField.text
             realm.objects(ToDoModel.self)[todoId!].toDo = textViwe.text
         }
     }
@@ -209,7 +209,7 @@ class TodoInputView: UIView, UITextFieldDelegate, UIPickerViewDelegate, UITableV
     //MARK: - TapGesture func
     @objc func tapView(_:UITapGestureRecognizer){
         textField.resignFirstResponder()
-        DateTextField.resignFirstResponder()
+        dateTextField.resignFirstResponder()
         textViwe.resignFirstResponder()
     }
     

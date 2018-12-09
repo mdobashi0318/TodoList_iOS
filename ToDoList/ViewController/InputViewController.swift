@@ -81,10 +81,10 @@ class InputViewController: UIViewController {
                               handler: { _ in return })
         }
         
-        if todoInputView?.DateTextField.text?.count == 0 {
+        if todoInputView?.dateTextField.text?.count == 0 {
             alert.alertAction(viewController: self,
                               title: "",
-                              message: "ToDoの日付が入力されていません",
+                              message: "ToDoの期限が入力されていません",
                               handler: { _ in return })
         }
         
