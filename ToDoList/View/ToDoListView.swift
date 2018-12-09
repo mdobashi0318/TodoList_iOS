@@ -9,8 +9,8 @@
 import UIKit
 import RealmSwift
 
-protocol ToDoListViewDelegate {
-    func cellTapAction(indexPath:String)
+protocol ToDoListViewDelegate: class {
+    func cellTapAction(indexPath:Int)
 }
 
 
@@ -18,6 +18,7 @@ class ToDoListView: UIView, UITableViewDelegate, UITableViewDataSource {
     
     var toDoModel:ToDoModel = ToDoModel()
     var todoCount: Int?
+    weak var toDoListViewDelegate: ToDoListViewDelegate?
     
     
     
@@ -48,7 +49,6 @@ class ToDoListView: UIView, UITableViewDelegate, UITableViewDataSource {
         tableView!.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         self.addSubview(tableView!)
         
-        
         tableView!.backgroundColor = UIColor.white
         tableView!.translatesAutoresizingMaskIntoConstraints = false
         tableView!.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
@@ -58,9 +58,10 @@ class ToDoListView: UIView, UITableViewDelegate, UITableViewDataSource {
     }
     
     
+    // MARK: - UITableViewDataSource
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        find()
+        findRealm()
         if todoCount == 0 || todoCount == nil {
             return 1
         }
@@ -71,17 +72,20 @@ class ToDoListView: UIView, UITableViewDelegate, UITableViewDataSource {
         return 1
     }
     
+    // MARK: - UITableViewDelegate
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell:UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath as IndexPath)
         let realm:Realm = try! Realm()
         
         
         if todoCount == 0 || todoCount == nil {
-            cell.textLabel?.text = "何もない"
+            cell.selectionStyle = .none
+            cell.textLabel?.text = "Todoがまだ登録されていません"
             return cell
         }
         
-        
+        cell.accessoryType = .disclosureIndicator
         let toDoNameLabel: UILabel = UILabel()
         toDoNameLabel.text = realm.objects(ToDoModel.self)[indexPath.section].toDoName
         
@@ -102,8 +106,8 @@ class ToDoListView: UIView, UITableViewDelegate, UITableViewDataSource {
         stakc.distribution = .fillEqually
         
         stakc.addArrangedSubview(toDoNameLabel)
-        stakc.addArrangedSubview(toDoLabel)
         stakc.addArrangedSubview(toDoDateLabel)
+        stakc.addArrangedSubview(toDoLabel)
         cell.addSubview(stakc)
         
         stakc.translatesAutoresizingMaskIntoConstraints = false
@@ -117,8 +121,11 @@ class ToDoListView: UIView, UITableViewDelegate, UITableViewDataSource {
     
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if todoCount == 0 {
+            return
+        }
         tableView.deselectRow(at: indexPath, animated: true)
-//        self.navigationController?.pushViewController(ToDoDetailViewController(), animated: true)
+        toDoListViewDelegate?.cellTapAction(indexPath: indexPath.section)
     }
     
     
@@ -126,12 +133,9 @@ class ToDoListView: UIView, UITableViewDelegate, UITableViewDataSource {
         return 70
     }
     
-    var viewTodo: Any?
-   
+    // MARK: - Realm func
     
-    
-    
-    func find() {
+    func findRealm() {
         let realm:Realm = try! Realm()
         todoCount = realm.objects(ToDoModel.self).count
         print(realm.objects(ToDoModel.self))

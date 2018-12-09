@@ -8,13 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		6FF02EB15D5049DC099C5648 /* Pods_ToDoList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07953119CD910C907A014925 /* Pods_ToDoList.framework */; };
-		D00F23452197FD5D00B5CEDE /* TodoArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00F23442197FD5D00B5CEDE /* TodoArray.swift */; };
 		D018BA5B215BBC60008EC964 /* ToDoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D018BA5A215BBC60008EC964 /* ToDoModel.swift */; };
+		D09CBC6B21A2E8E100981E32 /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09CBC6A21A2E8E100981E32 /* AlertManager.swift */; };
 		D0A6A5F3219C4D0200D6A526 /* ToDoListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A6A5F2219C4D0200D6A526 /* ToDoListTests.swift */; };
 		D0A6A5FD219C4D6000D6A526 /* ToDoListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A6A5FC219C4D6000D6A526 /* ToDoListView.swift */; };
-		D0A6A5FF219C4D8900D6A526 /* InputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A6A5FE219C4D8900D6A526 /* InputView.swift */; };
+		D0A6A5FF219C4D8900D6A526 /* TodoInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A6A5FE219C4D8900D6A526 /* TodoInputView.swift */; };
 		D0A6A602219C4DB500D6A526 /* ToDoDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A6A601219C4DB500D6A526 /* ToDoDetailView.swift */; };
-		D0A6A603219C4DB500D6A526 /* ToDoDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A6A601219C4DB500D6A526 /* ToDoDetailView.swift */; };
 		D0BB76D1219DAC7F000AF1E4 /* ToDoListUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BB76D0219DAC7F000AF1E4 /* ToDoListUITests.swift */; };
 		D0EAD27221999D23006D43E6 /* ToDoDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0EAD27121999D23006D43E6 /* ToDoDetailViewController.swift */; };
 		D0F9CC3A214A8E6000C51BD6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F9CC39214A8E6000C51BD6 /* AppDelegate.swift */; };
@@ -45,13 +44,13 @@
 		018B747783F7C1779FEB3EC7 /* Pods-ToDoList.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ToDoList.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ToDoList/Pods-ToDoList.debug.xcconfig"; sourceTree = "<group>"; };
 		07953119CD910C907A014925 /* Pods_ToDoList.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ToDoList.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9546D7C366211327E0362A85 /* Pods-ToDoList.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ToDoList.release.xcconfig"; path = "Pods/Target Support Files/Pods-ToDoList/Pods-ToDoList.release.xcconfig"; sourceTree = "<group>"; };
-		D00F23442197FD5D00B5CEDE /* TodoArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoArray.swift; sourceTree = "<group>"; };
 		D018BA5A215BBC60008EC964 /* ToDoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoModel.swift; sourceTree = "<group>"; };
+		D09CBC6A21A2E8E100981E32 /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
 		D0A6A5F0219C4D0200D6A526 /* ToDoListTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ToDoListTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0A6A5F2219C4D0200D6A526 /* ToDoListTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListTests.swift; sourceTree = "<group>"; };
 		D0A6A5F4219C4D0200D6A526 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D0A6A5FC219C4D6000D6A526 /* ToDoListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListView.swift; sourceTree = "<group>"; };
-		D0A6A5FE219C4D8900D6A526 /* InputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputView.swift; sourceTree = "<group>"; };
+		D0A6A5FE219C4D8900D6A526 /* TodoInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoInputView.swift; sourceTree = "<group>"; };
 		D0A6A601219C4DB500D6A526 /* ToDoDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoDetailView.swift; sourceTree = "<group>"; };
 		D0BB76CE219DAC7F000AF1E4 /* ToDoListUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ToDoListUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0BB76D0219DAC7F000AF1E4 /* ToDoListUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListUITests.swift; sourceTree = "<group>"; };
@@ -113,9 +112,9 @@
 		D0A6A5FA219C4D2200D6A526 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				D0F9CC4D214A8FCF00C51BD6 /* ToDoListViewController.swift */,
 				D0F9CC4B214A8F5900C51BD6 /* InputViewController.swift */,
 				D0EAD27121999D23006D43E6 /* ToDoDetailViewController.swift */,
-				D0F9CC4D214A8FCF00C51BD6 /* ToDoListViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -124,10 +123,18 @@
 			isa = PBXGroup;
 			children = (
 				D0A6A5FC219C4D6000D6A526 /* ToDoListView.swift */,
-				D0A6A5FE219C4D8900D6A526 /* InputView.swift */,
+				D0A6A5FE219C4D8900D6A526 /* TodoInputView.swift */,
 				D0A6A601219C4DB500D6A526 /* ToDoDetailView.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		D0A86F7A21BBB30100C2B1CF /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				D018BA5A215BBC60008EC964 /* ToDoModel.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		D0BB76CF219DAC7F000AF1E4 /* ToDoListUITests */ = {
@@ -164,11 +171,11 @@
 		D0F9CC38214A8E6000C51BD6 /* ToDoList */ = {
 			isa = PBXGroup;
 			children = (
-				D0A6A5FA219C4D2200D6A526 /* ViewController */,
 				D0F9CC39214A8E6000C51BD6 /* AppDelegate.swift */,
+				D0A6A5FA219C4D2200D6A526 /* ViewController */,
 				D0A6A5FB219C4D3D00D6A526 /* View */,
-				D018BA5A215BBC60008EC964 /* ToDoModel.swift */,
-				D00F23442197FD5D00B5CEDE /* TodoArray.swift */,
+				D0A86F7A21BBB30100C2B1CF /* Model */,
+				D09CBC6A21A2E8E100981E32 /* AlertManager.swift */,
 				D0F9CC40214A8E6300C51BD6 /* Assets.xcassets */,
 				D0F9CC42214A8E6300C51BD6 /* LaunchScreen.storyboard */,
 				D0F9CC45214A8E6300C51BD6 /* Info.plist */,
@@ -262,6 +269,7 @@
 					};
 					D0F9CC35214A8E6000C51BD6 = {
 						CreatedOnToolsVersion = 9.4.1;
+						LastSwiftMigration = 1010;
 					};
 				};
 			};
@@ -366,7 +374,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D0A6A5F3219C4D0200D6A526 /* ToDoListTests.swift in Sources */,
-				D0A6A603219C4DB500D6A526 /* ToDoDetailView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -387,8 +394,8 @@
 				D0EAD27221999D23006D43E6 /* ToDoDetailViewController.swift in Sources */,
 				D018BA5B215BBC60008EC964 /* ToDoModel.swift in Sources */,
 				D0F9CC4E214A8FCF00C51BD6 /* ToDoListViewController.swift in Sources */,
-				D00F23452197FD5D00B5CEDE /* TodoArray.swift in Sources */,
-				D0A6A5FF219C4D8900D6A526 /* InputView.swift in Sources */,
+				D09CBC6B21A2E8E100981E32 /* AlertManager.swift in Sources */,
+				D0A6A5FF219C4D8900D6A526 /* TodoInputView.swift in Sources */,
 				D0F9CC4C214A8F5900C51BD6 /* InputViewController.swift in Sources */,
 				D0A6A5FD219C4D6000D6A526 /* ToDoListView.swift in Sources */,
 			);
@@ -638,7 +645,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = m.dobashi.ToDoList;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -658,7 +665,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = m.dobashi.ToDoList;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

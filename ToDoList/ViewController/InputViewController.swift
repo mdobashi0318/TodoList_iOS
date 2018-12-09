@@ -7,14 +7,31 @@
 //
 
 import UIKit
-import RealmSwift
+
 
 class InputViewController: UIViewController {
-    var inputV:InputView?
+    var todoInputView:TodoInputView?
     var toDoModel:ToDoModel = ToDoModel()
+    var todoId:Int?
     
     
     
+    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+    
+    /// 編集時のinit
+    ///
+    /// - Parameter todoId: 編集するTodoのid
+    convenience init(todoId:Int) {
+        self.init(nibName: nil, bundle: nil)
+        self.todoId = todoId
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     
     override func viewDidLoad() {
@@ -24,20 +41,13 @@ class InputViewController: UIViewController {
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(leftButton))
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(rightButton))
         
+        let statusBarHeight: CGFloat = UIApplication.shared.statusBarFrame.height
+        let navBarHeight = self.navigationController?.navigationBar.frame.size.height
+        let flame:CGRect = CGRect(x: 0, y: statusBarHeight + navBarHeight! , width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
         
-        let flame:CGRect = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+        todoInputView = TodoInputView(frame: flame, toDoModel: toDoModel, todoId: todoId)
+        self.view.addSubview(todoInputView!)
         
-        inputV = InputView(frame: flame, toDoModel: toDoModel)
-        
-        
-        self.view.addSubview(inputV!)
-        
-        inputV?.translatesAutoresizingMaskIntoConstraints = false
-        inputV?.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor).isActive = true
-        inputV?.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
-        inputV?.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 1).isActive = true
-        
-        // Do any additional setup after loading the view.
     }
     
     
@@ -51,31 +61,62 @@ class InputViewController: UIViewController {
     }
     
     
+    /// Todoの新規作成時はモーダルを閉じる,編集時はも一つ前の画面に戻る
     @objc func leftButton(){
-        self.dismiss(animated: true, completion: nil)
-    }
-    
-    @objc func rightButton(){
-        let controller:UIAlertController = UIAlertController(title: "", message: "ToDoを登録しました", preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: "OK", style: .default, handler: {(action) -> Void in
-            self.inputV!.addRealm()
+        if todoId == nil {
             self.dismiss(animated: true, completion: nil)
-        }))
-        self.present(controller,animated: true,completion: nil)
-        
-        
+        }else{
+            self.navigationController?.popViewController(animated: true)
+        }
     }
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destinationViewController.
-     // Pass the selected object to the new view controller.
-     }
-     */
     
     
+    /// Todoの保存、更新
+    @objc func rightButton(){
+        let alert = AlertManager()
+        if todoInputView?.textField.text?.count == 0 {
+            alert.alertAction(viewController: self,
+                              title: "",
+                              message: "ToDoのタイトルが入力されていません",
+                              handler: { _ in return })
+        }
+        
+        if todoInputView?.DateTextField.text?.count == 0 {
+            alert.alertAction(viewController: self,
+                              title: "",
+                              message: "ToDoの日付が入力されていません",
+                              handler: { _ in return })
+        }
+        
+        if todoInputView?.textViwe.text?.count == 0 {
+            alert.alertAction(viewController: self,
+                              title: "",
+                              message: "ToDoの詳細が入力されていません",
+                              handler: { _ in return })
+        }
+        
+        
+        if todoId != nil {
+            alert.alertAction(viewController: self,
+                              title: "",
+                              message: "ToDoを更新しました",
+                              handler: {(action) -> Void in
+                                self.todoInputView!.updateRealm()
+                                self.navigationController?.popViewController(animated: true)
+                                return
+            })
+        }
+        
+        
+        alert.alertAction(viewController: self,
+                          title: "",
+                          message: "ToDoを登録しました",
+                          handler: {(action) -> Void in
+                            self.todoInputView!.addRealm()
+                            self.dismiss(animated: true, completion: nil)
+        })
+    }
+
 }
 
 
