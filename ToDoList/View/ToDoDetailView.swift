@@ -11,6 +11,7 @@ import RealmSwift
 
 class ToDoDetailView: UIView, UITableViewDelegate, UITableViewDataSource {
     
+    let realm:Realm = try! Realm()
     var toDoModel:ToDoModel = ToDoModel()
     var todoId:Int?
     
@@ -65,7 +66,6 @@ class ToDoDetailView: UIView, UITableViewDelegate, UITableViewDataSource {
         cell.accessoryType = .none
         cell.selectionStyle = .none
         
-        let realm:Realm = try! Realm()
         
         switch indexPath.section {
         case 0:
@@ -127,7 +127,6 @@ class ToDoDetailView: UIView, UITableViewDelegate, UITableViewDataSource {
     // MARK: - Realm func
     
     func deleteRealm(){
-        let realm = try! Realm()
         let toDoModel = realm.objects(ToDoModel.self)[todoId!]
         
         try! realm.write() {

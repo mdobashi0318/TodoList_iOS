@@ -16,6 +16,7 @@ protocol ToDoListViewDelegate: class {
 
 class ToDoListView: UIView, UITableViewDelegate, UITableViewDataSource {
     
+    let realm:Realm = try! Realm()
     var toDoModel:ToDoModel = ToDoModel()
     var todoCount: Int?
     weak var toDoListViewDelegate: ToDoListViewDelegate?
@@ -29,6 +30,8 @@ class ToDoListView: UIView, UITableViewDelegate, UITableViewDataSource {
     convenience init(frame: CGRect, toDoModel:ToDoModel) {
         self.init(frame: frame)
         self.toDoModel = toDoModel
+        
+        todoCount = realm.objects(ToDoModel.self).count
         
         viewLoad()
     }
@@ -61,7 +64,7 @@ class ToDoListView: UIView, UITableViewDelegate, UITableViewDataSource {
     // MARK: - UITableViewDataSource
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        findRealm()
+//        findRealm()
         if todoCount == 0 || todoCount == nil {
             return 1
         }
@@ -76,7 +79,7 @@ class ToDoListView: UIView, UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell:UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath as IndexPath)
-        let realm:Realm = try! Realm()
+        
         
         
         if todoCount == 0 || todoCount == nil {
@@ -131,14 +134,6 @@ class ToDoListView: UIView, UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 70
-    }
-    
-    // MARK: - Realm func
-    
-    func findRealm() {
-        let realm:Realm = try! Realm()
-        todoCount = realm.objects(ToDoModel.self).count
-        print(realm.objects(ToDoModel.self))
     }
     
 }
