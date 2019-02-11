@@ -7,12 +7,12 @@
 //
 
 import UIKit
-
+import UserNotifications
 
 class InputViewController: UIViewController {
-    var todoInputView:TodoInputView?
-    var toDoModel:ToDoModel = ToDoModel()
-    var todoId:Int?
+    private var todoInputView:TodoInputView?
+    private var toDoModel:ToDoModel = ToDoModel()
+    private var todoId:Int?
     
     
     
@@ -95,6 +95,7 @@ class InputViewController: UIViewController {
                               handler: { _ in return })
         }
         
+        addNotification()
         
         if todoId != nil {
             alert.alertAction(viewController: self,
@@ -115,6 +116,35 @@ class InputViewController: UIViewController {
                             self.todoInputView!.addRealm()
                             self.dismiss(animated: true, completion: nil)
         })
+    }
+    
+    private func addNotification() {
+        
+        let content:UNMutableNotificationContent = UNMutableNotificationContent()
+        
+        content.title = (todoInputView?.textField.text)!
+        
+        content.body = (todoInputView?.textViwe.text)!
+        
+        content.sound = UNNotificationSound.default
+        
+        
+        //通知する日付を設定
+        let date:Date = (todoInputView?.tmpDate)!
+        let calendar = Calendar.current
+        let dateComponent = calendar.dateComponents([.year, .month, .day, .hour, .minute] , from: date)
+        
+        
+        let trigger:UNCalendarNotificationTrigger = UNCalendarNotificationTrigger(dateMatching: dateComponent, repeats: false)
+        
+        let request:UNNotificationRequest = UNNotificationRequest.init(identifier: "Todo", content: content, trigger: trigger)
+        
+        
+        let center:UNUserNotificationCenter = UNUserNotificationCenter.current()
+        center.add(request) { (error) in
+            
+        }
+        
     }
 
 }

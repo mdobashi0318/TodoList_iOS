@@ -16,9 +16,9 @@ protocol ToDoListViewDelegate: class {
 
 class ToDoListView: UIView, UITableViewDelegate, UITableViewDataSource {
     
-    let realm:Realm = try! Realm()
-    var toDoModel:ToDoModel = ToDoModel()
-    var todoCount: Int?
+    private let realm:Realm = try! Realm()
+    private var toDoModel:ToDoModel = ToDoModel()
+    private var todoCount: Int?
     weak var toDoListViewDelegate: ToDoListViewDelegate?
     
     
@@ -43,7 +43,7 @@ class ToDoListView: UIView, UITableViewDelegate, UITableViewDataSource {
     
     
 
-    func viewLoad(){
+    private func viewLoad(){
         var tableView:UITableView?
         tableView = UITableView(frame: .zero, style: .plain)
         tableView?.separatorInset = .zero
@@ -64,7 +64,6 @@ class ToDoListView: UIView, UITableViewDelegate, UITableViewDataSource {
     // MARK: - UITableViewDataSource
     
     func numberOfSections(in tableView: UITableView) -> Int {
-//        findRealm()
         if todoCount == 0 || todoCount == nil {
             return 1
         }

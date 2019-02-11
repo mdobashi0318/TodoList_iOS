@@ -10,9 +10,9 @@ import UIKit
 
 
 class ToDoDetailViewController: UIViewController {
-    var toDoDetailView:ToDoDetailView?
-    var toDoModel:ToDoModel = ToDoModel()
-    var todoId:Int?
+    private var toDoDetailView:ToDoDetailView?
+    private var toDoModel:ToDoModel = ToDoModel()
+    private var todoId:Int?
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -47,7 +47,7 @@ class ToDoDetailViewController: UIViewController {
     
     
     /// アクションシートを開く
-    @objc func rightBarAction(){
+    @objc private func rightBarAction(){
         let alertSheet:UIAlertController = UIAlertController(title: nil, message: "Todoをどうしますか?", preferredStyle: .actionSheet)
         alertSheet.addAction(UIAlertAction(title: "編集", style: .default, handler: {(action) -> Void in
             let inputViewController:InputViewController = InputViewController(todoId: self.todoId!)

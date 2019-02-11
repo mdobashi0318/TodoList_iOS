@@ -52,6 +52,5 @@ class ToDoListViewController: UIViewController, ToDoListViewDelegate {
         let toDoDetailViewController:ToDoDetailViewController = ToDoDetailViewController(todoId: indexPath)
         self.navigationController?.pushViewController(toDoDetailViewController, animated: true)
     }
-    
 
 }

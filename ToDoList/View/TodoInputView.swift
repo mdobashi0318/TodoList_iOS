@@ -16,9 +16,10 @@ class TodoInputView: UIView, UITextFieldDelegate, UIPickerViewDelegate, UITableV
     let dateTextField:UITextField = UITextField()
     let textViwe:UITextView = UITextView()
     let datePicker:UIDatePicker = UIDatePicker()
+    var tmpDate:Date?
     
-    var toDoModel:ToDoModel = ToDoModel()
-    var todoId:Int?
+    private var toDoModel:ToDoModel = ToDoModel()
+    private var todoId:Int?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -38,7 +39,7 @@ class TodoInputView: UIView, UITextFieldDelegate, UIPickerViewDelegate, UITableV
     
     
     
-    func viewLoad(){
+    private func viewLoad(){
         let tableView:UITableView = UITableView(frame: .zero, style: .grouped)
         
         tableView.delegate = self
@@ -98,6 +99,7 @@ class TodoInputView: UIView, UITextFieldDelegate, UIPickerViewDelegate, UITableV
         case 1:
             dateTextField.inputView = datePicker
             dateTextField.delegate = self
+            datePicker.datePickerMode = .dateAndTime
             datePicker.addTarget(self, action: #selector(onDidChangeDate(sender:)), for: .valueChanged)
             cell.addSubview(dateTextField)
             
@@ -170,11 +172,12 @@ class TodoInputView: UIView, UITextFieldDelegate, UIPickerViewDelegate, UITableV
     
     
     // MARK: - UIDatePicker func
-    @objc func onDidChangeDate(sender:UIDatePicker){
+    @objc private func onDidChangeDate(sender:UIDatePicker){
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy/MM/dd"
+        formatter.dateFormat = "yyyy/MM/dd hh:mm"
         formatter.locale = Locale(identifier: "ja_JP")
         
+        tmpDate = sender.date
         let s_Date:String = formatter.string(from: sender.date)
         datePicker.minimumDate = Date()
         dateTextField.text = s_Date
@@ -207,7 +210,7 @@ class TodoInputView: UIView, UITextFieldDelegate, UIPickerViewDelegate, UITableV
     }
     
     //MARK: - TapGesture func
-    @objc func tapView(_:UITapGestureRecognizer){
+    @objc private func tapView(_:UITapGestureRecognizer){
         textField.resignFirstResponder()
         dateTextField.resignFirstResponder()
         textViwe.resignFirstResponder()

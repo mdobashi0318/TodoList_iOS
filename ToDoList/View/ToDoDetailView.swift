@@ -11,9 +11,9 @@ import RealmSwift
 
 class ToDoDetailView: UIView, UITableViewDelegate, UITableViewDataSource {
     
-    let realm:Realm = try! Realm()
-    var toDoModel:ToDoModel = ToDoModel()
-    var todoId:Int?
+    private let realm:Realm = try! Realm()
+    private var toDoModel:ToDoModel = ToDoModel()
+    private var todoId:Int?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -32,7 +32,7 @@ class ToDoDetailView: UIView, UITableViewDelegate, UITableViewDataSource {
     }
     
     
-    func viewLoad(){
+    private func viewLoad(){
         let tableView:UITableView = UITableView(frame: .zero, style: .grouped)
         tableView.delegate = self
         tableView.dataSource = self
