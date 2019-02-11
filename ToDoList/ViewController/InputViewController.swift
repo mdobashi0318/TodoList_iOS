@@ -130,15 +130,16 @@ class InputViewController: UIViewController {
         
         
         //通知する日付を設定
-        let date:Date = (todoInputView?.tmpDate)!
+        guard let date:Date = (todoInputView?.tmpDate) else {
+            return
+        }
         let calendar = Calendar.current
         let dateComponent = calendar.dateComponents([.year, .month, .day, .hour, .minute] , from: date)
         
         
         let trigger:UNCalendarNotificationTrigger = UNCalendarNotificationTrigger(dateMatching: dateComponent, repeats: false)
         
-        let request:UNNotificationRequest = UNNotificationRequest.init(identifier: "Todo", content: content, trigger: trigger)
-        
+        let request:UNNotificationRequest = UNNotificationRequest.init(identifier: content.title, content: content, trigger: trigger)
         
         let center:UNUserNotificationCenter = UNUserNotificationCenter.current()
         center.add(request) { (error) in

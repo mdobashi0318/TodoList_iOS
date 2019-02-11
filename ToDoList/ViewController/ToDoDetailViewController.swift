@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import RealmSwift
+import UserNotifications
 
 
 class ToDoDetailViewController: UIViewController {
@@ -14,6 +16,7 @@ class ToDoDetailViewController: UIViewController {
     private var toDoModel:ToDoModel = ToDoModel()
     private var todoId:Int?
     
+    let realm:Realm = try! Realm()
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
@@ -55,6 +58,7 @@ class ToDoDetailViewController: UIViewController {
         })
         )
         alertSheet.addAction(UIAlertAction(title: "削除", style: .destructive, handler: {(action) -> Void in
+            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [self.realm.objects(ToDoModel.self)[self.todoId!].toDoName])
             self.toDoDetailView?.deleteRealm()
             self.navigationController?.popViewController(animated: true)
         })
