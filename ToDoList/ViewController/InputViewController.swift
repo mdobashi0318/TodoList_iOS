@@ -40,12 +40,8 @@ class InputViewController: UIViewController {
         self.view.backgroundColor = UIColor.white
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(leftButton))
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(rightButton))
-        
-        let statusBarHeight: CGFloat = UIApplication.shared.statusBarFrame.height
-        let navBarHeight = self.navigationController?.navigationBar.frame.size.height
-        let flame:CGRect = CGRect(x: 0, y: statusBarHeight + navBarHeight! , width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-        
-        todoInputView = TodoInputView(frame: flame, toDoModel: toDoModel, todoId: todoId)
+                
+        todoInputView = TodoInputView(frame: frame_Size(viewController: self), toDoModel: toDoModel, todoId: todoId)
         self.view.addSubview(todoInputView!)
         
     }

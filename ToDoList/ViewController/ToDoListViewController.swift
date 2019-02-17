@@ -24,9 +24,7 @@ class ToDoListViewController: UIViewController, ToDoListViewDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        let flame:CGRect = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-        
-        let todoListView:ToDoListView = ToDoListView(frame: flame, toDoModel: toDoModel)
+        let todoListView:ToDoListView = ToDoListView(frame: frame_Size(viewController: self), toDoModel: toDoModel)
         todoListView.toDoListViewDelegate = self
         self.view.addSubview(todoListView)
     }

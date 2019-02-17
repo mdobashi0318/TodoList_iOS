@@ -18,7 +18,7 @@ class ToDoListView: UIView, UITableViewDelegate, UITableViewDataSource {
     
     private let realm:Realm = try! Realm()
     private var toDoModel:ToDoModel = ToDoModel()
-    private var todoCount: Int?
+    private var todoCount: Int = 0
     weak var toDoListViewDelegate: ToDoListViewDelegate?
     
     
@@ -44,30 +44,29 @@ class ToDoListView: UIView, UITableViewDelegate, UITableViewDataSource {
     
 
     private func viewLoad(){
-        var tableView:UITableView?
-        tableView = UITableView(frame: .zero, style: .plain)
-        tableView?.separatorInset = .zero
-        tableView?.dataSource = self
-        tableView?.delegate = self
-        tableView!.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        self.addSubview(tableView!)
+        let tableView:UITableView = UITableView(frame: .zero, style: .plain)
+        tableView.separatorInset = .zero
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        self.addSubview(tableView)
         
-        tableView!.backgroundColor = UIColor.white
-        tableView!.translatesAutoresizingMaskIntoConstraints = false
-        tableView!.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
-        tableView!.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
-        tableView!.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
-        tableView!.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
+        tableView.backgroundColor = UIColor.white
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
+        tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
     }
     
     
     // MARK: - UITableViewDataSource
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        if todoCount == 0 || todoCount == nil {
+        if todoCount == 0 {
             return 1
         }
-        return todoCount!
+        return todoCount
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -81,7 +80,7 @@ class ToDoListView: UIView, UITableViewDelegate, UITableViewDataSource {
         
         
         
-        if todoCount == 0 || todoCount == nil {
+        if todoCount == 0 {
             cell.selectionStyle = .none
             cell.textLabel?.text = "Todoがまだ登録されていません"
             return cell

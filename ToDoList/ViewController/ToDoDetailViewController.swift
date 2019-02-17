@@ -40,11 +40,9 @@ class ToDoDetailViewController: UIViewController {
     
     
     override func viewWillAppear(_ animated: Bool) {
-        let statusBarHeight: CGFloat = UIApplication.shared.statusBarFrame.height
-        let navBarHeight = self.navigationController?.navigationBar.frame.size.height
-        let flame:CGRect = CGRect(x: 0, y: statusBarHeight + navBarHeight! , width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+        super.viewWillAppear(animated)
         
-         toDoDetailView = ToDoDetailView(frame: flame, toDoModel: toDoModel, todoId:todoId!)
+         toDoDetailView = ToDoDetailView(frame: frame_Size(viewController: self), toDoModel: toDoModel, todoId:todoId!)
         self.view.addSubview(toDoDetailView!)
     }
     
