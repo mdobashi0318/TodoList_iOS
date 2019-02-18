@@ -13,7 +13,6 @@ import UserNotifications
 
 class ToDoDetailViewController: UIViewController {
     private var toDoDetailView:ToDoDetailView?
-    private var toDoModel:ToDoModel = ToDoModel()
     private var todoId:Int?
     
     let realm:Realm = try! Realm()
@@ -42,7 +41,7 @@ class ToDoDetailViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-         toDoDetailView = ToDoDetailView(frame: frame_Size(viewController: self), toDoModel: toDoModel, todoId:todoId!)
+         toDoDetailView = ToDoDetailView(frame: frame_Size(viewController: self), todoId:todoId!)
         self.view.addSubview(toDoDetailView!)
     }
     

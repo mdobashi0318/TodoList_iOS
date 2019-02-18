@@ -25,9 +25,8 @@ class TodoInputView: UIView, UITextFieldDelegate, UIPickerViewDelegate, UITableV
         super.init(frame: frame)
     }
     
-    convenience init(frame: CGRect, toDoModel:ToDoModel, todoId:Int?) {
+    convenience init(frame: CGRect, todoId:Int?) {
         self.init(frame: frame)
-        self.toDoModel = toDoModel
         self.todoId = todoId
         
         viewLoad()

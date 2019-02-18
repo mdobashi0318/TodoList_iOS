@@ -17,7 +17,6 @@ protocol ToDoListViewDelegate: class {
 class ToDoListView: UIView, UITableViewDelegate, UITableViewDataSource {
     
     private let realm:Realm = try! Realm()
-    private var toDoModel:ToDoModel = ToDoModel()
     private var todoCount: Int = 0
     weak var toDoListViewDelegate: ToDoListViewDelegate?
     
@@ -25,14 +24,7 @@ class ToDoListView: UIView, UITableViewDelegate, UITableViewDataSource {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-    }
-    
-    convenience init(frame: CGRect, toDoModel:ToDoModel) {
-        self.init(frame: frame)
-        self.toDoModel = toDoModel
-        
         todoCount = realm.objects(ToDoModel.self).count
-        
         viewLoad()
     }
     

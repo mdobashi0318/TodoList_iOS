@@ -11,7 +11,6 @@ import UserNotifications
 
 class InputViewController: UIViewController {
     private var todoInputView:TodoInputView?
-    private var toDoModel:ToDoModel = ToDoModel()
     private var todoId:Int?
     
     
@@ -41,7 +40,7 @@ class InputViewController: UIViewController {
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(leftButton))
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(rightButton))
                 
-        todoInputView = TodoInputView(frame: frame_Size(viewController: self), toDoModel: toDoModel, todoId: todoId)
+        todoInputView = TodoInputView(frame: frame_Size(viewController: self), todoId: todoId)
         self.view.addSubview(todoInputView!)
         
     }

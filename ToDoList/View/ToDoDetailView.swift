@@ -12,16 +12,14 @@ import RealmSwift
 class ToDoDetailView: UIView, UITableViewDelegate, UITableViewDataSource {
     
     private let realm:Realm = try! Realm()
-    private var toDoModel:ToDoModel = ToDoModel()
     private var todoId:Int?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
     }
     
-    convenience init(frame: CGRect, toDoModel:ToDoModel, todoId:Int) {
+    convenience init(frame: CGRect, todoId:Int) {
         self.init(frame: frame)
-        self.toDoModel = toDoModel
         self.todoId = todoId
         
         viewLoad()

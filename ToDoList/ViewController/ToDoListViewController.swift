@@ -11,9 +11,6 @@ import UIKit
 
 class ToDoListViewController: UIViewController, ToDoListViewDelegate {
 
-    
-    var toDoModel:ToDoModel = ToDoModel()
-
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -24,7 +21,7 @@ class ToDoListViewController: UIViewController, ToDoListViewDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        let todoListView:ToDoListView = ToDoListView(frame: frame_Size(viewController: self), toDoModel: toDoModel)
+        let todoListView:ToDoListView = ToDoListView(frame: frame_Size(viewController: self))
         todoListView.toDoListViewDelegate = self
         self.view.addSubview(todoListView)
     }
