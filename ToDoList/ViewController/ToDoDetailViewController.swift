@@ -49,15 +49,15 @@ class ToDoDetailViewController: UIViewController {
     /// アクションシートを開く
     @objc private func rightBarAction(){
         let alertSheet:UIAlertController = UIAlertController(title: nil, message: "Todoをどうしますか?", preferredStyle: .actionSheet)
-        alertSheet.addAction(UIAlertAction(title: "編集", style: .default, handler: {(action) -> Void in
-            let inputViewController:InputViewController = InputViewController(todoId: self.todoId!)
-            self.navigationController?.pushViewController(inputViewController, animated: true)
+        alertSheet.addAction(UIAlertAction(title: "編集", style: .default, handler: {[weak self] action in
+            let inputViewController:InputViewController = InputViewController(todoId: (self?.todoId!)!)
+            self?.navigationController?.pushViewController(inputViewController, animated: true)
         })
         )
-        alertSheet.addAction(UIAlertAction(title: "削除", style: .destructive, handler: {(action) -> Void in
-            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [self.realm.objects(ToDoModel.self)[self.todoId!].toDoName])
-            self.toDoDetailView?.deleteRealm()
-            self.navigationController?.popViewController(animated: true)
+        alertSheet.addAction(UIAlertAction(title: "削除", style: .destructive, handler: {[weak self] action in
+            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [(self?.realm.objects(ToDoModel.self)[(self?.todoId!)!].toDoName)!])
+            self?.toDoDetailView?.deleteRealm()
+            self?.navigationController?.popViewController(animated: true)
         })
         )
         alertSheet.addAction(UIAlertAction(title: "キャンセル", style: .cancel, handler: nil))

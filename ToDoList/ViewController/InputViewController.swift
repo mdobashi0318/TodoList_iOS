@@ -96,9 +96,9 @@ class InputViewController: UIViewController {
             alert.alertAction(viewController: self,
                               title: "",
                               message: "ToDoを更新しました",
-                              handler: {(action) -> Void in
-                                self.todoInputView!.updateRealm()
-                                self.navigationController?.popViewController(animated: true)
+                              handler: {[weak self] action in
+                                self?.todoInputView!.updateRealm()
+                                self?.navigationController?.popViewController(animated: true)
                                 return
             })
         }
@@ -107,9 +107,9 @@ class InputViewController: UIViewController {
         alert.alertAction(viewController: self,
                           title: "",
                           message: "ToDoを登録しました",
-                          handler: {(action) -> Void in
-                            self.todoInputView!.addRealm()
-                            self.dismiss(animated: true, completion: nil)
+                          handler: {[weak self] action in
+                            self?.todoInputView!.addRealm()
+                            self?.dismiss(animated: true, completion: nil)
         })
     }
     
