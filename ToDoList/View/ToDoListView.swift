@@ -78,6 +78,13 @@ class ToDoListView: UIView, UITableViewDelegate, UITableViewDataSource {
             return cell
         }
         
+        
+        let format = DateFormatter()
+        format.dateFormat = "yyyy/MM/dd hh:mm"
+        let now = Date()
+        
+        cell.backgroundColor = format.string(from: now) < realm.objects(ToDoModel.self)[indexPath.section].todoDate! ? .white : .lightGray
+        
         cell.accessoryType = .disclosureIndicator
         let toDoNameLabel: UILabel = UILabel()
         toDoNameLabel.text = realm.objects(ToDoModel.self)[indexPath.section].toDoName
