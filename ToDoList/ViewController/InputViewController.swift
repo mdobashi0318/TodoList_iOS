@@ -13,9 +13,6 @@ class InputViewController: UIViewController {
     private var todoInputView:TodoInputView?
     private var todoId:Int?
     
-    
-    
-    
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
@@ -69,7 +66,7 @@ class InputViewController: UIViewController {
     /// Todoの保存、更新
     @objc func rightButton(){
         let alert = AlertManager()
-        if todoInputView?.textField.text?.count == 0 {
+        if todoInputView?.titletextField.text?.count == 0 {
             alert.alertAction(viewController: self,
                               title: "",
                               message: "ToDoのタイトルが入力されていません",
@@ -83,7 +80,7 @@ class InputViewController: UIViewController {
                               handler: { _ in return })
         }
         
-        if todoInputView?.textViwe.text?.count == 0 {
+        if todoInputView?.detailTextViwe.text?.count == 0 {
             alert.alertAction(viewController: self,
                               title: "",
                               message: "ToDoの詳細が入力されていません",
@@ -117,9 +114,9 @@ class InputViewController: UIViewController {
         
         let content:UNMutableNotificationContent = UNMutableNotificationContent()
         
-        content.title = (todoInputView?.textField.text)!
+        content.title = (todoInputView?.titletextField.text)!
         
-        content.body = (todoInputView?.textViwe.text)!
+        content.body = (todoInputView?.detailTextViwe.text)!
         
         content.sound = UNNotificationSound.default
         

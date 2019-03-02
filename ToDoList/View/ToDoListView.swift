@@ -17,14 +17,12 @@ protocol ToDoListViewDelegate: class {
 class ToDoListView: UIView, UITableViewDelegate, UITableViewDataSource {
     
     private let realm:Realm = try! Realm()
-    private var todoCount: Int = 0
     weak var toDoListViewDelegate: ToDoListViewDelegate?
     
     
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        todoCount = realm.objects(ToDoModel.self).count
         viewLoad()
     }
     
@@ -55,10 +53,10 @@ class ToDoListView: UIView, UITableViewDelegate, UITableViewDataSource {
     // MARK: - UITableViewDataSource
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        if todoCount == 0 {
+        if realm.objects(ToDoModel.self).count == 0 {
             return 1
         }
-        return todoCount
+        return realm.objects(ToDoModel.self).count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -71,8 +69,7 @@ class ToDoListView: UIView, UITableViewDelegate, UITableViewDataSource {
         let cell:UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath as IndexPath)
         
         
-        
-        if todoCount == 0 {
+        if realm.objects(ToDoModel.self).count == 0 {
             cell.selectionStyle = .none
             cell.textLabel?.text = "Todoがまだ登録されていません"
             return cell
@@ -121,7 +118,7 @@ class ToDoListView: UIView, UITableViewDelegate, UITableViewDataSource {
     
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if todoCount == 0 {
+        if realm.objects(ToDoModel.self).count == 0 {
             return
         }
         tableView.deselectRow(at: indexPath, animated: true)
