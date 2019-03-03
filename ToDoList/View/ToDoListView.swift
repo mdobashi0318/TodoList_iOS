@@ -11,6 +11,8 @@ import RealmSwift
 
 protocol ToDoListViewDelegate: class {
     func cellTapAction(indexPath:Int)
+    func deleteAction(indexPath:IndexPath)
+    func editAction(indexPath:IndexPath)
 }
 
 
@@ -18,8 +20,6 @@ class ToDoListView: UIView, UITableViewDelegate, UITableViewDataSource {
     
     private let realm:Realm = try! Realm()
     weak var toDoListViewDelegate: ToDoListViewDelegate?
-    
-    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -129,5 +129,45 @@ class ToDoListView: UIView, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 70
     }
+    
+    
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        
+        let edit = UITableViewRowAction(style: .default, title: "編集") {
+            (action, indexPath) in
+            
+            self.toDoListViewDelegate?.editAction(indexPath: indexPath)
+        }
+        edit.backgroundColor = .orange
+        
+        let del = UITableViewRowAction(style: .destructive, title: "削除") {
+            (action, indexPath) in
+            
+            self.toDoListViewDelegate?.deleteAction(indexPath: indexPath)
+        }
+        
+        return [del, edit]
+    }
+    
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        if realm.objects(ToDoModel.self).count == 0 {
+            return false
+        }
+        return true
+    }
+    
+    
+    // MARK: - Realm Func
+    
+    func deleteRealm(indexPath: IndexPath){
+        let toDoModel = realm.objects(ToDoModel.self)[indexPath.row]
+        
+        try! realm.write() {
+            realm.delete(toDoModel)
+        }
+        
+    }
+
     
 }

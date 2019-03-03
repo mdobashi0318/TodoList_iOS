@@ -10,6 +10,7 @@ import UIKit
 
 
 class ToDoListViewController: UIViewController, ToDoListViewDelegate {
+    private var todoListView:ToDoListView?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,9 +22,9 @@ class ToDoListViewController: UIViewController, ToDoListViewDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        let todoListView:ToDoListView = ToDoListView(frame: frame_Size(viewController: self))
-        todoListView.toDoListViewDelegate = self
-        self.view.addSubview(todoListView)
+        todoListView = ToDoListView(frame: frame_Size(viewController: self))
+        todoListView?.toDoListViewDelegate = self
+        self.view.addSubview(todoListView!)
     }
 
     override func didReceiveMemoryWarning() {
@@ -46,6 +47,21 @@ class ToDoListViewController: UIViewController, ToDoListViewDelegate {
     func cellTapAction(indexPath: Int) {
         let toDoDetailViewController:ToDoDetailViewController = ToDoDetailViewController(todoId: indexPath)
         self.navigationController?.pushViewController(toDoDetailViewController, animated: true)
+    }
+    
+    func editAction(indexPath: IndexPath) {
+        let inputViewController:InputViewController = InputViewController(todoId: indexPath.section)
+        self.navigationController?.pushViewController(inputViewController, animated: true)
+    }
+    
+    
+    func deleteAction(indexPath: IndexPath) {
+        AlertManager().alertAction(viewController: self, title: nil, message: "削除しますか?", handler1: {[weak self] action in
+            self?.todoListView?.deleteRealm(indexPath: indexPath)
+            
+            self?.viewWillAppear(true)
+            }, handler2: {_ -> Void in})
+        
     }
 
 }
