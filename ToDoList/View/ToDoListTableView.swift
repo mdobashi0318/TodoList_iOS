@@ -29,6 +29,7 @@ class TodoListTableView: UITableView, UITableViewDelegate, UITableViewDataSource
         
         self.dataSource = self
         self.delegate = self
+        self.separatorInset = .zero
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -43,7 +44,7 @@ class TodoListTableView: UITableView, UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return tableValues.count
+        return tableValues.count > 0 ? tableValues.count : 1
     }
 
     // MARK: - UITableViewDelegate
