@@ -37,7 +37,7 @@ class InputViewController: UIViewController {
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(leftButton))
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(rightButton))
                 
-        todoInputView = TodoInputView(frame: frame_Size(viewController: self), todoId: todoId)
+        todoInputView = TodoInputView(frame: frame_Size(self), todoId: todoId)
         self.view.addSubview(todoInputView!)
         
     }

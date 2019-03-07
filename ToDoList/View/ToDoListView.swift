@@ -7,23 +7,28 @@
 //
 
 import UIKit
-import RealmSwift
 
 protocol ToDoListViewDelegate: class {
-    func cellTapAction(indexPath:Int)
+    func cellTapAction(indexPath:IndexPath)
     func deleteAction(indexPath:IndexPath)
     func editAction(indexPath:IndexPath)
 }
 
-
-class ToDoListView: UIView, UITableViewDelegate, UITableViewDataSource {
+class TodoListTableView: UITableView, UITableViewDelegate, UITableViewDataSource {
     
-    private let realm:Realm = try! Realm()
+    private var tableValues:[TableValue] = [TableValue]()
     weak var toDoListViewDelegate: ToDoListViewDelegate?
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        viewLoad()
+    override init(frame: CGRect, style: UITableView.Style) {
+        super.init(frame: frame, style: style)
+    }
+    
+    convenience init(frame: CGRect, style: UITableView.Style, tableValue:[TableValue]) {
+        self.init(frame: frame, style: style)
+        self.tableValues = tableValue
+        
+        self.dataSource = self
+        self.delegate = self
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -31,69 +36,39 @@ class ToDoListView: UIView, UITableViewDelegate, UITableViewDataSource {
     }
     
     
-    
-
-    private func viewLoad(){
-        let tableView:UITableView = UITableView(frame: .zero, style: .plain)
-        tableView.separatorInset = .zero
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        self.addSubview(tableView)
-        
-        tableView.backgroundColor = UIColor.white
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
-        tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
-        tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-    }
-    
-    
     // MARK: - UITableViewDataSource
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        if realm.objects(ToDoModel.self).count == 0 {
-            return 1
-        }
-        return realm.objects(ToDoModel.self).count
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
     
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return tableValues.count
+    }
+
     // MARK: - UITableViewDelegate
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell:UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath as IndexPath)
+        let cell:UITableViewCell = UITableViewCell(style: .default, reuseIdentifier: "todoListCell")
         
         
-        if realm.objects(ToDoModel.self).count == 0 {
+        if tableValues.count == 0 {
             cell.selectionStyle = .none
             cell.textLabel?.text = "Todoがまだ登録されていません"
             return cell
         }
         
+        let titleLabel: UILabel = UILabel()
+        titleLabel.text = tableValues[indexPath.row].title
         
-        let format = DateFormatter()
-        format.dateFormat = "yyyy/MM/dd hh:mm"
-        let now = Date()
+        let detailLabel: UILabel = UILabel()
+        detailLabel.text = tableValues[indexPath.row].detail
+        detailLabel.numberOfLines = 0
+        detailLabel.sizeToFit()
         
-        cell.backgroundColor = format.string(from: now) < realm.objects(ToDoModel.self)[indexPath.section].todoDate! ? .white : .lightGray
-        
-        cell.accessoryType = .disclosureIndicator
-        let toDoNameLabel: UILabel = UILabel()
-        toDoNameLabel.text = realm.objects(ToDoModel.self)[indexPath.section].toDoName
-        
-        let toDoLabel: UILabel = UILabel()
-        toDoLabel.text = realm.objects(ToDoModel.self)[indexPath.section].toDo
-        toDoLabel.numberOfLines = 0
-        toDoLabel.sizeToFit()
-        
-        let toDoDateLabel: UILabel = UILabel()
-        toDoDateLabel.text = realm.objects(ToDoModel.self)[indexPath.section].todoDate
-        
+        let dateLabel: UILabel = UILabel()
+        dateLabel.text = tableValues[indexPath.row].date
+        changeCellBackGroundCollor(cell: cell, indexPath: indexPath)
         
         
         let stakc:UIStackView = UIStackView()
@@ -102,9 +77,9 @@ class ToDoListView: UIView, UITableViewDelegate, UITableViewDataSource {
         stakc.spacing = 5
         stakc.distribution = .fillEqually
         
-        stakc.addArrangedSubview(toDoNameLabel)
-        stakc.addArrangedSubview(toDoDateLabel)
-        stakc.addArrangedSubview(toDoLabel)
+        stakc.addArrangedSubview(titleLabel)
+        stakc.addArrangedSubview(detailLabel)
+        stakc.addArrangedSubview(dateLabel)
         cell.addSubview(stakc)
         
         stakc.translatesAutoresizingMaskIntoConstraints = false
@@ -116,13 +91,12 @@ class ToDoListView: UIView, UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if realm.objects(ToDoModel.self).count == 0 {
+        if tableValues.count == 0 {
             return
         }
         tableView.deselectRow(at: indexPath, animated: true)
-        toDoListViewDelegate?.cellTapAction(indexPath: indexPath.section)
+        toDoListViewDelegate?.cellTapAction(indexPath: indexPath)
     }
     
     
@@ -151,23 +125,18 @@ class ToDoListView: UIView, UITableViewDelegate, UITableViewDataSource {
     
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        if realm.objects(ToDoModel.self).count == 0 {
+        if tableValues.count == 0 {
             return false
         }
         return true
     }
     
     
-    // MARK: - Realm Func
-    
-    func deleteRealm(indexPath: IndexPath){
-        let toDoModel = realm.objects(ToDoModel.self)[indexPath.row]
+    private func changeCellBackGroundCollor(cell:UITableViewCell, indexPath:IndexPath){
+        let format = DateFormatter()
+        format.dateFormat = "yyyy/MM/dd hh:mm"
+        let now = Date()
         
-        try! realm.write() {
-            realm.delete(toDoModel)
-        }
-        
+        cell.backgroundColor = format.string(from: now) < tableValues[indexPath.row].date ? .white : .lightGray
     }
-
-    
 }

@@ -41,7 +41,7 @@ class ToDoDetailViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-         toDoDetailView = ToDoDetailView(frame: frame_Size(viewController: self), todoId:todoId!)
+         toDoDetailView = ToDoDetailView(frame: frame_Size(self), todoId:todoId!)
         self.view.addSubview(toDoDetailView!)
     }
     
