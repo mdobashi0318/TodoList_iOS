@@ -13,7 +13,6 @@ class ToDoListViewController: UIViewController, ToDoListViewDelegate {
     private var todoListTableView:TodoListTableView?
     private let realm:Realm = try! Realm()
     private var tableValues:[TableValue] = [TableValue]()
-    private var todoModel = [ToDoModel]()
 
     override func viewDidLoad() {
         super.viewDidLoad()

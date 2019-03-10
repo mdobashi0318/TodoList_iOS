@@ -7,10 +7,10 @@
 //
 
 import UIKit
-import RealmSwift
 
-
-class TodoInputView: UIView, UITextFieldDelegate, UIPickerViewDelegate, UITableViewDelegate, UITableViewDataSource {
+class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIPickerViewDelegate {
+    
+    private var tableValue:TableValue?
     
     let titletextField:UITextField = UITextField()
     let dateTextField:UITextField = UITextField()
@@ -18,46 +18,37 @@ class TodoInputView: UIView, UITextFieldDelegate, UIPickerViewDelegate, UITableV
     let datePicker:UIDatePicker = UIDatePicker()
     var tmpDate:Date?
     
-    private var toDoModel:ToDoModel = ToDoModel()
     private var todoId:Int?
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    override init(frame: CGRect, style: UITableView.Style) {
+        super.init(frame: frame, style: style)
+        
+        self.delegate = self
+        self.dataSource = self
+        self.separatorInset = .zero
+        self.estimatedSectionHeaderHeight = 0
+        self.estimatedSectionFooterHeight = 0
+        self.backgroundColor = UIColor.rgba(red: 230, green: 230, blue: 230, alpha: 1)
+        
+        
+        let tapGesture:UITapGestureRecognizer = UITapGestureRecognizer(target: self, action:
+            #selector(tapView(_:)))
+        self.addGestureRecognizer(tapGesture)
+        
     }
     
-    convenience init(frame: CGRect, todoId:Int?) {
-        self.init(frame: frame)
+    convenience init(frame: CGRect, style: UITableView.Style, todoId:Int?, tableValue:TableValue) {
+        self.init(frame: frame, style: style)
         self.todoId = todoId
-        
-        viewLoad()
+        self.tableValue = TableValue(id: tableValue.id,
+                                     title: tableValue.title,
+                                     todoDate: tableValue.date,
+                                     detail: tableValue.detail
+        )
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    
-    
-    private func viewLoad(){
-        let tableView:UITableView = UITableView(frame: .zero, style: .grouped)
-        
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.estimatedSectionHeaderHeight = 0
-        tableView.estimatedSectionFooterHeight = 0
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        self.addSubview(tableView)
-        
-        let tapGesture:UITapGestureRecognizer = UITapGestureRecognizer(target: self, action:
-            #selector(tapView(_:)))
-        tableView.addGestureRecognizer(tapGesture)
-        
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
-        tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
-        tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-        
     }
     
     // MARK: - UITableViewDataSource
@@ -74,17 +65,15 @@ class TodoInputView: UIView, UITextFieldDelegate, UIPickerViewDelegate, UITableV
     // MARK: - UITableViewDelegate
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell:UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath as IndexPath)
+        let cell:UITableViewCell = UITableViewCell(style: .default, reuseIdentifier: "inputCell")
         cell.accessoryType = .none
         cell.selectionStyle = .none
         
-        let realm:Realm = try! Realm()
-        
         // ToDoの編集時はTextFieldに表示
         if todoId != nil {
-            titletextField.text = realm.objects(ToDoModel.self)[todoId!].toDoName
-            dateTextField.text = realm.objects(ToDoModel.self)[todoId!].todoDate
-            detailTextViwe.text = realm.objects(ToDoModel.self)[todoId!].toDo
+            titletextField.text = tableValue?.title
+            dateTextField.text = tableValue?.date
+            detailTextViwe.text = tableValue?.detail
         }
         
         let leading:CGFloat = 15
@@ -183,37 +172,11 @@ class TodoInputView: UIView, UITextFieldDelegate, UIPickerViewDelegate, UITableV
         dateTextField.text = s_Date
         
     }
-    
-    // MARK: - Realm func
-    
-    func addRealm(){
-        let realm:Realm = try! Realm()
-        
-        toDoModel.id = String(realm.objects(ToDoModel.self).count + 1)
-        toDoModel.toDoName = titletextField.text!
-        toDoModel.todoDate = dateTextField.text
-        toDoModel.toDo = detailTextViwe.text
-        
-        try! realm.write() {
-            realm.add(toDoModel)
-        }
-    }
-    
-    func updateRealm(){
-        let realm:Realm = try! Realm()
- 
-        try! realm.write() {
-            realm.objects(ToDoModel.self)[todoId!].toDoName = titletextField.text!
-            realm.objects(ToDoModel.self)[todoId!].todoDate = dateTextField.text
-            realm.objects(ToDoModel.self)[todoId!].toDo = detailTextViwe.text
-        }
-    }
-    
+
     //MARK: - TapGesture func
     @objc private func tapView(_:UITapGestureRecognizer){
         titletextField.resignFirstResponder()
         dateTextField.resignFirstResponder()
         detailTextViwe.resignFirstResponder()
     }
-    
 }

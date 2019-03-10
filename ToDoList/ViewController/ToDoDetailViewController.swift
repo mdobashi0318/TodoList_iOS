@@ -12,8 +12,10 @@ import UserNotifications
 
 
 class ToDoDetailViewController: UIViewController {
-    private var toDoDetailView:ToDoDetailView?
+    private var toDoDetailView:ToDoDetailTableView?
     private var todoId:Int?
+    private var tableValue:TableValue?
+    
     
     let realm:Realm = try! Realm()
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -33,6 +35,8 @@ class ToDoDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tableValue = TableValue(id: realm.objects(ToDoModel.self)[todoId!].id, title: realm.objects(ToDoModel.self)[todoId!].toDoName, todoDate: realm.objects(ToDoModel.self)[todoId!].todoDate!, detail: realm.objects(ToDoModel.self)[todoId!].toDo)
+        
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(self.rightBarAction))
         
     }
@@ -41,7 +45,7 @@ class ToDoDetailViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-         toDoDetailView = ToDoDetailView(frame: frame_Size(self), todoId:todoId!)
+        toDoDetailView = ToDoDetailTableView(frame: frame_Size(self), style: .plain, todoId: todoId, tableValue: tableValue!)
         self.view.addSubview(toDoDetailView!)
     }
     
@@ -56,7 +60,7 @@ class ToDoDetailViewController: UIViewController {
         )
         alertSheet.addAction(UIAlertAction(title: "削除", style: .destructive, handler: {[weak self] action in
             UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [(self?.realm.objects(ToDoModel.self)[(self?.todoId!)!].toDoName)!])
-            self?.toDoDetailView?.deleteRealm()
+            self?.deleteRealm()
             self?.navigationController?.popViewController(animated: true)
         })
         )
@@ -66,4 +70,16 @@ class ToDoDetailViewController: UIViewController {
     }
     
 
+    
+    // MARK: - Realm func
+    
+    func deleteRealm(){
+        let realm:Realm = try! Realm()
+        let toDoModel = realm.objects(ToDoModel.self)[todoId!]
+        
+        try! realm.write() {
+            realm.delete(toDoModel)
+        }
+        
+    }
 }

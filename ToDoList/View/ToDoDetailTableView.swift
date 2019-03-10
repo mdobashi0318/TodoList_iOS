@@ -7,45 +7,36 @@
 //
 
 import UIKit
-import RealmSwift
 
-class ToDoDetailView: UIView, UITableViewDelegate, UITableViewDataSource {
+class ToDoDetailTableView: UITableView, UITableViewDelegate, UITableViewDataSource {
     
-    private let realm:Realm = try! Realm()
     private var todoId:Int?
+    private var tableValue:TableValue!
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    override init(frame: CGRect, style: UITableView.Style) {
+        super.init(frame: frame, style: style)
+        
+        self.delegate = self
+        self.dataSource = self
+        self.separatorInset = .zero
+        self.estimatedSectionHeaderHeight = 0
+        self.estimatedSectionFooterHeight = 0
+        self.backgroundColor = UIColor.rgba(red: 230, green: 230, blue: 230, alpha: 1)
+        
     }
     
-    convenience init(frame: CGRect, todoId:Int) {
-        self.init(frame: frame)
+    convenience init(frame: CGRect, style: UITableView.Style, todoId:Int?, tableValue:TableValue) {
+        self.init(frame: frame, style: style)
         self.todoId = todoId
-        
-        viewLoad()
+        self.tableValue = TableValue(id: tableValue.id,
+                                     title: tableValue.title,
+                                     todoDate: tableValue.date,
+                                     detail: tableValue.detail
+        )
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    
-    private func viewLoad(){
-        let tableView:UITableView = UITableView(frame: .zero, style: .grouped)
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.estimatedSectionHeaderHeight = 0
-        tableView.estimatedSectionFooterHeight = 0
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        self.addSubview(tableView)
-        
-        
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
-        tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
-        tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-        
     }
     
     // MARK: - UITableViewDataSource
@@ -60,18 +51,18 @@ class ToDoDetailView: UIView, UITableViewDelegate, UITableViewDataSource {
     // MARK: - UITableViewDelegate
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell:UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath as IndexPath)
+        let cell:UITableViewCell = UITableViewCell(style: .default, reuseIdentifier: "detailCell")
         cell.accessoryType = .none
         cell.selectionStyle = .none
         
         
         switch indexPath.section {
         case 0:
-            cell.textLabel!.text = realm.objects(ToDoModel.self)[todoId!].toDoName
+            cell.textLabel!.text = tableValue.title
         case 1:
-            cell.textLabel!.text = realm.objects(ToDoModel.self)[todoId!].todoDate
+            cell.textLabel!.text = tableValue.date
         default:
-            cell.textLabel!.text = realm.objects(ToDoModel.self)[todoId!].toDo
+            cell.textLabel!.text = tableValue.detail
             cell.textLabel?.numberOfLines = 0
         }
         
@@ -120,16 +111,5 @@ class ToDoDetailView: UIView, UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return CGFloat.leastNormalMagnitude
-    }
-    
-    // MARK: - Realm func
-    
-    func deleteRealm(){
-        let toDoModel = realm.objects(ToDoModel.self)[todoId!]
-        
-        try! realm.write() {
-            realm.delete(toDoModel)
-        }
-        
     }
 }

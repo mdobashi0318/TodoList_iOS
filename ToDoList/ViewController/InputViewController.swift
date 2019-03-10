@@ -8,10 +8,16 @@
 
 import UIKit
 import UserNotifications
+import RealmSwift
 
 class InputViewController: UIViewController {
-    private var todoInputView:TodoInputView?
+    let realm:Realm = try! Realm()
+    
+    private var todoInputTableView:TodoInputTableView?
     private var todoId:Int?
+    private var toDoModel:ToDoModel = ToDoModel()
+    
+    private var tableValue:TableValue?
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -36,9 +42,18 @@ class InputViewController: UIViewController {
         self.view.backgroundColor = UIColor.white
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(leftButton))
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(rightButton))
-                
-        todoInputView = TodoInputView(frame: frame_Size(self), todoId: todoId)
-        self.view.addSubview(todoInputView!)
+        
+        if todoId == nil {
+            todoInputTableView = TodoInputTableView(frame: frame_Size(self))
+        } else {
+            tableValue = TableValue(id: realm.objects(ToDoModel.self)[todoId!].id,
+                                    title: realm.objects(ToDoModel.self)[todoId!].toDoName,
+                                    todoDate: realm.objects(ToDoModel.self)[todoId!].todoDate!,
+                                    detail: realm.objects(ToDoModel.self)[todoId!].toDo
+            )
+            todoInputTableView = TodoInputTableView(frame: frame_Size(self), style: .plain, todoId: todoId, tableValue: tableValue!)
+        }
+        self.view.addSubview(todoInputTableView!)
         
     }
     
@@ -47,6 +62,7 @@ class InputViewController: UIViewController {
         super.viewWillAppear(animated)
         
     }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -66,21 +82,21 @@ class InputViewController: UIViewController {
     /// Todoの保存、更新
     @objc func rightButton(){
         let alert = AlertManager()
-        if todoInputView?.titletextField.text?.count == 0 {
+        if todoInputTableView?.titletextField.text?.count == 0 {
             alert.alertAction(viewController: self,
                               title: "",
                               message: "ToDoのタイトルが入力されていません",
                               handler: { _ in return })
         }
         
-        if todoInputView?.dateTextField.text?.count == 0 {
+        if todoInputTableView?.dateTextField.text?.count == 0 {
             alert.alertAction(viewController: self,
                               title: "",
                               message: "ToDoの期限が入力されていません",
                               handler: { _ in return })
         }
         
-        if todoInputView?.detailTextViwe.text?.count == 0 {
+        if todoInputTableView?.detailTextViwe.text?.count == 0 {
             alert.alertAction(viewController: self,
                               title: "",
                               message: "ToDoの詳細が入力されていません",
@@ -94,7 +110,7 @@ class InputViewController: UIViewController {
                               title: "",
                               message: "ToDoを更新しました",
                               handler: {[weak self] action in
-                                self?.todoInputView!.updateRealm()
+                                self?.updateRealm()
                                 self?.navigationController?.popViewController(animated: true)
                                 return
             })
@@ -105,7 +121,7 @@ class InputViewController: UIViewController {
                           title: "",
                           message: "ToDoを登録しました",
                           handler: {[weak self] action in
-                            self?.todoInputView!.addRealm()
+                            self?.addRealm()
                             self?.dismiss(animated: true, completion: nil)
         })
     }
@@ -114,15 +130,15 @@ class InputViewController: UIViewController {
         
         let content:UNMutableNotificationContent = UNMutableNotificationContent()
         
-        content.title = (todoInputView?.titletextField.text)!
+        content.title = (todoInputTableView?.titletextField.text)!
         
-        content.body = (todoInputView?.detailTextViwe.text)!
+        content.body = (todoInputTableView?.detailTextViwe.text)!
         
         content.sound = UNNotificationSound.default
         
         
         //通知する日付を設定
-        guard let date:Date = (todoInputView?.tmpDate) else {
+        guard let date:Date = (todoInputTableView?.tmpDate) else {
             return
         }
         let calendar = Calendar.current
@@ -138,6 +154,33 @@ class InputViewController: UIViewController {
             
         }
         
+    }
+    
+    
+    
+    // MARK: - Realm func
+    
+    func addRealm(){
+        
+        
+        toDoModel.id = String(realm.objects(ToDoModel.self).count + 1)
+        toDoModel.toDoName = (todoInputTableView?.titletextField.text)!
+        toDoModel.todoDate = todoInputTableView?.dateTextField.text
+        toDoModel.toDo = (todoInputTableView?.detailTextViwe.text)!
+        
+        try! realm.write() {
+            realm.add(toDoModel)
+        }
+    }
+    
+    func updateRealm(){
+        let realm:Realm = try! Realm()
+        
+        try! realm.write() {
+            realm.objects(ToDoModel.self)[todoId!].toDoName = (todoInputTableView?.titletextField.text!)!
+            realm.objects(ToDoModel.self)[todoId!].todoDate = todoInputTableView?.dateTextField.text
+            realm.objects(ToDoModel.self)[todoId!].toDo = (todoInputTableView?.detailTextViwe.text)!
+        }
     }
 
 }
