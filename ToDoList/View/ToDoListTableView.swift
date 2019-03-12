@@ -30,6 +30,7 @@ class TodoListTableView: UITableView, UITableViewDelegate, UITableViewDataSource
         self.dataSource = self
         self.delegate = self
         self.separatorInset = .zero
+        self.register(TodoListCell.self, forCellReuseIdentifier: "listCell")
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -50,7 +51,7 @@ class TodoListTableView: UITableView, UITableViewDelegate, UITableViewDataSource
     // MARK: - UITableViewDelegate
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell:UITableViewCell = UITableViewCell(style: .default, reuseIdentifier: "todoListCell")
+        let cell = tableView.dequeueReusableCell(withIdentifier: "listCell") as! TodoListCell
         
         
         if tableValues.count == 0 {
@@ -59,35 +60,10 @@ class TodoListTableView: UITableView, UITableViewDelegate, UITableViewDataSource
             return cell
         }
         
-        let titleLabel: UILabel = UILabel()
-        titleLabel.text = tableValues[indexPath.row].title
-        
-        let detailLabel: UILabel = UILabel()
-        detailLabel.text = tableValues[indexPath.row].detail
-        detailLabel.numberOfLines = 0
-        detailLabel.sizeToFit()
-        
-        let dateLabel: UILabel = UILabel()
-        dateLabel.text = tableValues[indexPath.row].date
-        changeCellBackGroundCollor(cell: cell, indexPath: indexPath)
-        
-        
-        let stakc:UIStackView = UIStackView()
-        stakc.axis = .vertical
-        stakc.alignment = .leading
-        stakc.spacing = 5
-        stakc.distribution = .fillEqually
-        
-        stakc.addArrangedSubview(titleLabel)
-        stakc.addArrangedSubview(detailLabel)
-        stakc.addArrangedSubview(dateLabel)
-        cell.addSubview(stakc)
-        
-        stakc.translatesAutoresizingMaskIntoConstraints = false
-        stakc.topAnchor.constraint(equalTo: cell.topAnchor, constant: 10).isActive = true
-        stakc.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 10).isActive = true
-        stakc.trailingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -10).isActive = true
-        stakc.bottomAnchor.constraint(equalTo: cell.bottomAnchor, constant: -10).isActive = true
+        cell.setText(title: tableValues[indexPath.row].title,
+                     date: tableValues[indexPath.row].date,
+                     detail: tableValues[indexPath.row].detail
+        )
         
         return cell
     }
