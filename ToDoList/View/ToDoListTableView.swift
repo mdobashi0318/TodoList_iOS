@@ -27,6 +27,7 @@ class TodoListTableView: UITableView, UITableViewDelegate, UITableViewDataSource
         self.init(frame: frame, style: style)
         self.tableValues = tableValue
         
+        self.separatorStyle = tableValues.count != 0 ? .none : .singleLine
         self.dataSource = self
         self.delegate = self
         self.separatorInset = .zero
@@ -51,15 +52,14 @@ class TodoListTableView: UITableView, UITableViewDelegate, UITableViewDataSource
     // MARK: - UITableViewDelegate
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "listCell") as! TodoListCell
-        
         
         if tableValues.count == 0 {
+            let cell:UITableViewCell = UITableViewCell(style: .default, reuseIdentifier: "cell")
             cell.selectionStyle = .none
             cell.textLabel?.text = "Todoがまだ登録されていません"
             return cell
         }
-        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "listCell") as! TodoListCell
         cell.setText(title: tableValues[indexPath.row].title,
                      date: tableValues[indexPath.row].date,
                      detail: tableValues[indexPath.row].detail
@@ -78,7 +78,7 @@ class TodoListTableView: UITableView, UITableViewDelegate, UITableViewDataSource
     
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 70
+        return 80
     }
     
     
@@ -115,5 +115,79 @@ class TodoListTableView: UITableView, UITableViewDelegate, UITableViewDataSource
         let now = Date()
         
         cell.backgroundColor = format.string(from: now) < tableValues[indexPath.row].date ? .white : .lightGray
+    }
+}
+
+
+
+
+
+
+
+
+fileprivate final class TodoListCell:UITableViewCell {
+    let titleLabel: UILabel = UILabel()
+    let detailLabel: UILabel = UILabel()
+    let dateLabel: UILabel = UILabel()
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        self.selectionStyle = .none
+        self.accessoryType = .disclosureIndicator
+        
+        let layerView:UIView = UIView()
+        layerView.layer.borderColor = UIColor.orange.cgColor
+        layerView.layer.borderWidth = 1
+        layerView.layer.cornerRadius = 50 / 5
+        layerView.layer.shadowColor = UIColor.orange.cgColor
+        layerView.layer.shadowOffset = CGSize(width: 0.1, height: 0.2)
+        layerView.backgroundColor = GENET
+        
+        
+        
+        detailLabel.numberOfLines = 0
+        detailLabel.sizeToFit()
+        
+        let stakc:UIStackView = UIStackView()
+        stakc.axis = .vertical
+        stakc.alignment = .leading
+        stakc.spacing = 5
+        stakc.distribution = .fillEqually
+        
+        stakc.addSubview(layerView)
+        stakc.addArrangedSubview(titleLabel)
+        stakc.addArrangedSubview(detailLabel)
+        stakc.addArrangedSubview(dateLabel)
+        
+        self.addSubview(stakc)
+        
+        
+        
+        stakc.translatesAutoresizingMaskIntoConstraints = false
+        stakc.topAnchor.constraint(equalTo: self.topAnchor, constant: 10).isActive = true
+        stakc.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10).isActive = true
+        stakc.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10).isActive = true
+        stakc.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10).isActive = true
+        
+        
+        
+        layerView.translatesAutoresizingMaskIntoConstraints = false
+        layerView.topAnchor.constraint(equalTo: stakc.topAnchor, constant: -7).isActive = true
+        layerView.leadingAnchor.constraint(equalTo: stakc.leadingAnchor, constant: -5).isActive = true
+        layerView.trailingAnchor.constraint(equalTo: stakc.trailingAnchor, constant: 5).isActive = true
+        layerView.bottomAnchor.constraint(equalTo: stakc.bottomAnchor, constant: 7).isActive = true
+        
+        
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setText(title:String, date:String, detail:String){
+        titleLabel.text = title
+        detailLabel.text = detail
+        dateLabel.text = date
     }
 }

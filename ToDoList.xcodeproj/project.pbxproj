@@ -9,8 +9,8 @@
 /* Begin PBXBuildFile section */
 		6FF02EB15D5049DC099C5648 /* Pods_ToDoList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07953119CD910C907A014925 /* Pods_ToDoList.framework */; };
 		D018BA5B215BBC60008EC964 /* ToDoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D018BA5A215BBC60008EC964 /* ToDoModel.swift */; };
+		D07EAF9722428210009FB684 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07EAF9622428210009FB684 /* Constant.swift */; };
 		D09CBC6B21A2E8E100981E32 /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09CBC6A21A2E8E100981E32 /* AlertManager.swift */; };
-		D0A335262237E1930065EA90 /* TodoListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A335252237E1930065EA90 /* TodoListCell.swift */; };
 		D0A6A5F3219C4D0200D6A526 /* ToDoListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A6A5F2219C4D0200D6A526 /* ToDoListTests.swift */; };
 		D0A6A5FD219C4D6000D6A526 /* ToDoListTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A6A5FC219C4D6000D6A526 /* ToDoListTableView.swift */; };
 		D0A6A5FF219C4D8900D6A526 /* TodoInputTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A6A5FE219C4D8900D6A526 /* TodoInputTableView.swift */; };
@@ -47,8 +47,8 @@
 		07953119CD910C907A014925 /* Pods_ToDoList.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ToDoList.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9546D7C366211327E0362A85 /* Pods-ToDoList.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ToDoList.release.xcconfig"; path = "Pods/Target Support Files/Pods-ToDoList/Pods-ToDoList.release.xcconfig"; sourceTree = "<group>"; };
 		D018BA5A215BBC60008EC964 /* ToDoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoModel.swift; sourceTree = "<group>"; };
+		D07EAF9622428210009FB684 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		D09CBC6A21A2E8E100981E32 /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
-		D0A335252237E1930065EA90 /* TodoListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoListCell.swift; sourceTree = "<group>"; };
 		D0A6A5F0219C4D0200D6A526 /* ToDoListTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ToDoListTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0A6A5F2219C4D0200D6A526 /* ToDoListTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListTests.swift; sourceTree = "<group>"; };
 		D0A6A5F4219C4D0200D6A526 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -102,14 +102,6 @@
 				9546D7C366211327E0362A85 /* Pods-ToDoList.release.xcconfig */,
 			);
 			name = Pods;
-			sourceTree = "<group>";
-		};
-		D0A335242237E15B0065EA90 /* Cells */ = {
-			isa = PBXGroup;
-			children = (
-				D0A335252237E1930065EA90 /* TodoListCell.swift */,
-			);
-			path = Cells;
 			sourceTree = "<group>";
 		};
 		D0A6A5F1219C4D0200D6A526 /* ToDoListTests */ = {
@@ -193,10 +185,10 @@
 			children = (
 				D0F9CC39214A8E6000C51BD6 /* AppDelegate.swift */,
 				D09CBC6A21A2E8E100981E32 /* AlertManager.swift */,
+				D07EAF9622428210009FB684 /* Constant.swift */,
 				D0A6A5FA219C4D2200D6A526 /* ViewController */,
 				D0A6A5FB219C4D3D00D6A526 /* View */,
 				D0A86F7A21BBB30100C2B1CF /* Model */,
-				D0A335242237E15B0065EA90 /* Cells */,
 				D0E57E13221930E00001D1C3 /* Extensions */,
 				D0F9CC40214A8E6300C51BD6 /* Assets.xcassets */,
 				D0F9CC42214A8E6300C51BD6 /* LaunchScreen.storyboard */,
@@ -415,13 +407,13 @@
 				D0A6A602219C4DB500D6A526 /* ToDoDetailTableView.swift in Sources */,
 				D0EAD27221999D23006D43E6 /* ToDoDetailViewController.swift in Sources */,
 				D018BA5B215BBC60008EC964 /* ToDoModel.swift in Sources */,
-				D0A335262237E1930065EA90 /* TodoListCell.swift in Sources */,
 				D0E57E172219312E0001D1C3 /* Extension.swift in Sources */,
 				D0F9CC4E214A8FCF00C51BD6 /* ToDoListViewController.swift in Sources */,
 				D09CBC6B21A2E8E100981E32 /* AlertManager.swift in Sources */,
 				D0A6A5FF219C4D8900D6A526 /* TodoInputTableView.swift in Sources */,
 				D0F9CC4C214A8F5900C51BD6 /* InputViewController.swift in Sources */,
 				D0A6A5FD219C4D6000D6A526 /* ToDoListTableView.swift in Sources */,
+				D07EAF9722428210009FB684 /* Constant.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
