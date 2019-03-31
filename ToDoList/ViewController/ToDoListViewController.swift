@@ -29,6 +29,8 @@ class ToDoListViewController: UIViewController, ToDoListViewDelegate {
                                           title: realm.objects(ToDoModel.self)[i].toDoName,
                                           todoDate: realm.objects(ToDoModel.self)[i].todoDate!,
                                           detail: realm.objects(ToDoModel.self)[i].toDo))
+            
+            tableValues.sort{ $0.date < $1.date }
         }
   
         todoListTableView = TodoListTableView(frame: frame_Size(self), style: .plain, tableValue: tableValues)
