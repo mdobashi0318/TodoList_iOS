@@ -108,14 +108,6 @@ class TodoListTableView: UITableView, UITableViewDelegate, UITableViewDataSource
         return true
     }
     
-    
-    private func changeCellBackGroundCollor(cell:UITableViewCell, indexPath:IndexPath){
-        let format = DateFormatter()
-        format.dateFormat = "yyyy/MM/dd hh:mm"
-        let now = Date()
-        
-        cell.backgroundColor = format.string(from: now) < tableValues[indexPath.row].date ? .white : .lightGray
-    }
 }
 
 
@@ -130,13 +122,14 @@ fileprivate final class TodoListCell:UITableViewCell {
     let detailLabel: UILabel = UILabel()
     let dateLabel: UILabel = UILabel()
     
+    let layerView:UIView = UIView()
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         self.selectionStyle = .none
         self.accessoryType = .disclosureIndicator
         
-        let layerView:UIView = UIView()
         layerView.layer.borderColor = UIColor.orange.cgColor
         layerView.layer.borderWidth = 1
         layerView.layer.cornerRadius = 50 / 5
@@ -189,5 +182,17 @@ fileprivate final class TodoListCell:UITableViewCell {
         titleLabel.text = title
         detailLabel.text = detail
         dateLabel.text = date
+        
+        
+        changeCellBackGroundCollor(date: dateLabel.text!)
+    }
+    
+    
+    private func changeCellBackGroundCollor(date: String){
+        let format = DateFormatter()
+        format.dateFormat = "yyyy/MM/dd hh:mm"
+        let now = Date()
+        
+        layerView.backgroundColor = format.string(from: now) < date ? GENET : .lightGray
     }
 }
