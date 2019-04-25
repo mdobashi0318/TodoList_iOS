@@ -46,6 +46,7 @@ class ToDoListViewController: UIViewController, ToDoListViewDelegate {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
+        todoListTableView?.removeFromSuperview()
         tableValues.removeAll()
     }
     
