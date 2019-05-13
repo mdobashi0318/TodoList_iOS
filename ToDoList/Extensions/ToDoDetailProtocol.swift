@@ -1,5 +1,5 @@
 //
-//  UITableViewExtension.swift
+//  ToDoDetailProtocol.swift
 //  ToDoList
 //
 //  Created by 土橋正晴 on 2019/04/25.
@@ -8,8 +8,14 @@
 
 import Foundation
 import UIKit
-extension UITableView {
-    
+
+
+extension TodoInputTableView: ToDoDetailProtocol {}
+extension ToDoDetailTableView: ToDoDetailProtocol {}
+
+
+protocol ToDoDetailProtocol {}
+extension ToDoDetailProtocol {
     func todoHeadrView(viewForHeaderInSection section: Int) -> UIView {
         let headerView:UIView = UIView()
         let headerLabel:UILabel = UILabel()

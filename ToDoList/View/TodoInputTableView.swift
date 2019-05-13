@@ -124,7 +124,7 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return tableView.todoHeadrView(viewForHeaderInSection: section)
+        return todoHeadrView(viewForHeaderInSection: section)
     }
     
     

@@ -75,7 +75,7 @@ class ToDoDetailTableView: UITableView, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return tableView.todoHeadrView(viewForHeaderInSection: section)
+        return todoHeadrView(viewForHeaderInSection: section)
     }
     
     
