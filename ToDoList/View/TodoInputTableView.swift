@@ -12,10 +12,40 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
     
     private var tableValue:TableValue?
     
-    let titletextField:UITextField = UITextField()
-    let dateTextField:UITextField = UITextField()
-    let detailTextViwe:UITextView = UITextView()
-    let datePicker:UIDatePicker = UIDatePicker()
+    let titletextField:UITextField = {
+        let textField: UITextField = UITextField()
+        textField.accessibilityLabel = "titleTextField"
+        
+        return textField
+    }()
+    
+    
+    let dateTextField:UITextField = {
+        let textField: UITextField = UITextField()
+        textField.accessibilityLabel = "dateTextField"
+        
+        return textField
+    }()
+    
+    
+    let detailTextViwe:UITextView = {
+        let textView: UITextView = UITextView()
+        textView.accessibilityLabel = "detailTextViwe"
+        
+        return textView
+    }()
+    
+    
+    let datePicker:UIDatePicker = {
+        let datePicker: UIDatePicker = UIDatePicker()
+        datePicker.accessibilityLabel = "detailPicker"
+        datePicker.datePickerMode = .dateAndTime
+        datePicker.addTarget(self, action: #selector(onDidChangeDate(sender:)), for: .valueChanged)
+        
+        return datePicker
+    }()
+    
+    
     var tmpDate:Date?
     
     private var todoId:Int?
@@ -88,8 +118,7 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
         case 1: /* Todoの期限 */
             dateTextField.inputView = datePicker
             dateTextField.delegate = self
-            datePicker.datePickerMode = .dateAndTime
-            datePicker.addTarget(self, action: #selector(onDidChangeDate(sender:)), for: .valueChanged)
+            
             cell.addSubview(dateTextField)
             
             dateTextField.translatesAutoresizingMaskIntoConstraints = false

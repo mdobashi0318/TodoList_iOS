@@ -23,10 +23,13 @@ extension ToDoDetailProtocol {
         switch section {
         case 0:
             headerLabel.text = "タイトル"
+            headerLabel.accessibilityLabel = "titleLabel"
         case 1:
             headerLabel.text = "期限"
+            headerLabel.accessibilityLabel = "dateLabel"
         case 2:
             headerLabel.text = "詳細"
+            headerLabel.accessibilityLabel = "detailLabel"
         default:
             break
         }

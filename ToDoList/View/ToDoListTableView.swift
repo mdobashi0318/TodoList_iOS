@@ -16,18 +16,13 @@ protocol ToDoListViewDelegate: class {
 
 class TodoListTableView: UITableView, UITableViewDelegate, UITableViewDataSource {
     
-    private var tableValues:[TableValue] = [TableValue]()
+    var tableValues:[TableValue] = [TableValue]()
     weak var toDoListViewDelegate: ToDoListViewDelegate?
     
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
-    }
-    
-    convenience init(frame: CGRect, style: UITableView.Style, tableValue:[TableValue]) {
-        self.init(frame: frame, style: style)
-        self.tableValues = tableValue
         
-        self.separatorStyle = tableValues.count != 0 ? .none : .singleLine
+        self.separatorStyle = .none
         self.dataSource = self
         self.delegate = self
         self.separatorInset = .zero
