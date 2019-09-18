@@ -12,12 +12,21 @@ import UserNotifications
 
 
 class ToDoDetailViewController: UIViewController {
-    private var toDoDetailView:ToDoDetailTableView?
+    
+    // MARK: Properties
+    
+    let realm:Realm = try! Realm()
     private var todoId:Int?
     private var tableValue:TableValue?
     
+    private lazy var toDoDetailView:ToDoDetailTableView = {
+        let tableView: ToDoDetailTableView = ToDoDetailTableView(frame: frame_Size(self), style: .plain)
+        
+        return tableView
+    }()
     
-    let realm:Realm = try! Realm()
+    // MARK: Init
+    
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
@@ -32,21 +41,36 @@ class ToDoDetailViewController: UIViewController {
     }
     
     
+    // MARK: LifeCycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableValue = TableValue(id: realm.objects(ToDoModel.self)[todoId!].id, title: realm.objects(ToDoModel.self)[todoId!].toDoName, todoDate: realm.objects(ToDoModel.self)[todoId!].todoDate!, detail: realm.objects(ToDoModel.self)[todoId!].toDo)
-        
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(self.rightBarAction))
         
+        view.addSubview(toDoDetailView)
     }
     
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        toDoDetailView = ToDoDetailTableView(frame: frame_Size(self), style: .plain, todoId: todoId, tableValue: tableValue!)
-        self.view.addSubview(toDoDetailView!)
+        // テーブルビューの更新
+        tableValue = setTableValue()
+        
+        toDoDetailView.tableValue = tableValue
+        toDoDetailView.reloadData()
+        
+        
+    }
+    
+    
+    
+    // MARK: Private Func
+    
+    /// ToDoのValueをセットする
+    private func setTableValue() -> TableValue {
+        return TableValue(id: realm.objects(ToDoModel.self)[todoId!].id, title: realm.objects(ToDoModel.self)[todoId!].toDoName, todoDate: realm.objects(ToDoModel.self)[todoId!].todoDate!, detail: realm.objects(ToDoModel.self)[todoId!].toDo)
     }
     
     
@@ -71,8 +95,9 @@ class ToDoDetailViewController: UIViewController {
     
 
     
-    // MARK: - Realm func
+    // MARK: Realm func
     
+    /// ToDoの削除
     func deleteRealm(){
         let realm:Realm = try! Realm()
         let toDoModel = realm.objects(ToDoModel.self)[todoId!]

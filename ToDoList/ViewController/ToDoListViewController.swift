@@ -11,6 +11,10 @@ import RealmSwift
 
 class ToDoListViewController: UIViewController, ToDoListViewDelegate {
     
+    // MARK: Properties
+    
+    private let realm:Realm = try! Realm()
+    
     private lazy var todoListTableView:TodoListTableView = {
         let tableView: TodoListTableView = TodoListTableView(frame: frame_Size(self), style: .plain)
         tableView.toDoListViewDelegate = self
@@ -18,9 +22,12 @@ class ToDoListViewController: UIViewController, ToDoListViewDelegate {
         return tableView
     }()
     
-    private let realm:Realm = try! Realm()
-    private var tableValues:[TableValue]?// = [TableValue]()
+    /// ToDoを格納する配列
+    private var tableValues:[TableValue]?
 
+    
+    // MARK: LifeCycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -43,16 +50,21 @@ class ToDoListViewController: UIViewController, ToDoListViewDelegate {
         tableValuesAppend()
     }
 
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        // 配列の中身を削除
+        tableValues?.removeAll()
+    }
+    
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        
-        tableValues?.removeAll()
-    }
+    
     
     
     /// 配列に追加とViewのTableに反映

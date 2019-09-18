@@ -34,18 +34,22 @@ class TodoListTableView: UITableView, UITableViewDelegate, UITableViewDataSource
     }
     
     
-    // MARK: - UITableViewDataSource
+    // MARK: - UITableViewDataSource, UITableViewDelegate
     
+    
+    /// セクションの数を設定
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
+    
+    /// セクションの行数を設定
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tableValues.count > 0 ? tableValues.count : 1
     }
 
-    // MARK: - UITableViewDelegate
     
+    /// セル内の設定
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         if tableValues.count == 0 {
@@ -63,6 +67,10 @@ class TodoListTableView: UITableView, UITableViewDelegate, UITableViewDataSource
         return cell
     }
     
+    
+    
+    
+    /// ToDoの個数が0個の時に選択させない
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if tableValues.count == 0 {
             return
@@ -72,11 +80,16 @@ class TodoListTableView: UITableView, UITableViewDelegate, UITableViewDataSource
     }
     
     
+    
+    
+    /// セルの高さ
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
     }
     
     
+    
+    /// 編集と削除のスワイプをセット
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         
         let edit = UITableViewRowAction(style: .default, title: "編集") {
@@ -96,6 +109,7 @@ class TodoListTableView: UITableView, UITableViewDelegate, UITableViewDataSource
     }
     
     
+    /// ToDoの個数が0の時はスワイプさせない
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         if tableValues.count == 0 {
             return false

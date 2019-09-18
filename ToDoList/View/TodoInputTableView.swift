@@ -12,6 +12,8 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
     
     private var tableValue:TableValue?
     
+    
+    /// ToDoのタイトル入力テキストフィールド
     let titletextField:UITextField = {
         let textField: UITextField = UITextField()
         textField.accessibilityLabel = "titleTextField"
@@ -19,7 +21,7 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
         return textField
     }()
     
-    
+    /// ToDoの期限入力テキストフィールド
     let dateTextField:UITextField = {
         let textField: UITextField = UITextField()
         textField.accessibilityLabel = "dateTextField"
@@ -27,7 +29,7 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
         return textField
     }()
     
-    
+    /// ToDoの詳細入力テキストフィールド
     let detailTextViwe:UITextView = {
         let textView: UITextView = UITextView()
         textView.accessibilityLabel = "detailTextViwe"
@@ -35,7 +37,7 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
         return textView
     }()
     
-    
+    /// ToDoの日付選択デートピッカー
     let datePicker:UIDatePicker = {
         let datePicker: UIDatePicker = UIDatePicker()
         datePicker.accessibilityLabel = "detailPicker"
@@ -45,9 +47,10 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
         return datePicker
     }()
     
-    
+    /// 日付の一時保存
     var tmpDate:Date?
     
+    /// 編集するToDoのID
     private var todoId:Int?
     
     override init(frame: CGRect, style: UITableView.Style) {
@@ -81,19 +84,21 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - UITableViewDataSource
+    // MARK: - UITableViewDataSource, UITableViewDelegate
     
+    
+    /// セクションの数を設定
     func numberOfSections(in tableView: UITableView) -> Int {
         return 3
     }
     
+    /// セクションの行数を設定
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
     
     
-    // MARK: - UITableViewDelegate
-    
+    /// セル内の設定
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell:UITableViewCell = UITableViewCell(style: .default, reuseIdentifier: "inputCell")
         cell.accessoryType = .none
@@ -140,11 +145,13 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
         return cell
     }
     
+    
+    /// セルの選択はさせない
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         return nil
     }
     
-    
+    /// セルの高さを設定
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section != 2 {
             return 50
@@ -152,22 +159,25 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
         return 100
     }
     
+    /// ヘッダー内のビューを設定
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         return todoHeadrView(viewForHeaderInSection: section)
     }
     
     
+    /// ヘッダーの高さを設定
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 30
     }
     
-    
+    /// フッターの高さを設定
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return CGFloat.leastNormalMagnitude
     }
     
     
     // MARK: - UIDatePicker func
+    
     @objc private func onDidChangeDate(sender:UIDatePicker){
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy/MM/dd hh:mm"

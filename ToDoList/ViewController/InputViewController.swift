@@ -11,6 +11,8 @@ import UserNotifications
 import RealmSwift
 
 class InputViewController: UIViewController {
+    
+    // MARK: Properties
     let realm:Realm = try! Realm()
     
     private var todoInputTableView:TodoInputTableView?
@@ -22,6 +24,9 @@ class InputViewController: UIViewController {
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
+    
+    
+    // MARK: Init
     
     /// 編集時のinit
     ///
@@ -35,6 +40,8 @@ class InputViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    
+    // MARK LifeCycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -81,6 +88,9 @@ class InputViewController: UIViewController {
     
     /// Todoの保存、更新
     @objc func rightButton(){
+        
+        // バリデーションする
+        
         let alert = AlertManager()
         if todoInputTableView?.titletextField.text?.count == 0 {
             alert.alertAction(viewController: self,
@@ -126,6 +136,9 @@ class InputViewController: UIViewController {
         })
     }
     
+    
+    
+    /// 通知を設定する
     private func addNotification() {
         
         let content:UNMutableNotificationContent = UNMutableNotificationContent()
@@ -158,10 +171,11 @@ class InputViewController: UIViewController {
     
     
     
-    // MARK: - Realm func
+    // MARK: Realm func
     
+    
+    /// ToDoを追加する
     func addRealm(){
-        
         
         toDoModel.id = String(realm.objects(ToDoModel.self).count + 1)
         toDoModel.toDoName = (todoInputTableView?.titletextField.text)!
@@ -173,6 +187,8 @@ class InputViewController: UIViewController {
         }
     }
     
+    
+    /// ToDoの更新
     func updateRealm(){
         let realm:Realm = try! Realm()
         
