@@ -132,6 +132,11 @@ class InputViewController: UIViewController {
                           message: "ToDoを登録しました",
                           handler: {[weak self] action in
                             self?.addRealm()
+                            
+                            if #available(iOS 13.0, *) {
+                                NotificationCenter.default.post(name: Notification.Name("upDate"), object: nil)
+                            }
+                            
                             self?.dismiss(animated: true, completion: nil)
         })
     }

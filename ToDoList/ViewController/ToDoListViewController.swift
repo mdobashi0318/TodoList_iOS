@@ -42,6 +42,12 @@ class ToDoListViewController: UIViewController, ToDoListViewDelegate {
         navigationItem.leftBarButtonItem?.accessibilityIdentifier = "allDelete"
         #endif
      
+        
+        
+        
+        if #available(iOS 13.0, *) {
+            NotificationCenter.default.addObserver(self, selector: #selector(allDeleteFlag(notification:)), name: NSNotification.Name(rawValue: "upDate"), object: nil)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -145,6 +151,12 @@ class ToDoListViewController: UIViewController, ToDoListViewDelegate {
             
             self?.viewWillAppear(true)
             }, handler2: {_ -> Void in})
+    }
+    
+    
+    @objc @available(iOS 13.0, *)
+    func allDeleteFlag(notification: Notification) {
+        self.viewWillAppear(true)
     }
 }
 
