@@ -8,25 +8,49 @@
 
 import UIKit
 
+// MARK: - ToDoListViewDelegate
+
 protocol ToDoListViewDelegate: class {
+    
+    /// ToDoセルの選択時
     func cellTapAction(indexPath:IndexPath)
+    
+    /// セルのスワイプの削除ボタンタップ
     func deleteAction(indexPath:IndexPath)
+    
+    /// セルのスワイプの編集ボタンタップ
     func editAction(indexPath:IndexPath)
 }
 
-class TodoListTableView: UITableView, UITableViewDelegate, UITableViewDataSource {
+
+
+
+
+
+
+
+// MARK: - TodoListTableView
+
+final class TodoListTableView: UITableView, UITableViewDelegate, UITableViewDataSource {
     
+    // MARK: Properties
+    
+    /// ToDoをあ格納する配列
     var tableValues:[TableValue] = [TableValue]()
-    weak var toDoListViewDelegate: ToDoListViewDelegate?
     
+    /// TodoListのデリゲート
+    weak var toDoListDelegate: ToDoListViewDelegate?
+    
+    
+    // MARK: Init
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
         
-        self.separatorStyle = .none
-        self.dataSource = self
-        self.delegate = self
-        self.separatorInset = .zero
-        self.register(TodoListCell.self, forCellReuseIdentifier: "listCell")
+        separatorStyle = .none
+        dataSource = self
+        delegate = self
+        separatorInset = .zero
+        register(TodoListCell.self, forCellReuseIdentifier: "listCell")
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -34,9 +58,10 @@ class TodoListTableView: UITableView, UITableViewDelegate, UITableViewDataSource
     }
     
     
-    // MARK: - UITableViewDataSource, UITableViewDelegate
     
     
+    // MARK: UITableViewDataSource, UITableViewDelegate
+     
     /// セクションの数を設定
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -49,26 +74,38 @@ class TodoListTableView: UITableView, UITableViewDelegate, UITableViewDataSource
     }
 
     
+    // MARK: Cell
+    
     /// セル内の設定
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         if tableValues.count == 0 {
             let cell:UITableViewCell = UITableViewCell(style: .default, reuseIdentifier: "cell")
+            cell.backgroundColor = cellWhite
             cell.selectionStyle = .none
             cell.textLabel?.text = "Todoがまだ登録されていません"
             return cell
         }
-        let cell = tableView.dequeueReusableCell(withIdentifier: "listCell") as! TodoListCell
-        cell.setText(title: tableValues[indexPath.row].title,
+        
+        /// ToDoを表示するセル
+        let listCell = tableView.dequeueReusableCell(withIdentifier: "listCell") as! TodoListCell
+        listCell.setText(title: tableValues[indexPath.row].title,
                      date: tableValues[indexPath.row].date,
                      detail: tableValues[indexPath.row].detail
         )
         
-        return cell
+        return listCell
     }
     
     
+
+    /// セルの高さ
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 80
+    }
     
+    
+    // MARK: Select cell
     
     /// ToDoの個数が0個の時に選択させない
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -76,17 +113,17 @@ class TodoListTableView: UITableView, UITableViewDelegate, UITableViewDataSource
             return
         }
         tableView.deselectRow(at: indexPath, animated: true)
-        toDoListViewDelegate?.cellTapAction(indexPath: indexPath)
+        toDoListDelegate?.cellTapAction(indexPath: indexPath)
     }
     
     
-    
-    
-    /// セルの高さ
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 80
+    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        if tableValues.count == 0 {
+            return nil
+        }
+        
+        return indexPath
     }
-    
     
     
     /// 編集と削除のスワイプをセット
@@ -95,14 +132,14 @@ class TodoListTableView: UITableView, UITableViewDelegate, UITableViewDataSource
         let edit = UITableViewRowAction(style: .default, title: "編集") {
             (action, indexPath) in
             
-            self.toDoListViewDelegate?.editAction(indexPath: indexPath)
+            self.toDoListDelegate?.editAction(indexPath: indexPath)
         }
         edit.backgroundColor = .orange
         
         let del = UITableViewRowAction(style: .destructive, title: "削除") {
             (action, indexPath) in
             
-            self.toDoListViewDelegate?.deleteAction(indexPath: indexPath)
+            self.toDoListDelegate?.deleteAction(indexPath: indexPath)
         }
         
         return [del, edit]
@@ -126,30 +163,48 @@ class TodoListTableView: UITableView, UITableViewDelegate, UITableViewDataSource
 
 
 
+
+
+
+// MARK: - TodoListCell
+
+/// Todoを表示するセル
 fileprivate final class TodoListCell:UITableViewCell {
+    
+    // MARK: Properties
+    
+    /// タイトルを表示するラベル
     let titleLabel: UILabel = UILabel()
-    let detailLabel: UILabel = UILabel()
+    
+    /// ToDoの詳細を表示するラベル
+    let detailLabel: UILabel = {
+        let label: UILabel = UILabel()
+        label.numberOfLines = 0
+        
+        return label
+    }()
+    
+    /// 日付を表示するラベル
     let dateLabel: UILabel = UILabel()
     
+    /// セルの背景のバックグラウンド
     let layerView:UIView = UIView()
+    
+    // MARK: Init
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        self.selectionStyle = .none
-        self.accessoryType = .disclosureIndicator
+        selectionStyle = .none
+        accessoryType = .disclosureIndicator
         
-        layerView.layer.borderColor = UIColor.orange.cgColor
-        layerView.layer.borderWidth = 1
+        
+        
         layerView.layer.cornerRadius = 50 / 5
-        layerView.layer.shadowColor = UIColor.orange.cgColor
-        layerView.layer.shadowOffset = CGSize(width: 0.1, height: 0.2)
-        layerView.backgroundColor = GENET
         
         
         
-        detailLabel.numberOfLines = 0
-        detailLabel.sizeToFit()
+        
         
         let stakc:UIStackView = UIStackView()
         stakc.axis = .vertical
@@ -162,15 +217,15 @@ fileprivate final class TodoListCell:UITableViewCell {
         stakc.addArrangedSubview(detailLabel)
         stakc.addArrangedSubview(dateLabel)
         
-        self.addSubview(stakc)
+        addSubview(stakc)
         
         
         
         stakc.translatesAutoresizingMaskIntoConstraints = false
-        stakc.topAnchor.constraint(equalTo: self.topAnchor, constant: 10).isActive = true
-        stakc.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10).isActive = true
-        stakc.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10).isActive = true
-        stakc.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10).isActive = true
+        stakc.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
+        stakc.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
+        stakc.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10).isActive = true
+        stakc.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10).isActive = true
         
         
         
@@ -187,11 +242,16 @@ fileprivate final class TodoListCell:UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    
+    
+    /// セルにテキストを設定する
+    /// - Parameter title: Todoのタイトル
+    /// - Parameter date: ToDoの日付
+    /// - Parameter detail: ToDoの詳細
     func setText(title:String, date:String, detail:String){
         titleLabel.text = title
         detailLabel.text = detail
         dateLabel.text = date
-        
         
         changeCellBackGroundCollor(date: dateLabel.text!)
     }
@@ -202,6 +262,6 @@ fileprivate final class TodoListCell:UITableViewCell {
         format.dateFormat = "yyyy/MM/dd hh:mm"
         let now = Date()
         
-        layerView.backgroundColor = format.string(from: now) < date ? GENET : .lightGray
+        layerView.backgroundColor = format.string(from: now) < date ? Rose : .lightGray
     }
 }
