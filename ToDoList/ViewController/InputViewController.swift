@@ -134,7 +134,7 @@ class InputViewController: UIViewController {
                             self?.addRealm()
                             
                             if #available(iOS 13.0, *) {
-                                NotificationCenter.default.post(name: Notification.Name("upDate"), object: nil)
+                                NotificationCenter.default.post(name: Notification.Name(ViewUpdate), object: nil)
                             }
                             
                             self?.dismiss(animated: true, completion: nil)

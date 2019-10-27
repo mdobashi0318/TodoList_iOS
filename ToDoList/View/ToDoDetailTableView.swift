@@ -20,7 +20,6 @@ class ToDoDetailTableView: UITableView, UITableViewDelegate, UITableViewDataSour
         self.separatorInset = .zero
         self.estimatedSectionHeaderHeight = 0
         self.estimatedSectionFooterHeight = 0
-        self.backgroundColor = UIColor.rgba(red: 230, green: 230, blue: 230, alpha: 1)
         
     }
     
@@ -29,7 +28,7 @@ class ToDoDetailTableView: UITableView, UITableViewDelegate, UITableViewDataSour
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - UITableViewDataSource
+    // MARK: UITableViewDataSource
     
     /// セクションの数を設定
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -41,14 +40,14 @@ class ToDoDetailTableView: UITableView, UITableViewDelegate, UITableViewDataSour
         return 1
     }
     
-    // MARK: - UITableViewDelegate
+    // MARK: UITableViewDelegate
     
     /// セル内の設定
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell:UITableViewCell = UITableViewCell(style: .default, reuseIdentifier: "detailCell")
         cell.accessoryType = .none
         cell.selectionStyle = .none
-        
+        cell.backgroundColor = cellWhite
         
         switch indexPath.section {
         case 0:

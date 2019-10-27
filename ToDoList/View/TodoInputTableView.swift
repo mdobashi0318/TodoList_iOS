@@ -11,11 +11,12 @@ import UIKit
 class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIPickerViewDelegate {
     
     private var tableValue:TableValue?
-    
+    private let leading:CGFloat = 15
     
     /// ToDoのタイトル入力テキストフィールド
     let titletextField:UITextField = {
         let textField: UITextField = UITextField()
+        textField.placeholder = "タイトルを入力してください"
         textField.accessibilityLabel = "titleTextField"
         
         return textField
@@ -24,6 +25,7 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
     /// ToDoの期限入力テキストフィールド
     let dateTextField:UITextField = {
         let textField: UITextField = UITextField()
+        textField.placeholder = "期限を入力してください"
         textField.accessibilityLabel = "dateTextField"
         
         return textField
@@ -61,7 +63,6 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
         self.separatorInset = .zero
         self.estimatedSectionHeaderHeight = 0
         self.estimatedSectionFooterHeight = 0
-        self.backgroundColor = UIColor.rgba(red: 230, green: 230, blue: 230, alpha: 1)
         
         
         let tapGesture:UITapGestureRecognizer = UITapGestureRecognizer(target: self, action:
@@ -84,7 +85,7 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - UITableViewDataSource, UITableViewDelegate
+    // MARK: UITableViewDataSource, UITableViewDelegate
     
     
     /// セクションの数を設定
@@ -103,7 +104,7 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
         let cell:UITableViewCell = UITableViewCell(style: .default, reuseIdentifier: "inputCell")
         cell.accessoryType = .none
         cell.selectionStyle = .none
-        
+        cell.backgroundColor = cellWhite
         // ToDoの編集時はTextFieldに表示
         if todoId != nil {
             titletextField.text = tableValue?.title
@@ -111,15 +112,10 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
             detailTextViwe.text = tableValue?.detail
         }
         
-        let leading:CGFloat = 15
+        
         switch indexPath.section {
         case 0: /* Todoのタイトル */
-            cell.addSubview(titletextField)
-            titletextField.translatesAutoresizingMaskIntoConstraints = false
-            titletextField.topAnchor.constraint(equalTo: cell.topAnchor).isActive = true
-            titletextField.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: leading).isActive = true
-            titletextField.trailingAnchor.constraint(equalTo: cell.trailingAnchor).isActive = true
-            titletextField.bottomAnchor.constraint(equalTo: cell.bottomAnchor).isActive = true
+            textFieldConstraint(cell, textField: titletextField)
         case 1: /* Todoの期限 */
             dateTextField.inputView = datePicker
             dateTextField.delegate = self
@@ -176,7 +172,7 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
     }
     
     
-    // MARK: - UIDatePicker func
+    // MARK: UIDatePicker func
     
     @objc private func onDidChangeDate(sender:UIDatePicker){
         let formatter = DateFormatter()
@@ -190,10 +186,24 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
         
     }
 
-    //MARK: - TapGesture func
+    //MARK: TapGesture func
     @objc private func tapView(_:UITapGestureRecognizer){
         titletextField.resignFirstResponder()
         dateTextField.resignFirstResponder()
         detailTextViwe.resignFirstResponder()
+    }
+    
+    
+    
+    /// セルにテキストフィールドの制約を付ける
+    /// - Parameter cell: セル
+    /// - Parameter textField: 制約を付けるテキストフィールド
+    private func textFieldConstraint(_ cell: UITableViewCell, textField: UITextField) {
+        cell.addSubview(textField)
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.topAnchor.constraint(equalTo: cell.topAnchor).isActive = true
+        textField.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: leading).isActive = true
+        textField.trailingAnchor.constraint(equalTo: cell.trailingAnchor).isActive = true
+        textField.bottomAnchor.constraint(equalTo: cell.bottomAnchor).isActive = true
     }
 }

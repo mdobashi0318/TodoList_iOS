@@ -39,7 +39,7 @@ final class ToDoListViewController: UIViewController, ToDoListViewDelegate {
         
   
         if #available(iOS 13.0, *) {
-            NotificationCenter.default.addObserver(self, selector: #selector(allDeleteFlag(notification:)), name: NSNotification.Name(rawValue: "upDate"), object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(allDeleteFlag(notification:)), name: NSNotification.Name(rawValue: ViewUpdate), object: nil)
         }
     }
     
@@ -48,6 +48,8 @@ final class ToDoListViewController: UIViewController, ToDoListViewDelegate {
         super.viewWillAppear(animated)
         
         tableValuesAppend()
+        
+        print("Model\(String(describing: tableValues))")
     }
 
     
@@ -134,14 +136,15 @@ final class ToDoListViewController: UIViewController, ToDoListViewDelegate {
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.rightBarAction))
         
         #if DEBUG
-          navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(leftButtonAction))
-          navigationItem.leftBarButtonItem?.accessibilityIdentifier = "allDelete"
-          #endif
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(leftButtonAction))
+        navigationItem.leftBarButtonItem?.accessibilityIdentifier = "allDelete"
+        #endif
     }
     
     
     /// 配列に追加とViewのTableに反映
     func tableValuesAppend() {
+        tableValues?.removeAll()
         for i in 0..<realm.objects(ToDoModel.self).count{
             
             tableValues?.append(TableValue(id: realm.objects(ToDoModel.self)[i].id,

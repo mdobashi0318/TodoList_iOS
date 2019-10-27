@@ -25,7 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let toDoListViewController:ToDoListViewController = ToDoListViewController()
         let navigation:UINavigationController = UINavigationController(rootViewController: toDoListViewController)
         
-        navigation.navigationBar.barTintColor = .white
+//        navigation.navigationBar.barTintColor = .white
         self.window = UIWindow(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
         self.window?.rootViewController = navigation
         self.window?.makeKeyAndVisible()
