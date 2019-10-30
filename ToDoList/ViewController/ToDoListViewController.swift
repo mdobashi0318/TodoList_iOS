@@ -7,15 +7,17 @@
 //
 
 import UIKit
+import UserNotifications
 import RealmSwift
+import NotificationBannerSwift
 
-final class ToDoListViewController: UIViewController, ToDoListViewDelegate {
+final class ToDoListViewController: UIViewController, ToDoListViewDelegate, UNUserNotificationCenterDelegate {
     
     // MARK: Properties
     
     private let realm:Realm = try! Realm()
-    
-    /// ToDoListを表示するテーブルビューs
+    let center = UNUserNotificationCenter.current()
+    /// ToDoListを表示するテーブルビュー
     private lazy var todoListTableView:TodoListTableView = {
         let tableView: TodoListTableView = TodoListTableView(frame: frame_Size(self), style: .plain)
         tableView.toDoListDelegate = self
@@ -32,24 +34,27 @@ final class ToDoListViewController: UIViewController, ToDoListViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
         setNavigationItem()
-     
+        
         tableValues = [TableValue]()
         view.addSubview(todoListTableView)
         
   
         if #available(iOS 13.0, *) {
-            NotificationCenter.default.addObserver(self, selector: #selector(allDeleteFlag(notification:)), name: NSNotification.Name(rawValue: ViewUpdate), object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(callViewWillAppear(notification:)), name: NSNotification.Name(rawValue: ViewUpdate), object: nil)
         }
     }
     
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+        center.delegate = self
         tableValuesAppend()
         
-        print("Model\(String(describing: tableValues))")
+        #if DEBUG
+        print("Model\(String(describing: tableValues!))")
+        #endif
     }
 
     
@@ -106,7 +111,7 @@ final class ToDoListViewController: UIViewController, ToDoListViewDelegate {
     }
     
     
-    // MARK: - Realm Func
+    // MARK: Realm Func
     
     /// 選択したToDoの削除
     ///
@@ -163,10 +168,35 @@ final class ToDoListViewController: UIViewController, ToDoListViewDelegate {
     
     
     
+    /// viewWillAppearを呼ぶ
     @objc @available(iOS 13.0, *)
-    func allDeleteFlag(notification: Notification) {
+    func callViewWillAppear(notification: Notification) {
         self.viewWillAppear(true)
     }
+    
+    
+    /// フォアグラウンドの時の通知
+    @available(iOS 10.0, *)
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                willPresent notification: UNNotification,
+                                withCompletionHandler completionHandler: (UNNotificationPresentationOptions) -> Void) {
+        
+        completionHandler([.sound])
+        let banner = FloatingNotificationBanner(title: notification.request.identifier,
+                                                subtitle: notification.request.content.body,
+                                                style: .success
+        )
+        banner.autoDismiss = false
+        banner.onSwipeUp = {
+            banner.dismiss()
+            self.viewWillAppear(false)
+        }
+        
+        banner.show(queuePosition: .front,
+                    bannerPosition: .top,
+                    cornerRadius: 10)
+    }
+    
 }
 
 

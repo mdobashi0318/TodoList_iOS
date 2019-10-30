@@ -6,7 +6,7 @@ target 'ToDoList' do
   use_frameworks!
   
   pod 'RealmSwift'
-
+  pod 'NotificationBannerSwift', '~> 3.0.0'
 
   # Pods for ToDoList
 

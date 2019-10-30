@@ -55,6 +55,10 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
     /// 編集するToDoのID
     private var todoId:Int?
     
+    
+    // MARK: Init
+    
+    
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
         
@@ -79,6 +83,17 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
                                      todoDate: tableValue.date,
                                      detail: tableValue.detail
         )
+        
+        self.delegate = self
+        self.dataSource = self
+        self.separatorInset = .zero
+        self.estimatedSectionHeaderHeight = 0
+        self.estimatedSectionFooterHeight = 0
+        
+        
+        let tapGesture:UITapGestureRecognizer = UITapGestureRecognizer(target: self, action:
+            #selector(tapView(_:)))
+        self.addGestureRecognizer(tapGesture)
     }
     
     required init?(coder aDecoder: NSCoder) {
