@@ -51,14 +51,14 @@ class InputViewController: UIViewController {
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(rightButton))
         
         if todoId == nil {
-            todoInputTableView = TodoInputTableView(frame: frame_Size(self))
+            todoInputTableView = TodoInputTableView(frame: frame_Size(self), todoId: nil, tableValue: nil)
         } else {
             tableValue = TableValue(id: realm.objects(ToDoModel.self)[todoId!].id,
                                     title: realm.objects(ToDoModel.self)[todoId!].toDoName,
                                     todoDate: realm.objects(ToDoModel.self)[todoId!].todoDate!,
                                     detail: realm.objects(ToDoModel.self)[todoId!].toDo
             )
-            todoInputTableView = TodoInputTableView(frame: frame_Size(self), style: .plain, todoId: todoId, tableValue: tableValue!)
+            todoInputTableView = TodoInputTableView(frame: frame_Size(self),todoId: todoId, tableValue: tableValue)
         }
         self.view.addSubview(todoInputTableView!)
         

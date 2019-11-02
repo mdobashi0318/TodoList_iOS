@@ -198,13 +198,7 @@ fileprivate final class TodoListCell:UITableViewCell {
         selectionStyle = .none
         accessoryType = .disclosureIndicator
         
-        
-        
         layerView.layer.cornerRadius = 50 / 5
-        
-        
-        
-        
         
         let stakc:UIStackView = UIStackView()
         stakc.axis = .vertical

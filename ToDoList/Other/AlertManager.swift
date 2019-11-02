@@ -9,8 +9,11 @@
 import UIKit
 
 class AlertManager {
-
-     func alertAction(viewController:UIViewController, title: String, message: String, handler: @escaping (UIAlertAction) -> ()){
+    
+    
+    
+    /// 閉じるボタンが付いたアラート
+    func alertAction(viewController:UIViewController, title: String, message: String, handler: @escaping (UIAlertAction) -> ()){
         let controller:UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
         controller.addAction(UIAlertAction(title: "閉じる",
@@ -19,8 +22,10 @@ class AlertManager {
         )
         viewController.present(controller, animated: true, completion: nil)
     }
-
     
+    
+    
+    /// 「削除」、「閉じる」が付いたアラート
     func alertAction(viewController:UIViewController, title: String?, message: String, handler1: @escaping (UIAlertAction)->(),handler2: @escaping (UIAlertAction) -> ()){
         let controller:UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         

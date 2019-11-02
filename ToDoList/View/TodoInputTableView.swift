@@ -61,32 +61,30 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
     
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
-        
-        self.delegate = self
-        self.dataSource = self
-        self.separatorInset = .zero
-        self.estimatedSectionHeaderHeight = 0
-        self.estimatedSectionFooterHeight = 0
-        
-        
-        let tapGesture:UITapGestureRecognizer = UITapGestureRecognizer(target: self, action:
-            #selector(tapView(_:)))
-        self.addGestureRecognizer(tapGesture)
-        
     }
     
-    convenience init(frame: CGRect, style: UITableView.Style, todoId:Int?, tableValue:TableValue) {
+    
+    convenience init(frame: CGRect, style: UITableView.Style = .grouped, todoId:Int?, tableValue:TableValue?) {
         self.init(frame: frame, style: style)
-        self.todoId = todoId
-        self.tableValue = TableValue(id: tableValue.id,
-                                     title: tableValue.title,
-                                     todoDate: tableValue.date,
-                                     detail: tableValue.detail
-        )
+        
+        
+        if let _todoId = todoId {
+            self.todoId = _todoId
+        }
+        
+        if let _tableValue = tableValue {
+            self.tableValue = TableValue(id: _tableValue.id,
+                                         title: _tableValue.title,
+                                         todoDate: _tableValue.date,
+                                         detail: _tableValue.detail
+            )
+        }
         
         self.delegate = self
         self.dataSource = self
         self.separatorInset = .zero
+        self.separatorStyle = .singleLine
+        
         self.estimatedSectionHeaderHeight = 0
         self.estimatedSectionFooterHeight = 0
         
@@ -137,11 +135,7 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
             
             cell.addSubview(dateTextField)
             
-            dateTextField.translatesAutoresizingMaskIntoConstraints = false
-            dateTextField.topAnchor.constraint(equalTo: cell.topAnchor).isActive = true
-            dateTextField.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: leading).isActive = true
-            dateTextField.trailingAnchor.constraint(equalTo: cell.trailingAnchor).isActive = true
-            dateTextField.bottomAnchor.constraint(equalTo: cell.bottomAnchor).isActive = true
+            textFieldConstraint(cell, textField: dateTextField)
         case 2: /* Todoの詳細 */
             cell.addSubview(detailTextViwe)
             detailTextViwe.translatesAutoresizingMaskIntoConstraints = false
