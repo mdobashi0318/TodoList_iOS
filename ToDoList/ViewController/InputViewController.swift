@@ -13,20 +13,47 @@ import RealmSwift
 class InputViewController: UIViewController {
     
     // MARK: Properties
-    let realm:Realm = try! Realm()
     
-    private var todoInputTableView:TodoInputTableView?
-    private var todoId:Int?
-    private var toDoModel:ToDoModel = ToDoModel()
+    /// Realmのインタンス
+    private var realm: Realm?
     
-    private var tableValue:TableValue?
+    /// ToDoを入力するためのView
+    private lazy var todoInputTableView: TodoInputTableView = {
+        
+        if todoId == nil {
+            let view = TodoInputTableView(frame: frame_Size(self), todoId: nil, tableValue: nil)
+            
+            return view
+            
+        } else {
+            tableValue = TableValue(id: (realm?.objects(ToDoModel.self)[todoId!].id)!,
+                                    title: (realm?.objects(ToDoModel.self)[todoId!].toDoName)!,
+                                    todoDate: (realm?.objects(ToDoModel.self)[todoId!].todoDate)!,
+                                    detail: (realm?.objects(ToDoModel.self)[todoId!].toDo)!
+            )
+            let view = TodoInputTableView(frame: frame_Size(self),todoId: todoId, tableValue: tableValue)
+            
+            return view
+        }
+    }()
+        
+    /// ToDoのIDを格納
+    private var todoId: Int?
+    
+    /// ToDoModelのインスタンス
+    private var toDoModel: ToDoModel = ToDoModel()
+    
+    /// ToDoのValueの格納するインスタンス
+    private var tableValue: TableValue?
+    
+    
+    
+    // MARK: Init
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
-    
-    // MARK: Init
     
     /// 編集時のinit
     ///
@@ -46,29 +73,26 @@ class InputViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        do {
+            realm = try Realm()
+            
+        } catch {
+            AlertManager().alertAction(viewController: self,
+                                       title: "",
+                                       message: "エラーが発生しました",
+                                       handler: { _ in
+                return
+            })
+            return
+        }
+        
         self.view.backgroundColor = UIColor.white
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(leftButton))
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(rightButton))
         
-        if todoId == nil {
-            todoInputTableView = TodoInputTableView(frame: frame_Size(self), todoId: nil, tableValue: nil)
-        } else {
-            tableValue = TableValue(id: realm.objects(ToDoModel.self)[todoId!].id,
-                                    title: realm.objects(ToDoModel.self)[todoId!].toDoName,
-                                    todoDate: realm.objects(ToDoModel.self)[todoId!].todoDate!,
-                                    detail: realm.objects(ToDoModel.self)[todoId!].toDo
-            )
-            todoInputTableView = TodoInputTableView(frame: frame_Size(self),todoId: todoId, tableValue: tableValue)
-        }
-        self.view.addSubview(todoInputTableView!)
-        
+        view.addSubview(todoInputTableView)
     }
-    
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-    }
+
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -76,47 +100,48 @@ class InputViewController: UIViewController {
     }
     
     
+    
+    // MARK: NavigationButton Action
+    
     /// Todoの新規作成時はモーダルを閉じる,編集時はも一つ前の画面に戻る
-    @objc func leftButton(){
+    @objc func leftButton() {
         if todoId == nil {
             self.dismiss(animated: true, completion: nil)
-        }else{
+        } else {
             self.navigationController?.popViewController(animated: true)
         }
     }
     
     
     /// Todoの保存、更新
-    @objc func rightButton(){
+    @objc func rightButton() {
         
         // バリデーションする
-        
-        let alert = AlertManager()
-        if todoInputTableView?.titletextField.text?.count == 0 {
-            alert.alertAction(viewController: self,
+        if todoInputTableView.titletextField.text!.isEmpty {
+            AlertManager().alertAction(viewController: self,
                               title: "",
                               message: "ToDoのタイトルが入力されていません",
                               handler: { _ in return })
         }
         
-        if todoInputTableView?.dateTextField.text?.count == 0 {
-            alert.alertAction(viewController: self,
+        if todoInputTableView.dateTextField.text!.isEmpty {
+            AlertManager().alertAction(viewController: self,
                               title: "",
                               message: "ToDoの期限が入力されていません",
                               handler: { _ in return })
         }
         
-        if todoInputTableView?.detailTextViwe.text?.count == 0 {
-            alert.alertAction(viewController: self,
+        if todoInputTableView.detailTextViwe.text.isEmpty {
+            AlertManager().alertAction(viewController: self,
                               title: "",
                               message: "ToDoの詳細が入力されていません",
                               handler: { _ in return })
         }
         
-        addNotification()
+        
         
         if todoId != nil {
-            alert.alertAction(viewController: self,
+            AlertManager().alertAction(viewController: self,
                               title: "",
                               message: "ToDoを更新しました",
                               handler: {[weak self] action in
@@ -124,39 +149,45 @@ class InputViewController: UIViewController {
                                 self?.navigationController?.popViewController(animated: true)
                                 return
             })
+            
+        } else {
+            AlertManager().alertAction(viewController: self,
+                              title: "",
+                              message: "ToDoを登録しました",
+                              handler: {[weak self] action in
+                                self?.addRealm()
+                                
+                                if #available(iOS 13.0, *) {
+                                    NotificationCenter.default.post(name: Notification.Name(ViewUpdate), object: nil)
+                                }
+                                
+                                self?.dismiss(animated: true, completion: nil)
+            })
+            
         }
         
+        addNotification()
         
-        alert.alertAction(viewController: self,
-                          title: "",
-                          message: "ToDoを登録しました",
-                          handler: {[weak self] action in
-                            self?.addRealm()
-                            
-                            if #available(iOS 13.0, *) {
-                                NotificationCenter.default.post(name: Notification.Name(ViewUpdate), object: nil)
-                            }
-                            
-                            self?.dismiss(animated: true, completion: nil)
-        })
     }
     
     
+    
+    // MARK: Set Notification
     
     /// 通知を設定する
     private func addNotification() {
         
         let content:UNMutableNotificationContent = UNMutableNotificationContent()
         
-        content.title = (todoInputTableView?.titletextField.text)!
+        content.title = (todoInputTableView.titletextField.text)!
         
-        content.body = (todoInputTableView?.detailTextViwe.text)!
+        content.body = (todoInputTableView.detailTextViwe.text)!
         
         content.sound = UNNotificationSound.default
         
         
         //通知する日付を設定
-        guard let date:Date = (todoInputTableView?.tmpDate) else {
+        guard let date:Date = (todoInputTableView.tmpDate) else {
             return
         }
         let calendar = Calendar.current
@@ -178,32 +209,51 @@ class InputViewController: UIViewController {
     
     // MARK: Realm func
     
-    
     /// ToDoを追加する
-    func addRealm(){
+    private func addRealm() {
         
-        toDoModel.id = String(realm.objects(ToDoModel.self).count + 1)
-        toDoModel.toDoName = (todoInputTableView?.titletextField.text)!
-        toDoModel.todoDate = todoInputTableView?.dateTextField.text
-        toDoModel.toDo = (todoInputTableView?.detailTextViwe.text)!
+        toDoModel.id = String((realm?.objects(ToDoModel.self).count)! + 1)
+        toDoModel.toDoName = (todoInputTableView.titletextField.text)!
+        toDoModel.todoDate = todoInputTableView.dateTextField.text
+        toDoModel.toDo = (todoInputTableView.detailTextViwe.text)!
         
-        try! realm.write() {
-            realm.add(toDoModel)
+        do {
+            try realm?.write() {
+                realm?.add(toDoModel)
+            }
         }
+        catch {
+            AlertManager().alertAction(viewController: self, title: "", message: "ToDoの登録に失敗しました", handler: { _ in
+                return
+            })
+            return
+        }
+        
+        
+        
     }
     
     
     /// ToDoの更新
-    func updateRealm(){
-        let realm:Realm = try! Realm()
-        
-        try! realm.write() {
-            realm.objects(ToDoModel.self)[todoId!].toDoName = (todoInputTableView?.titletextField.text!)!
-            realm.objects(ToDoModel.self)[todoId!].todoDate = todoInputTableView?.dateTextField.text
-            realm.objects(ToDoModel.self)[todoId!].toDo = (todoInputTableView?.detailTextViwe.text)!
+    private func updateRealm() {
+        do {
+            try realm?.write() {
+                realm?.objects(ToDoModel.self)[todoId!].toDoName = todoInputTableView.titletextField.text!
+                realm?.objects(ToDoModel.self)[todoId!].todoDate = todoInputTableView.dateTextField.text
+                realm?.objects(ToDoModel.self)[todoId!].toDo = todoInputTableView.detailTextViwe.text
+            }
         }
+        catch {
+            AlertManager().alertAction(viewController: self, title: "", message: "ToDoの更新に失敗しました", handler: { _ in
+                return
+            })
+            return
+        }
+        
+        
+        
     }
-
+    
 }
 
 

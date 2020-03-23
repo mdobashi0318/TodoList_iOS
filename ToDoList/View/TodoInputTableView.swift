@@ -50,7 +50,7 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
     }()
     
     /// 日付の一時保存
-    var tmpDate:Date?
+    private(set) var tmpDate:Date?
     
     /// 編集するToDoのID
     private var todoId:Int?

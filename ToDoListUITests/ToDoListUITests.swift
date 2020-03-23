@@ -133,7 +133,7 @@ class ToDoListUITests: XCTestCase {
         
         // 期限入力
         app.cells.textFields["dateTextField"].tap()
-                datePicker.pickerWheels.element(boundBy: 0).adjust(toPickerWheelValue: "Sep 22")
+                datePicker.pickerWheels.element(boundBy: 0).swipeUp()
         datePicker.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "8")
         datePicker.pickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: "00")
         
@@ -165,7 +165,7 @@ class ToDoListUITests: XCTestCase {
         app.cells.textFields["dateTextField"].tap()
         let datePicker = app.datePickers["detailPicker"]
         XCTAssert(datePicker.exists)
-                datePicker.pickerWheels.element(boundBy: 0).adjust(toPickerWheelValue: "Sep 22")
+        datePicker.pickerWheels.element(boundBy: 0).swipeUp()
         datePicker.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "5")
         datePicker.pickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: "50")
         
