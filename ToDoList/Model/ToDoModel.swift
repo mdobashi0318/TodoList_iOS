@@ -16,11 +16,51 @@ class ToDoModel:Object {
     @objc dynamic var toDo:String = ""
     
     
-    // idをプライマリキーに設定
-    /*
-    override static func primaryKey() -> String? {
-        return "id"
+    
+    /// ToDoを追加する
+    class func addRealm(_ vc: UIViewController, addValue:TableValue) {
+        
+        let realm: Realm = try! Realm()
+        let toDoModel: ToDoModel = ToDoModel()
+        
+        toDoModel.id = addValue.id
+        toDoModel.toDoName = addValue.title
+        toDoModel.todoDate = addValue.date
+        toDoModel.toDo = addValue.detail
+        
+        do {
+            try realm.write() {
+                realm.add(toDoModel)
+            }
+        }
+        catch {
+            AlertManager().alertAction(vc, message: "ToDoの登録に失敗しました") { _ in
+                                        return
+            }
+        }
+    
     }
-     */
+    
+    
+    
+    /// ToDoの更新
+    class func updateRealm(_ vc: UIViewController, todoId: Int, updateValue: TableValue, errorHandler: @escaping () -> Void) {
+        let realm: Realm = try! Realm()
+        
+        do {
+            try realm.write() {
+                realm.objects(ToDoModel.self)[todoId].toDoName = updateValue.title
+                realm.objects(ToDoModel.self)[todoId].todoDate = updateValue.date
+                realm.objects(ToDoModel.self)[todoId].toDo = updateValue.detail
+            }
+        }
+        catch {
+            AlertManager().alertAction(vc,
+                                       message: "ToDoの更新に失敗しました") { _ in
+                                        return
+            }
+        }
+        
+    }
     
 }

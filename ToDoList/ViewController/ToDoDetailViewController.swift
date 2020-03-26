@@ -15,9 +15,11 @@ class ToDoDetailViewController: UIViewController {
     
     // MARK: Properties
     
-    let realm:Realm = try! Realm()
+    let realm: Realm = try! Realm()
     private var todoId:Int?
     private var tableValue:TableValue?
+    
+    private var toDoModel: ToDoModel!
     
     private lazy var toDoDetailView:ToDoDetailTableView = {
         let tableView: ToDoDetailTableView = ToDoDetailTableView(frame: frame_Size(self), style: .plain)
@@ -34,6 +36,8 @@ class ToDoDetailViewController: UIViewController {
     convenience init(todoId:Int) {
         self.init(nibName: nil, bundle: nil)
         self.todoId = todoId
+        
+        toDoModel = (realm.objects(ToDoModel.self).filter("id == '\(String(describing: todoId))'").first)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -70,7 +74,11 @@ class ToDoDetailViewController: UIViewController {
     
     /// ToDoのValueをセットする
     private func setTableValue() -> TableValue {
-        return TableValue(id: realm.objects(ToDoModel.self)[todoId!].id, title: realm.objects(ToDoModel.self)[todoId!].toDoName, todoDate: realm.objects(ToDoModel.self)[todoId!].todoDate!, detail: realm.objects(ToDoModel.self)[todoId!].toDo)
+        return TableValue(id: toDoModel.id,
+                          title: toDoModel.toDoName,
+                          todoDate: toDoModel.todoDate!,
+                          detail: toDoModel.toDo
+        )
     }
     
     

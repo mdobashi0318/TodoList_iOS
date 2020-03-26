@@ -80,7 +80,7 @@ final class ToDoListViewController: UIViewController, ToDoListViewDelegate, UNUs
     
     /// データベース内の全件削除(Debug)
     @objc override func leftButtonAction(){
-        AlertManager().alertAction(viewController: self, title: "データベースの削除", message: "作成した問題や履歴を全件削除します", handler1: { [weak self]  (action) in
+        AlertManager().alertAction(self, title: "データベースの削除", message: "作成した問題や履歴を全件削除します", handler1: { [weak self]  (action) in
             try! self?.realm.write {
                 self?.realm.deleteAll()
             }
@@ -97,7 +97,7 @@ final class ToDoListViewController: UIViewController, ToDoListViewDelegate, UNUs
     ///
     /// - Parameter indexPath: 選択したcellの行
     func cellTapAction(indexPath: IndexPath) {
-        let toDoDetailViewController:ToDoDetailViewController = ToDoDetailViewController(todoId: indexPath.row)
+        let toDoDetailViewController:ToDoDetailViewController = ToDoDetailViewController(todoId: Int((tableValues?[indexPath.row].id)!)!)
         self.navigationController?.pushViewController(toDoDetailViewController, animated: true)
     }
     
@@ -106,7 +106,7 @@ final class ToDoListViewController: UIViewController, ToDoListViewDelegate, UNUs
     ///
     /// - Parameter indexPath: 選択したcellの行
     func editAction(indexPath: IndexPath) {
-        let inputViewController:InputViewController = InputViewController(todoId: indexPath.row)
+        let inputViewController:InputViewController = InputViewController(todoId: Int((tableValues?[indexPath.row].id)!)!)
         self.navigationController?.pushViewController(inputViewController, animated: true)
     }
     
@@ -117,7 +117,7 @@ final class ToDoListViewController: UIViewController, ToDoListViewDelegate, UNUs
     ///
     /// - Parameter indexPath: 選択したcellの行
     func deleteAction(indexPath: IndexPath) {
-        AlertManager().alertAction(viewController: self, title: nil, message: "削除しますか?", handler1: {[weak self] action in
+        AlertManager().alertAction(self, message: "削除しますか?", handler1: {[weak self] action in
             
             let toDoModel = self?.realm.objects(ToDoModel.self)[indexPath.row]
             

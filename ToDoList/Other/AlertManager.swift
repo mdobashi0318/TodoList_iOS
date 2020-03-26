@@ -13,7 +13,7 @@ class AlertManager {
     
     
     /// 閉じるボタンが付いたアラート
-    func alertAction(viewController:UIViewController, title: String, message: String, handler: @escaping (UIAlertAction) -> ()){
+    func alertAction(_ viewController:UIViewController, title: String? = nil, message: String, handler: @escaping (UIAlertAction) -> ()){
         let controller:UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
         controller.addAction(UIAlertAction(title: "閉じる",
@@ -26,7 +26,7 @@ class AlertManager {
     
     
     /// 「削除」、「閉じる」が付いたアラート
-    func alertAction(viewController:UIViewController, title: String?, message: String, handler1: @escaping (UIAlertAction)->(),handler2: @escaping (UIAlertAction) -> ()){
+    func alertAction(_ viewController:UIViewController, title: String? = nil, message: String, handler1: @escaping (UIAlertAction)->(),handler2: @escaping (UIAlertAction) -> ()){
         let controller:UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
         controller.addAction(UIAlertAction(title: "削除",

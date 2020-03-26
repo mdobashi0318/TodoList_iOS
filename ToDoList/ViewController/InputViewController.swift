@@ -26,10 +26,10 @@ class InputViewController: UIViewController {
             return view
             
         } else {
-            tableValue = TableValue(id: (realm?.objects(ToDoModel.self)[todoId!].id)!,
-                                    title: (realm?.objects(ToDoModel.self)[todoId!].toDoName)!,
-                                    todoDate: (realm?.objects(ToDoModel.self)[todoId!].todoDate)!,
-                                    detail: (realm?.objects(ToDoModel.self)[todoId!].toDo)!
+            tableValue = TableValue(id: toDoModel.id,
+                                    title: toDoModel.toDoName,
+                                    todoDate: toDoModel.todoDate!,
+                                    detail: toDoModel.toDo
             )
             let view = TodoInputTableView(frame: frame_Size(self),todoId: todoId, tableValue: tableValue)
             
@@ -41,7 +41,7 @@ class InputViewController: UIViewController {
     private var todoId: Int?
     
     /// ToDoModelのインスタンス
-    private var toDoModel: ToDoModel = ToDoModel()
+    private var toDoModel: ToDoModel!
     
     /// ToDoのValueの格納するインスタンス
     private var tableValue: TableValue?
@@ -52,6 +52,8 @@ class InputViewController: UIViewController {
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        
+        
     }
     
     
@@ -61,6 +63,9 @@ class InputViewController: UIViewController {
     convenience init(todoId:Int) {
         self.init(nibName: nil, bundle: nil)
         self.todoId = todoId
+        setRealm()
+        
+        toDoModel = (realm?.objects(ToDoModel.self).filter("id == '\(String(describing: todoId))'").first)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -73,19 +78,8 @@ class InputViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        do {
-            realm = try Realm()
-            
-        } catch {
-            AlertManager().alertAction(viewController: self,
-                                       title: "",
-                                       message: "エラーが発生しました",
-                                       handler: { _ in
-                return
-            })
-            return
-        }
-        
+        setRealm()
+
         self.view.backgroundColor = UIColor.white
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(leftButton))
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(rightButton))
@@ -98,8 +92,7 @@ class InputViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    
+  
     
     // MARK: NavigationButton Action
     
@@ -118,22 +111,19 @@ class InputViewController: UIViewController {
         
         // バリデーションする
         if todoInputTableView.titletextField.text!.isEmpty {
-            AlertManager().alertAction(viewController: self,
-                              title: "",
+            AlertManager().alertAction(self,
                               message: "ToDoのタイトルが入力されていません",
                               handler: { _ in return })
         }
         
         if todoInputTableView.dateTextField.text!.isEmpty {
-            AlertManager().alertAction(viewController: self,
-                              title: "",
+            AlertManager().alertAction(self,
                               message: "ToDoの期限が入力されていません",
                               handler: { _ in return })
         }
         
         if todoInputTableView.detailTextViwe.text.isEmpty {
-            AlertManager().alertAction(viewController: self,
-                              title: "",
+            AlertManager().alertAction(self,
                               message: "ToDoの詳細が入力されていません",
                               handler: { _ in return })
         }
@@ -141,32 +131,26 @@ class InputViewController: UIViewController {
         
         
         if todoId != nil {
-            AlertManager().alertAction(viewController: self,
-                              title: "",
-                              message: "ToDoを更新しました",
-                              handler: {[weak self] action in
-                                self?.updateRealm()
+            AlertManager().alertAction(self,
+                              message: "ToDoを更新しました") { [weak self] action in
+                                self?.updateRealm() { [weak self] in self?.addNotification() }
+                                
                                 self?.navigationController?.popViewController(animated: true)
                                 return
-            })
+            }
             
         } else {
-            AlertManager().alertAction(viewController: self,
-                              title: "",
-                              message: "ToDoを登録しました",
-                              handler: {[weak self] action in
-                                self?.addRealm()
-                                
-                                if #available(iOS 13.0, *) {
-                                    NotificationCenter.default.post(name: Notification.Name(ViewUpdate), object: nil)
-                                }
-                                
-                                self?.dismiss(animated: true, completion: nil)
-            })
             
+            addRealm { [weak self] in
+                self?.addNotification()
+                if #available(iOS 13.0, *) {
+                    NotificationCenter.default.post(name: Notification.Name(ViewUpdate), object: nil)
+                }
+                AlertManager().alertAction(self!, message: "ToDoを登録しました") { [weak self] action in
+                    self?.dismiss(animated: true)
+                }
+            }
         }
-        
-        addNotification()
         
     }
     
@@ -209,48 +193,45 @@ class InputViewController: UIViewController {
     
     // MARK: Realm func
     
-    /// ToDoを追加する
-    private func addRealm() {
-        
-        toDoModel.id = String((realm?.objects(ToDoModel.self).count)! + 1)
-        toDoModel.toDoName = (todoInputTableView.titletextField.text)!
-        toDoModel.todoDate = todoInputTableView.dateTextField.text
-        toDoModel.toDo = (todoInputTableView.detailTextViwe.text)!
-        
+    /// Realmのインスタンスを生成
+    func setRealm() {
         do {
-            try realm?.write() {
-                realm?.add(toDoModel)
+            realm = try Realm()
+            
+        } catch {
+            AlertManager().alertAction(self,
+                                       title: "",
+                                       message: "エラーが発生しました") { _ in
+                                        return
             }
-        }
-        catch {
-            AlertManager().alertAction(viewController: self, title: "", message: "ToDoの登録に失敗しました", handler: { _ in
-                return
-            })
             return
         }
+    }
+    
+    /// ToDoを追加する
+    private func addRealm(completeHandler: () -> Void) {
+        let id: String = String((realm?.objects(ToDoModel.self).count)! + 1)
         
+        ToDoModel.addRealm(self, addValue: TableValue(id: id,
+                                                title: (todoInputTableView.titletextField.text)!,
+                                                todoDate: todoInputTableView.dateTextField.text!,
+                                                detail: (todoInputTableView.detailTextViwe.text)!))
         
-        
+        completeHandler()
     }
     
     
     /// ToDoの更新
-    private func updateRealm() {
-        do {
-            try realm?.write() {
-                realm?.objects(ToDoModel.self)[todoId!].toDoName = todoInputTableView.titletextField.text!
-                realm?.objects(ToDoModel.self)[todoId!].todoDate = todoInputTableView.dateTextField.text
-                realm?.objects(ToDoModel.self)[todoId!].toDo = todoInputTableView.detailTextViwe.text
-            }
-        }
-        catch {
-            AlertManager().alertAction(viewController: self, title: "", message: "ToDoの更新に失敗しました", handler: { _ in
-                return
-            })
-            return
+    private func updateRealm(completeHandler: () -> Void) {
+        ToDoModel.updateRealm(self, todoId: todoId!,
+                              updateValue: TableValue(id: String((realm?.objects(ToDoModel.self).count)! + 1),
+                                                      title: (todoInputTableView.titletextField.text)!,
+                                                      todoDate: todoInputTableView.dateTextField.text!,
+                                                      detail: (todoInputTableView.detailTextViwe.text)!)){
+                                                        return
         }
         
-        
+        completeHandler()
         
     }
     
