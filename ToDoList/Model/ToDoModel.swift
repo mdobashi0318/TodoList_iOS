@@ -44,14 +44,15 @@ class ToDoModel:Object {
     
     
     /// ToDoの更新
-    class func updateRealm(_ vc: UIViewController, todoId: Int, updateValue: TableValue, errorHandler: @escaping () -> Void) {
+    class func updateRealm(_ vc: UIViewController, todoId: Int, updateValue: TableValue) {
         let realm: Realm = try! Realm()
+        let toDoModel: ToDoModel = (realm.objects(ToDoModel.self).filter("id == '\(String(describing: todoId))'").first!)
         
         do {
             try realm.write() {
-                realm.objects(ToDoModel.self)[todoId].toDoName = updateValue.title
-                realm.objects(ToDoModel.self)[todoId].todoDate = updateValue.date
-                realm.objects(ToDoModel.self)[todoId].toDo = updateValue.detail
+                toDoModel.toDoName = updateValue.title
+                toDoModel.todoDate = updateValue.date
+                toDoModel.toDo = updateValue.detail
             }
         }
         catch {

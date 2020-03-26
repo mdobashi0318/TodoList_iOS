@@ -52,6 +52,7 @@ class InputViewController: UIViewController {
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        setRealm()
         
         
     }
@@ -78,7 +79,7 @@ class InputViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setRealm()
+        
 
         self.view.backgroundColor = UIColor.white
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(leftButton))
@@ -114,30 +115,43 @@ class InputViewController: UIViewController {
             AlertManager().alertAction(self,
                               message: "ToDoのタイトルが入力されていません",
                               handler: { _ in return })
+            
+            return
         }
         
         if todoInputTableView.dateTextField.text!.isEmpty {
             AlertManager().alertAction(self,
                               message: "ToDoの期限が入力されていません",
                               handler: { _ in return })
+            
+            return
         }
         
         if todoInputTableView.detailTextViwe.text.isEmpty {
             AlertManager().alertAction(self,
                               message: "ToDoの詳細が入力されていません",
                               handler: { _ in return })
+            
+            return
         }
         
         
         
         if todoId != nil {
-            AlertManager().alertAction(self,
-                              message: "ToDoを更新しました") { [weak self] action in
-                                self?.updateRealm() { [weak self] in self?.addNotification() }
-                                
-                                self?.navigationController?.popViewController(animated: true)
-                                return
+            updateRealm() { [weak self] in
+                self?.addNotification()
+                
+                AlertManager().alertAction(self!,
+                                           message: "ToDoを更新しました") { [weak self] action in
+                                            
+                                            self?.navigationController?.popViewController(animated: true)
+                                            return
+                }
+                
             }
+            
+            
+            
             
         } else {
             
@@ -224,12 +238,10 @@ class InputViewController: UIViewController {
     /// ToDoの更新
     private func updateRealm(completeHandler: () -> Void) {
         ToDoModel.updateRealm(self, todoId: todoId!,
-                              updateValue: TableValue(id: String((realm?.objects(ToDoModel.self).count)! + 1),
+                              updateValue: TableValue(id: String(todoId!),
                                                       title: (todoInputTableView.titletextField.text)!,
                                                       todoDate: todoInputTableView.dateTextField.text!,
-                                                      detail: (todoInputTableView.detailTextViwe.text)!)){
-                                                        return
-        }
+                                                      detail: (todoInputTableView.detailTextViwe.text)!))
         
         completeHandler()
         
