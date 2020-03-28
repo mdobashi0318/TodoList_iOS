@@ -64,4 +64,34 @@ class ToDoModel:Object {
         
     }
     
+    
+    
+    /// ToDoの削除
+    class func deleteRealm(_ vc: UIViewController, todoId: Int ,completion: () ->Void){
+        let realm:Realm = try! Realm()
+        let toDoModel: ToDoModel = (realm.objects(ToDoModel.self).filter("id == '\(String(describing: todoId))'").first!)
+        
+        UNUserNotificationCenter
+            .current()
+            .removePendingNotificationRequests(withIdentifiers: [toDoModel.toDoName])
+        
+        do {
+            try realm.write() {
+                realm.delete(toDoModel)
+            }
+        }
+            
+        catch {
+            AlertManager().alertAction(vc,
+                                       message: "ToDoの削除に失敗しました") { _ in
+                                        return
+            }
+        }
+        
+        
+        completion()
+    }
+    
+    
+    
 }

@@ -119,15 +119,13 @@ final class ToDoListViewController: UIViewController, ToDoListViewDelegate, UNUs
     func deleteAction(indexPath: IndexPath) {
         AlertManager().alertAction(self, message: "削除しますか?", handler1: {[weak self] action in
             
-            let toDoModel = self?.realm.objects(ToDoModel.self)[indexPath.row]
+            let todoid = Int((self?.realm.objects(ToDoModel.self)[indexPath.row].id)!)
             
-            try! self?.realm.write() {
-                self?.realm.delete(toDoModel!)
+            ToDoModel.deleteRealm(self!, todoId: todoid!) {
                 self?.tableValues?.removeAll()
             }
-            
             self?.viewWillAppear(true)
-            }, handler2: {_ -> Void in})
+            }){ _ in }
     }
     
     

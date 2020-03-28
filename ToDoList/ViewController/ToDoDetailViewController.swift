@@ -85,34 +85,21 @@ class ToDoDetailViewController: UIViewController {
     /// アクションシートを開く
     @objc private func rightBarAction(){
         let alertSheet:UIAlertController = UIAlertController(title: nil, message: "Todoをどうしますか?", preferredStyle: .actionSheet)
-        alertSheet.addAction(UIAlertAction(title: "編集", style: .default, handler: {[weak self] action in
+        alertSheet.addAction(UIAlertAction(title: "編集", style: .default) {[weak self] action in
             let inputViewController:InputViewController = InputViewController(todoId: (self?.todoId!)!)
             self?.navigationController?.pushViewController(inputViewController, animated: true)
         })
-        )
-        alertSheet.addAction(UIAlertAction(title: "削除", style: .destructive, handler: {[weak self] action in
-            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [(self?.realm.objects(ToDoModel.self)[(self?.todoId!)!].toDoName)!])
-            self?.deleteRealm()
-            self?.navigationController?.popViewController(animated: true)
+        
+        alertSheet.addAction(UIAlertAction(title: "削除", style: .destructive) { [weak self] action in
+            
+            ToDoModel.deleteRealm(self!, todoId: (self?.todoId!)!) {
+                self?.navigationController?.popViewController(animated: true)
+            }
+            
         })
-        )
         alertSheet.addAction(UIAlertAction(title: "キャンセル", style: .cancel, handler: nil))
         
         self.present(alertSheet,animated: true, completion: nil)
     }
     
-
-    
-    // MARK: Realm func
-    
-    /// ToDoの削除
-    func deleteRealm(){
-        let realm:Realm = try! Realm()
-        let toDoModel = realm.objects(ToDoModel.self)[todoId!]
-        
-        try! realm.write() {
-            realm.delete(toDoModel)
-        }
-        
-    }
 }
