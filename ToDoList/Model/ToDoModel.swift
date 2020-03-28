@@ -67,7 +67,7 @@ class ToDoModel:Object {
     
     
     /// ToDoの削除
-    class func deleteRealm(_ vc: UIViewController, todoId: Int ,completion: () ->Void){
+    class func deleteRealm(_ vc: UIViewController, todoId: Int ,completion: () ->Void) {
         let realm:Realm = try! Realm()
         let toDoModel: ToDoModel = (realm.objects(ToDoModel.self).filter("id == '\(String(describing: todoId))'").first!)
         
@@ -92,6 +92,20 @@ class ToDoModel:Object {
         completion()
     }
     
+    
+    /// 全件削除
+    class func allDeleteRealm(_ vc: UIViewController, completion:@escaping () ->Void) {
+        let realm: Realm = try! Realm()
+        
+        AlertManager().alertAction(vc, title: "データベースの削除", message: "作成した問題や履歴を全件削除します", handler1: { (action) in
+            try! realm.write {
+                realm.deleteAll()
+            }
+            completion()
+
+        }) { (action) in return }
+        
+    }
     
     
 }

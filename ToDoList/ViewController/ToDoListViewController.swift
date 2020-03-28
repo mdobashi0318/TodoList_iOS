@@ -79,15 +79,11 @@ final class ToDoListViewController: UIViewController, ToDoListViewDelegate, UNUs
     
     
     /// データベース内の全件削除(Debug)
-    @objc override func leftButtonAction(){
-        AlertManager().alertAction(self, title: "データベースの削除", message: "作成した問題や履歴を全件削除します", handler1: { [weak self]  (action) in
-            try! self?.realm.write {
-                self?.realm.deleteAll()
-            }
+    @objc override func leftButtonAction() {
+        ToDoModel.allDeleteRealm(self) { [weak self] in
             self?.tableValues?.removeAll()
             self?.viewWillAppear(true)
-            
-        }){ (action) in return }
+        }
         
     }
 
