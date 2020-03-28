@@ -17,10 +17,29 @@ class ToDoModel:Object {
     
     
     
+    
+    /// Realmのインスタンス化
+    class func initRealm(_ vc: UIViewController) -> Realm? {
+        
+        let realm: Realm
+        do {
+            realm = try Realm()
+            
+            return realm
+        }
+        catch {
+            AlertManager().alertAction(vc, message: "エラーが発生しました") { _ in
+                                        return
+            }
+        }
+        
+        return nil
+    }
+    
     /// ToDoを追加する
     class func addRealm(_ vc: UIViewController, addValue:TableValue) {
         
-        let realm: Realm = try! Realm()
+        guard let realm = initRealm(vc) else { return }
         let toDoModel: ToDoModel = ToDoModel()
         
         toDoModel.id = addValue.id
@@ -45,7 +64,7 @@ class ToDoModel:Object {
     
     /// ToDoの更新
     class func updateRealm(_ vc: UIViewController, todoId: Int, updateValue: TableValue) {
-        let realm: Realm = try! Realm()
+        guard let realm = initRealm(vc) else { return }
         let toDoModel: ToDoModel = (realm.objects(ToDoModel.self).filter("id == '\(String(describing: todoId))'").first!)
         
         do {
@@ -68,7 +87,7 @@ class ToDoModel:Object {
     
     /// ToDoの削除
     class func deleteRealm(_ vc: UIViewController, todoId: Int ,completion: () ->Void) {
-        let realm:Realm = try! Realm()
+        guard let realm = initRealm(vc) else { return }
         let toDoModel: ToDoModel = (realm.objects(ToDoModel.self).filter("id == '\(String(describing: todoId))'").first!)
         
         UNUserNotificationCenter
@@ -95,7 +114,7 @@ class ToDoModel:Object {
     
     /// 全件削除
     class func allDeleteRealm(_ vc: UIViewController, completion:@escaping () ->Void) {
-        let realm: Realm = try! Realm()
+        guard let realm = initRealm(vc) else { return }
         
         AlertManager().alertAction(vc, title: "データベースの削除", message: "作成した問題や履歴を全件削除します", handler1: { (action) in
             try! realm.write {
