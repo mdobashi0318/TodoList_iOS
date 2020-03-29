@@ -15,8 +15,10 @@ final class ToDoListViewController: UIViewController, ToDoListViewDelegate, UNUs
     
     // MARK: Properties
     
-    private let realm:Realm = try! Realm()
+    private let realm:Realm = try! Realm(configuration: Realm.Configuration(schemaVersion: realmConfig))
+    
     let center = UNUserNotificationCenter.current()
+    
     /// ToDoListを表示するテーブルビュー
     private lazy var todoListTableView:TodoListTableView = {
         let tableView: TodoListTableView = TodoListTableView(frame: frame_Size(self), style: .plain)
@@ -93,7 +95,7 @@ final class ToDoListViewController: UIViewController, ToDoListViewDelegate, UNUs
     ///
     /// - Parameter indexPath: 選択したcellの行
     func cellTapAction(indexPath: IndexPath) {
-        let toDoDetailViewController:ToDoDetailViewController = ToDoDetailViewController(todoId: Int((tableValues?[indexPath.row].id)!)!)
+        let toDoDetailViewController:ToDoDetailViewController = ToDoDetailViewController(todoId: Int((tableValues?[indexPath.row].id)!)!, createTime: tableValues?[indexPath.row].createTime)
         self.navigationController?.pushViewController(toDoDetailViewController, animated: true)
     }
     
@@ -102,7 +104,7 @@ final class ToDoListViewController: UIViewController, ToDoListViewDelegate, UNUs
     ///
     /// - Parameter indexPath: 選択したcellの行
     func editAction(indexPath: IndexPath) {
-        let inputViewController:InputViewController = InputViewController(todoId: Int((tableValues?[indexPath.row].id)!)!)
+        let inputViewController:InputViewController = InputViewController(todoId: Int((tableValues?[indexPath.row].id)!)!, createTime: tableValues?[indexPath.row].createTime)
         self.navigationController?.pushViewController(inputViewController, animated: true)
     }
     
@@ -116,8 +118,9 @@ final class ToDoListViewController: UIViewController, ToDoListViewDelegate, UNUs
         AlertManager().alertAction(self, message: "削除しますか?", handler1: {[weak self] action in
             
             let todoid = Int((self?.realm.objects(ToDoModel.self)[indexPath.row].id)!)
+            let createTime = self?.realm.objects(ToDoModel.self)[indexPath.row].createTime
             
-            ToDoModel.deleteRealm(self!, todoId: todoid!) {
+            ToDoModel.deleteRealm(self!, todoId: todoid!, createTime: createTime) {
                 self?.tableValues?.removeAll()
             }
             self?.viewWillAppear(true)
@@ -144,12 +147,15 @@ final class ToDoListViewController: UIViewController, ToDoListViewDelegate, UNUs
     /// 配列に追加とViewのTableに反映
     func tableValuesAppend() {
         tableValues?.removeAll()
-        for i in 0..<realm.objects(ToDoModel.self).count{
+        
+        guard let todoModel = ToDoModel.allFindRealm(self) else { return }
+        
+        for i in 0..<todoModel.count{
             
-            tableValues?.append(TableValue(id: realm.objects(ToDoModel.self)[i].id,
-                                           title: realm.objects(ToDoModel.self)[i].toDoName,
-                                           todoDate: realm.objects(ToDoModel.self)[i].todoDate!,
-                                           detail: realm.objects(ToDoModel.self)[i].toDo))
+            tableValues?.append(TableValue(id: todoModel[i].id,
+                                           title: todoModel[i].toDoName,
+                                           todoDate: todoModel[i].todoDate!,
+                                           detail: todoModel[i].toDo, createTime: todoModel[i].createTime))
             
             tableValues?.sort{ $0.date < $1.date }
         }
@@ -199,12 +205,14 @@ struct TableValue {
     let title:String
     let date:String
     let detail:String
+    let createTime:String?
     
-    init(id:String, title:String, todoDate:String, detail: String) {
+    init(id:String, title:String, todoDate:String, detail: String, createTime: String? = nil) {
         self.id = id
         self.title = title
         self.date = todoDate
         self.detail = detail
+        self.createTime = createTime
     }
 }
 

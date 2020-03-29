@@ -76,7 +76,8 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
             self.tableValue = TableValue(id: _tableValue.id,
                                          title: _tableValue.title,
                                          todoDate: _tableValue.date,
-                                         detail: _tableValue.detail
+                                         detail: _tableValue.detail,
+                                         createTime: _tableValue.createTime
             )
         }
         

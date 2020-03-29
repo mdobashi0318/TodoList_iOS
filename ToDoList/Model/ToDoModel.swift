@@ -14,6 +14,13 @@ class ToDoModel:Object {
     @objc dynamic var todoDate:String?
     @objc dynamic var toDoName:String = ""
     @objc dynamic var toDo:String = ""
+    @objc dynamic var createTime:String?
+    
+    
+    // idをプライマリキーに設定
+    override static func primaryKey() -> String? {
+        return "createTime"
+    }
     
     
     
@@ -42,10 +49,16 @@ class ToDoModel:Object {
         guard let realm = initRealm(vc) else { return }
         let toDoModel: ToDoModel = ToDoModel()
         
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
+        formatter.locale = Locale(identifier: "ja_JP")
+        let s_Date:String = formatter.string(from: Date())
+        
         toDoModel.id = addValue.id
         toDoModel.toDoName = addValue.title
         toDoModel.todoDate = addValue.date
         toDoModel.toDo = addValue.detail
+        toDoModel.createTime = s_Date
         
         do {
             try realm.write() {
@@ -84,9 +97,31 @@ class ToDoModel:Object {
     }
     
     
+    /// １件取得
+    class func findRealm(_ vc: UIViewController, todoId: Int, createTime: String?) -> ToDoModel? {
+        guard let realm = initRealm(vc) else { return nil }
+        
+        if let _createTime = createTime {
+            return (realm.objects(ToDoModel.self).filter("createTime == '\(String(describing: _createTime))'").first)
+        } else {
+            return(realm.objects(ToDoModel.self).filter("id == '\(String(describing: todoId))'").first!)
+        }
+        
+        
+    }
+    
+    
+    
+    /// 全件取得
+    class func allFindRealm(_ vc: UIViewController) -> Results<ToDoModel>? {
+        guard let realm = initRealm(vc) else { return nil }
+        
+        return realm.objects(ToDoModel.self)
+    }
+    
     
     /// ToDoの削除
-    class func deleteRealm(_ vc: UIViewController, todoId: Int ,completion: () ->Void) {
+    class func deleteRealm(_ vc: UIViewController, todoId: Int, createTime: String?, completion: () ->Void) {
         guard let realm = initRealm(vc) else { return }
         let toDoModel: ToDoModel = (realm.objects(ToDoModel.self).filter("id == '\(String(describing: todoId))'").first!)
         

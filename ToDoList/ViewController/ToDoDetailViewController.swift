@@ -17,6 +17,9 @@ class ToDoDetailViewController: UIViewController {
     
     let realm: Realm = try! Realm()
     private var todoId:Int?
+    
+    private var createTime:String?
+    
     private var tableValue:TableValue?
     
     private var toDoModel: ToDoModel!
@@ -33,11 +36,12 @@ class ToDoDetailViewController: UIViewController {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
-    convenience init(todoId:Int) {
+    convenience init(todoId:Int, createTime: String?) {
         self.init(nibName: nil, bundle: nil)
         self.todoId = todoId
+        self.createTime = createTime
         
-        toDoModel = (realm.objects(ToDoModel.self).filter("id == '\(String(describing: todoId))'").first)
+        toDoModel = ToDoModel.findRealm(self, todoId: todoId, createTime: createTime)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -77,22 +81,25 @@ class ToDoDetailViewController: UIViewController {
         return TableValue(id: toDoModel.id,
                           title: toDoModel.toDoName,
                           todoDate: toDoModel.todoDate!,
-                          detail: toDoModel.toDo
+                          detail: toDoModel.toDo,
+                          createTime: toDoModel?.createTime
         )
     }
     
     
     /// アクションシートを開く
     @objc private func rightBarAction(){
+        let createTime = toDoModel.createTime
+        
         let alertSheet:UIAlertController = UIAlertController(title: nil, message: "Todoをどうしますか?", preferredStyle: .actionSheet)
         alertSheet.addAction(UIAlertAction(title: "編集", style: .default) {[weak self] action in
-            let inputViewController:InputViewController = InputViewController(todoId: (self?.todoId!)!)
+            let inputViewController:InputViewController = InputViewController(todoId: (self?.todoId!)!, createTime: self?.createTime)
             self?.navigationController?.pushViewController(inputViewController, animated: true)
         })
         
         alertSheet.addAction(UIAlertAction(title: "削除", style: .destructive) { [weak self] action in
             
-            ToDoModel.deleteRealm(self!, todoId: (self?.todoId!)!) {
+            ToDoModel.deleteRealm(self!, todoId: (self?.todoId!)!, createTime: createTime) {
                 self?.navigationController?.popViewController(animated: true)
             }
             

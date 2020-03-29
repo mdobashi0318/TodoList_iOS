@@ -29,3 +29,7 @@ let cellWhite: UIColor = UIColor.changeAppearnceColor(light: .white, dark: .rgba
 
 /// iOS13以降でモーダルを閉じた時にViewWillAppearを呼ぶ
 let ViewUpdate: String = "viewUpdate"
+
+
+
+let realmConfig: UInt64 = 1

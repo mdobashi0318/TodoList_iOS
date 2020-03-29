@@ -112,7 +112,7 @@ class ToDoListUITests: XCTestCase {
         let datePicker = app.datePickers["detailPicker"]
         XCTAssert(datePicker.exists, "期限設定するデートピッカーが表示されない")
         
-        createToDo(isOpen: false)
+        createToDo(num: 1, isOpen: false)
         
 
         
@@ -149,8 +149,17 @@ class ToDoListUITests: XCTestCase {
     }
     
     
+    /*
+    func testCreate() {
+        
+        for i in 0..<10 {
+            createToDo(num: i)
+        }
+    }
+    */
     
-    func createToDo(isOpen: Bool = true) {
+    
+    func createToDo(num: Int, isOpen: Bool = true) {
         let app: XCUIApplication = XCUIApplication()
         
         if isOpen == true {
@@ -159,7 +168,7 @@ class ToDoListUITests: XCTestCase {
         }
         // タイトル入力
         app.cells.textFields["titleTextField"].tap()
-        app.typeText("test")
+        app.typeText("test\(String(num))")
         
         // 期限入力
         app.cells.textFields["dateTextField"].tap()
@@ -172,6 +181,8 @@ class ToDoListUITests: XCTestCase {
         // 詳細入力
         app.cells.textViews["detailTextViwe"].tap()
         app.typeText("testDetail")
+        
+        sleep(1)
         
         // 保存
         app.navigationBars.buttons["Save"].tap()

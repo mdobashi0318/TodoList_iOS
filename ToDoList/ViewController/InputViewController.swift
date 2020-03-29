@@ -29,7 +29,8 @@ class InputViewController: UIViewController {
             tableValue = TableValue(id: toDoModel.id,
                                     title: toDoModel.toDoName,
                                     todoDate: toDoModel.todoDate!,
-                                    detail: toDoModel.toDo
+                                    detail: toDoModel.toDo,
+                                    createTime: toDoModel.createTime
             )
             let view = TodoInputTableView(frame: frame_Size(self),todoId: todoId, tableValue: tableValue)
             
@@ -61,12 +62,17 @@ class InputViewController: UIViewController {
     /// 編集時のinit
     ///
     /// - Parameter todoId: 編集するTodoのid
-    convenience init(todoId:Int) {
+    convenience init(todoId:Int, createTime: String?) {
         self.init(nibName: nil, bundle: nil)
         self.todoId = todoId
         setRealm()
         
-        toDoModel = (realm?.objects(ToDoModel.self).filter("id == '\(String(describing: todoId))'").first)
+        
+        if let _createTime = createTime {
+        toDoModel = (realm?.objects(ToDoModel.self).filter("createTime == '\(String(describing: _createTime))'").first)
+        } else {
+            toDoModel = (realm?.objects(ToDoModel.self).filter("id == '\(String(describing: todoId))'").first)
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -229,7 +235,8 @@ class InputViewController: UIViewController {
         ToDoModel.addRealm(self, addValue: TableValue(id: id,
                                                 title: (todoInputTableView.titletextField.text)!,
                                                 todoDate: todoInputTableView.dateTextField.text!,
-                                                detail: (todoInputTableView.detailTextViwe.text)!))
+                                                detail: (todoInputTableView.detailTextViwe.text)!)
+        )
         
         completeHandler()
     }
