@@ -15,7 +15,8 @@ class ToDoDetailViewController: UIViewController {
     
     // MARK: Properties
     
-    let realm: Realm = try! Realm()
+    private let realm: Realm = try! Realm()
+    
     private var todoId:Int?
     
     private var createTime:String?
@@ -29,6 +30,7 @@ class ToDoDetailViewController: UIViewController {
         
         return tableView
     }()
+    
     
     // MARK: Init
     

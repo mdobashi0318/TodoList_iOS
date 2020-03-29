@@ -85,8 +85,6 @@ class InputViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
-
         self.view.backgroundColor = UIColor.white
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(leftButton))
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(rightButton))
@@ -153,12 +151,8 @@ class InputViewController: UIViewController {
                                             self?.navigationController?.popViewController(animated: true)
                                             return
                 }
-                
             }
-            
-            
-            
-            
+
         } else {
             
             addRealm { [weak self] in

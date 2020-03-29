@@ -155,7 +155,9 @@ final class ToDoListViewController: UIViewController, ToDoListViewDelegate, UNUs
             tableValues?.append(TableValue(id: todoModel[i].id,
                                            title: todoModel[i].toDoName,
                                            todoDate: todoModel[i].todoDate!,
-                                           detail: todoModel[i].toDo, createTime: todoModel[i].createTime))
+                                           detail: todoModel[i].toDo,
+                                           createTime: todoModel[i].createTime)
+            )
             
             tableValues?.sort{ $0.date < $1.date }
         }

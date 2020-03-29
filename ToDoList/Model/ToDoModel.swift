@@ -10,10 +10,19 @@ import Foundation
 import RealmSwift
 
 class ToDoModel:Object {
+    
     @objc dynamic var id:String = ""
+    
+    /// Todoの期限
     @objc dynamic var todoDate:String?
+    
+    /// Todoのタイトル
     @objc dynamic var toDoName:String = ""
+    
+    /// Todoの詳細
     @objc dynamic var toDo:String = ""
+    
+    /// Todoの作成日時
     @objc dynamic var createTime:String?
     
     
@@ -21,8 +30,6 @@ class ToDoModel:Object {
     override static func primaryKey() -> String? {
         return "createTime"
     }
-    
-    
     
     
     /// Realmのインスタンス化
@@ -43,7 +50,11 @@ class ToDoModel:Object {
         return nil
     }
     
+    
     /// ToDoを追加する
+    /// - Parameters:
+    ///   - vc: 呼び出し元のViewController
+    ///   - addValue: 登録するTodoの値
     class func addRealm(_ vc: UIViewController, addValue:TableValue) {
         
         guard let realm = initRealm(vc) else { return }
@@ -74,8 +85,11 @@ class ToDoModel:Object {
     }
     
     
-    
     /// ToDoの更新
+    /// - Parameters:
+    ///   - vc: 呼び出し元のViewController
+    ///   - todoId: TodoId
+    ///   - updateValue: 更新する値
     class func updateRealm(_ vc: UIViewController, todoId: Int, updateValue: TableValue) {
         guard let realm = initRealm(vc) else { return }
         let toDoModel: ToDoModel = (realm.objects(ToDoModel.self).filter("id == '\(String(describing: todoId))'").first!)
@@ -98,6 +112,11 @@ class ToDoModel:Object {
     
     
     /// １件取得
+    /// - Parameters:
+    ///   - vc: 呼び出し元のViewController
+    ///   - todoId: TodoId
+    ///   - createTime: Todoの作成時間
+    /// - Returns: 取得したTodoの最初の1件を返す
     class func findRealm(_ vc: UIViewController, todoId: Int, createTime: String?) -> ToDoModel? {
         guard let realm = initRealm(vc) else { return nil }
         
@@ -111,8 +130,9 @@ class ToDoModel:Object {
     }
     
     
-    
     /// 全件取得
+    /// - Parameter vc: 呼び出し元のViewController
+    /// - Returns: 取得したTodoを全件返す
     class func allFindRealm(_ vc: UIViewController) -> Results<ToDoModel>? {
         guard let realm = initRealm(vc) else { return nil }
         
@@ -121,6 +141,11 @@ class ToDoModel:Object {
     
     
     /// ToDoの削除
+    /// - Parameters:
+    ///   - vc: 呼び出し元のViewController
+    ///   - todoId: TodoId
+    ///   - createTime: Todoの作成時間
+    ///   - completion: 削除完了後の動作
     class func deleteRealm(_ vc: UIViewController, todoId: Int, createTime: String?, completion: () ->Void) {
         guard let realm = initRealm(vc) else { return }
         let toDoModel: ToDoModel = (realm.objects(ToDoModel.self).filter("id == '\(String(describing: todoId))'").first!)
@@ -148,6 +173,9 @@ class ToDoModel:Object {
     
     
     /// 全件削除
+    /// - Parameters:
+    ///   - vc: 呼び出し元のViewController
+    ///   - completion: 削除完了後の動作
     class func allDeleteRealm(_ vc: UIViewController, completion:@escaping () ->Void) {
         guard let realm = initRealm(vc) else { return }
         
