@@ -190,4 +190,14 @@ class ToDoModel:Object {
     }
     
     
+    class func allDelete() {
+
+        let realm = try! Realm()
+        
+        try! realm.write {
+            realm.deleteAll()
+        }
+    }
+    
+    
 }
