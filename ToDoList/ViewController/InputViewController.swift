@@ -55,7 +55,6 @@ class InputViewController: UIViewController {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         setRealm()
         
-        
     }
     
     
@@ -65,14 +64,7 @@ class InputViewController: UIViewController {
     convenience init(todoId:Int, createTime: String?) {
         self.init(nibName: nil, bundle: nil)
         self.todoId = todoId
-        setRealm()
-        
-        
-        if let _createTime = createTime {
-        toDoModel = (realm?.objects(ToDoModel.self).filter("createTime == '\(String(describing: _createTime))'").first)
-        } else {
-            toDoModel = (realm?.objects(ToDoModel.self).filter("id == '\(String(describing: todoId))'").first)
-        }
+        toDoModel = ToDoModel.findRealm(self, todoId: todoId, createTime: createTime)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -149,7 +141,6 @@ class InputViewController: UIViewController {
                                            message: "ToDoを更新しました") { [weak self] action in
                                             
                                             self?.navigationController?.popViewController(animated: true)
-                                            return
                 }
             }
 
@@ -214,7 +205,6 @@ class InputViewController: UIViewController {
             
         } catch {
             AlertManager().alertAction(self,
-                                       title: "",
                                        message: "エラーが発生しました") { _ in
                                         return
             }
