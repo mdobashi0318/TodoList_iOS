@@ -10,7 +10,9 @@ import UIKit
 import UserNotifications
 import RealmSwift
 
-class InputViewController: UIViewController {
+class InputViewController: UIViewController, TodoInputTableViewDelegate ,UIAdaptivePresentationControllerDelegate {
+    
+    
     
     // MARK: Properties
     
@@ -77,9 +79,18 @@ class InputViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.view.backgroundColor = UIColor.white
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(leftButton))
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(rightButton))
+        
+        todoInputTableView.inputDeleagte = self
+        
+        view.backgroundColor = UIColor.white
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel,
+                                                           target: self,
+                                                           action: #selector(leftButton)
+        )
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save,
+                                                            target: self,
+                                                            action: #selector(rightButton)
+        )
         
         view.addSubview(todoInputTableView)
     }
@@ -236,6 +247,20 @@ class InputViewController: UIViewController {
         
         completeHandler()
         
+    }
+    
+    
+    
+    func textChenge() {
+        if #available(iOS 13.0, *) {
+            if todoInputTableView.titletextField.text!.isEmpty &&
+                todoInputTableView.dateTextField.text!.isEmpty &&
+                todoInputTableView.detailTextViwe.text.isEmpty {
+                isModalInPresentation = false
+            } else {
+                isModalInPresentation = true
+            }
+        }
     }
     
 }

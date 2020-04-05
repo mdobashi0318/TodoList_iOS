@@ -8,10 +8,19 @@
 
 import UIKit
 
+
+protocol TodoInputTableViewDelegate: AnyObject {
+    func textChenge()
+}
+
+
+
 class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIPickerViewDelegate {
     
     private var tableValue:TableValue?
     private let leading:CGFloat = 15
+    
+    weak var inputDeleagte: TodoInputTableViewDelegate?
     
     /// ToDoのタイトル入力テキストフィールド
     let titletextField:UITextField = {
@@ -130,6 +139,7 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
         switch indexPath.section {
         case 0: /* Todoのタイトル */
             textFieldConstraint(cell, textField: titletextField)
+            titletextField.delegate = self
         case 1: /* Todoの期限 */
             dateTextField.inputView = datePicker
             dateTextField.delegate = self
@@ -216,4 +226,21 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
         textField.trailingAnchor.constraint(equalTo: cell.trailingAnchor).isActive = true
         textField.bottomAnchor.constraint(equalTo: cell.bottomAnchor).isActive = true
     }
+    
+    
+    // MARK: TextField Delegate
+    
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        inputDeleagte?.textChenge()
+    }
+    
+    
+    
+    
+    // MARK: TextView Delegate
+    
+    func textViewDidChange(_ textView: UITextView) {
+        inputDeleagte?.textChenge()
+    }
+    
 }
