@@ -176,7 +176,7 @@ final class ToDoListViewController: UIViewController, ToDoListViewDelegate, UNUs
         
         todoListTableView.tableValues = tableValues!
         todoListTableView.separatorStyle = todoListTableView.tableValues.count != 0 ? .none : .singleLine
-        todoListTableView.reloadData()
+        
     }
     
     

@@ -35,8 +35,12 @@ final class TodoListTableView: UITableView, UITableViewDelegate, UITableViewData
     
     // MARK: Properties
     
-    /// ToDoをあ格納する配列
-    var tableValues:[TableValue] = [TableValue]()
+    /// ToDoを格納する配列
+    var tableValues:[TableValue]! {
+        didSet {
+            reloadData()
+        }
+    }
     
     /// TodoListのデリゲート
     weak var toDoListDelegate: ToDoListViewDelegate?

@@ -90,13 +90,13 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
             )
         }
         
-        self.delegate = self
-        self.dataSource = self
-        self.separatorInset = .zero
-        self.separatorStyle = .singleLine
+        delegate = self
+        dataSource = self
+        separatorInset = .zero
+        separatorStyle = .singleLine
         
-        self.estimatedSectionHeaderHeight = 0
-        self.estimatedSectionFooterHeight = 0
+        estimatedSectionHeaderHeight = 0
+        estimatedSectionFooterHeight = 0
         
         
         let tapGesture:UITapGestureRecognizer = UITapGestureRecognizer(target: self, action:

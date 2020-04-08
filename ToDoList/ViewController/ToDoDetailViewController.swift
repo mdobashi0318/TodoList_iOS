@@ -26,7 +26,7 @@ class ToDoDetailViewController: UIViewController {
     private var toDoModel: ToDoModel!
     
     private lazy var toDoDetailView:ToDoDetailTableView = {
-        let tableView: ToDoDetailTableView = ToDoDetailTableView(frame: frame_Size(self), style: .plain)
+        let tableView: ToDoDetailTableView = ToDoDetailTableView(frame: frame_Size(self), style: .grouped)
         
         return tableView
     }()
