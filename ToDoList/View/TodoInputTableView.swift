@@ -140,14 +140,16 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
         case 0: /* Todoのタイトル */
             textFieldConstraint(cell, textField: titletextField)
             titletextField.delegate = self
+            titletextField.backgroundColor = cellWhite
         case 1: /* Todoの期限 */
             dateTextField.inputView = datePicker
             dateTextField.delegate = self
-            
+            dateTextField.backgroundColor = cellWhite
             cell.addSubview(dateTextField)
             
             textFieldConstraint(cell, textField: dateTextField)
         case 2: /* Todoの詳細 */
+            detailTextViwe.backgroundColor = cellWhite
             cell.addSubview(detailTextViwe)
             detailTextViwe.translatesAutoresizingMaskIntoConstraints = false
             detailTextViwe.topAnchor.constraint(equalTo: cell.topAnchor).isActive = true
