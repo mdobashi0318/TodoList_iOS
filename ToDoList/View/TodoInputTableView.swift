@@ -8,10 +8,19 @@
 
 import UIKit
 
+
+protocol TodoInputTableViewDelegate: AnyObject {
+    func textChenge()
+}
+
+
+
 class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIPickerViewDelegate {
     
     private var tableValue:TableValue?
     private let leading:CGFloat = 15
+    
+    weak var inputDeleagte: TodoInputTableViewDelegate?
     
     /// ToDoのタイトル入力テキストフィールド
     let titletextField:UITextField = {
@@ -81,13 +90,13 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
             )
         }
         
-        self.delegate = self
-        self.dataSource = self
-        self.separatorInset = .zero
-        self.separatorStyle = .singleLine
+        delegate = self
+        dataSource = self
+        separatorInset = .zero
+        separatorStyle = .singleLine
         
-        self.estimatedSectionHeaderHeight = 0
-        self.estimatedSectionFooterHeight = 0
+        estimatedSectionHeaderHeight = 0
+        estimatedSectionFooterHeight = 0
         
         
         let tapGesture:UITapGestureRecognizer = UITapGestureRecognizer(target: self, action:
@@ -130,14 +139,17 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
         switch indexPath.section {
         case 0: /* Todoのタイトル */
             textFieldConstraint(cell, textField: titletextField)
+            titletextField.delegate = self
+            titletextField.backgroundColor = cellWhite
         case 1: /* Todoの期限 */
             dateTextField.inputView = datePicker
             dateTextField.delegate = self
-            
+            dateTextField.backgroundColor = cellWhite
             cell.addSubview(dateTextField)
             
             textFieldConstraint(cell, textField: dateTextField)
         case 2: /* Todoの詳細 */
+            detailTextViwe.backgroundColor = cellWhite
             cell.addSubview(detailTextViwe)
             detailTextViwe.translatesAutoresizingMaskIntoConstraints = false
             detailTextViwe.topAnchor.constraint(equalTo: cell.topAnchor).isActive = true
@@ -216,4 +228,21 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
         textField.trailingAnchor.constraint(equalTo: cell.trailingAnchor).isActive = true
         textField.bottomAnchor.constraint(equalTo: cell.bottomAnchor).isActive = true
     }
+    
+    
+    // MARK: TextField Delegate
+    
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        inputDeleagte?.textChenge()
+    }
+    
+    
+    
+    
+    // MARK: TextView Delegate
+    
+    func textViewDidChange(_ textView: UITextView) {
+        inputDeleagte?.textChenge()
+    }
+    
 }

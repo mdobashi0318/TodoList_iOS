@@ -149,6 +149,29 @@ class ToDoListUITests: XCTestCase {
     }
     
     
+    
+    
+    
+    func testDetailEdit() {
+        
+        let app: XCUIApplication = XCUIApplication()
+        
+        createToDo(num: 1, isOpen: true)
+        app.tables.cells.element(boundBy: 0).tap()
+        app.navigationBars.buttons.element(boundBy: 1).tap()
+        
+        app.sheets.buttons["編集"].tap()
+        
+        editTodo(title: "編集", detail: "編集詳細")
+        
+        sleep(1)
+        
+        XCTAssert(app.staticTexts["編集"].exists, "編集したタイトルが表示されていません")
+        XCTAssert(app.staticTexts["編集詳細"].exists, "編集したタイトルが表示されていません")
+        
+        
+    }
+    
     /*
     func testCreate() {
         
@@ -189,6 +212,32 @@ class ToDoListUITests: XCTestCase {
         app.alerts.buttons["閉じる"].tap()
     }
     
+    
+    
+    func editTodo(title: String, detail: String) {
+        let app: XCUIApplication = XCUIApplication()
+        // タイトル入力
+        app.cells.textFields["titleTextField"].tap()
+        for _ in 0...app.cells.textFields["titleTextField"].label.count - 1 {
+            app.keys["delete"].tap()
+        }
+        app.typeText(title)
+        
+        // 期限入力
+        let datePicker = app.datePickers["detailPicker"]
+        app.cells.textFields["dateTextField"].tap()
+        datePicker.pickerWheels.element(boundBy: 0).swipeUp()
+        datePicker.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "8")
+        datePicker.pickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: "00")
+        
+        // 詳細入力
+        app.cells.textViews["detailTextViwe"].doubleTap()
+        app.typeText(detail)
+        
+        // 保存
+        app.navigationBars.buttons["Save"].tap()
+        app.alerts.buttons["閉じる"].tap()
+    }
     
     
 }

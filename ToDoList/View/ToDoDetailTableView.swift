@@ -15,11 +15,11 @@ class ToDoDetailTableView: UITableView, UITableViewDelegate, UITableViewDataSour
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
         
-        self.delegate = self
-        self.dataSource = self
-        self.separatorInset = .zero
-        self.estimatedSectionHeaderHeight = 0
-        self.estimatedSectionFooterHeight = 0
+        delegate = self
+        dataSource = self
+        separatorInset = .zero
+        estimatedSectionHeaderHeight = 0
+        estimatedSectionFooterHeight = 0
         
     }
     

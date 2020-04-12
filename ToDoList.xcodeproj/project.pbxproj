@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		6FF02EB15D5049DC099C5648 /* Pods_ToDoList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07953119CD910C907A014925 /* Pods_ToDoList.framework */; };
 		D018BA5B215BBC60008EC964 /* ToDoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D018BA5A215BBC60008EC964 /* ToDoModel.swift */; };
+		D0401D8D243F5AAF00E99989 /* TableValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0401D8C243F5AAF00E99989 /* TableValue.swift */; };
 		D05566FC22509409002EA61A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D05566FB22509409002EA61A /* LaunchScreen.storyboard */; };
 		D07EAF9722428210009FB684 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07EAF9622428210009FB684 /* Constant.swift */; };
 		D09CBC6B21A2E8E100981E32 /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09CBC6A21A2E8E100981E32 /* AlertManager.swift */; };
@@ -49,6 +50,7 @@
 		07953119CD910C907A014925 /* Pods_ToDoList.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ToDoList.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9546D7C366211327E0362A85 /* Pods-ToDoList.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ToDoList.release.xcconfig"; path = "Pods/Target Support Files/Pods-ToDoList/Pods-ToDoList.release.xcconfig"; sourceTree = "<group>"; };
 		D018BA5A215BBC60008EC964 /* ToDoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoModel.swift; sourceTree = "<group>"; };
+		D0401D8C243F5AAF00E99989 /* TableValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableValue.swift; sourceTree = "<group>"; };
 		D05566FB22509409002EA61A /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D07EAF9622428210009FB684 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		D09CBC6A21A2E8E100981E32 /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
@@ -113,6 +115,7 @@
 			children = (
 				D09CBC6A21A2E8E100981E32 /* AlertManager.swift */,
 				D07EAF9622428210009FB684 /* Constant.swift */,
+				D0401D8C243F5AAF00E99989 /* TableValue.swift */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -414,6 +417,7 @@
 			files = (
 				D0F9CC3A214A8E6000C51BD6 /* AppDelegate.swift in Sources */,
 				D0A6A602219C4DB500D6A526 /* ToDoDetailTableView.swift in Sources */,
+				D0401D8D243F5AAF00E99989 /* TableValue.swift in Sources */,
 				D0EAD27221999D23006D43E6 /* ToDoDetailViewController.swift in Sources */,
 				D0BDC06F2271EBAB00D1280B /* ToDoDetailProtocol.swift in Sources */,
 				D018BA5B215BBC60008EC964 /* ToDoModel.swift in Sources */,
@@ -448,6 +452,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7RPFL7EXKD;
 				INFOPLIST_FILE = ToDoListTests/Info.plist;
@@ -461,6 +467,8 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = m.dobashi.ToDoListTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ToDoList.app/ToDoList";
@@ -471,6 +479,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7RPFL7EXKD;
 				INFOPLIST_FILE = ToDoListTests/Info.plist;
@@ -483,6 +493,8 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = m.dobashi.ToDoListTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ToDoList.app/ToDoList";
@@ -583,7 +595,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -637,7 +649,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;

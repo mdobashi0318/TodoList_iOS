@@ -11,11 +11,14 @@ import UserNotifications
 import RealmSwift
 import NotificationBannerSwift
 
-final class ToDoListViewController: UIViewController, ToDoListViewDelegate, UNUserNotificationCenterDelegate {
+final class ToDoListViewController: UIViewController, ToDoListViewDelegate, UNUserNotificationCenterDelegate, UIAdaptivePresentationControllerDelegate {
     
     // MARK: Properties
     
     private let realm:Realm = try! Realm(configuration: Realm.Configuration(schemaVersion: realmConfig))
+    
+    
+    var naviController:UINavigationController!
     
     let center = UNUserNotificationCenter.current()
     
@@ -72,10 +75,9 @@ final class ToDoListViewController: UIViewController, ToDoListViewDelegate, UNUs
     /// Todoの入力画面を開く
     @objc func rightBarAction(){
         let inputViewController:InputViewController = InputViewController()
-        let navigationController:UINavigationController = UINavigationController(rootViewController: inputViewController)
-        self.present(navigationController,animated: true, completion: nil)
-        
-        tableValues?.removeAll()
+        naviController = UINavigationController(rootViewController: inputViewController)
+        naviController.presentationController?.delegate = self
+        present(naviController,animated: true, completion: nil)
     }
     
     
@@ -89,6 +91,15 @@ final class ToDoListViewController: UIViewController, ToDoListViewDelegate, UNUs
         
     }
 
+    func presentationControllerDidAttemptToDismiss(_ presentationController: UIPresentationController) {
+        AlertManager().alertAction(naviController, message: "編集途中の内容がありますが削除しますか?", handler1: { [weak self] action in
+            self?.naviController.dismiss(animated: true) {
+                self?.tableValuesAppend()
+            }
+        }) { _ in return }
+
+    }
+    
     
     
     /// Todoの詳細を開く
@@ -165,7 +176,7 @@ final class ToDoListViewController: UIViewController, ToDoListViewDelegate, UNUs
         
         todoListTableView.tableValues = tableValues!
         todoListTableView.separatorStyle = todoListTableView.tableValues.count != 0 ? .none : .singleLine
-        todoListTableView.reloadData()
+        
     }
     
     
@@ -201,20 +212,4 @@ final class ToDoListViewController: UIViewController, ToDoListViewDelegate, UNUs
     
 }
 
-
-struct TableValue {
-    let id: String
-    let title:String
-    let date:String
-    let detail:String
-    let createTime:String?
-    
-    init(id:String, title:String, todoDate:String, detail: String, createTime: String? = nil) {
-        self.id = id
-        self.title = title
-        self.date = todoDate
-        self.detail = detail
-        self.createTime = createTime
-    }
-}
 

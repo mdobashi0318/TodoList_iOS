@@ -10,7 +10,9 @@ import UIKit
 import UserNotifications
 import RealmSwift
 
-class InputViewController: UIViewController {
+class InputViewController: UIViewController, TodoInputTableViewDelegate ,UIAdaptivePresentationControllerDelegate {
+    
+    
     
     // MARK: Properties
     
@@ -55,7 +57,6 @@ class InputViewController: UIViewController {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         setRealm()
         
-        
     }
     
     
@@ -65,14 +66,7 @@ class InputViewController: UIViewController {
     convenience init(todoId:Int, createTime: String?) {
         self.init(nibName: nil, bundle: nil)
         self.todoId = todoId
-        setRealm()
-        
-        
-        if let _createTime = createTime {
-        toDoModel = (realm?.objects(ToDoModel.self).filter("createTime == '\(String(describing: _createTime))'").first)
-        } else {
-            toDoModel = (realm?.objects(ToDoModel.self).filter("id == '\(String(describing: todoId))'").first)
-        }
+        toDoModel = ToDoModel.findRealm(self, todoId: todoId, createTime: createTime)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -85,9 +79,18 @@ class InputViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.view.backgroundColor = UIColor.white
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(leftButton))
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(rightButton))
+        
+        todoInputTableView.inputDeleagte = self
+        
+        view.backgroundColor = UIColor.white
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel,
+                                                           target: self,
+                                                           action: #selector(leftButton)
+        )
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save,
+                                                            target: self,
+                                                            action: #selector(rightButton)
+        )
         
         view.addSubview(todoInputTableView)
     }
@@ -149,7 +152,6 @@ class InputViewController: UIViewController {
                                            message: "ToDoを更新しました") { [weak self] action in
                                             
                                             self?.navigationController?.popViewController(animated: true)
-                                            return
                 }
             }
 
@@ -214,7 +216,6 @@ class InputViewController: UIViewController {
             
         } catch {
             AlertManager().alertAction(self,
-                                       title: "",
                                        message: "エラーが発生しました") { _ in
                                         return
             }
@@ -246,6 +247,20 @@ class InputViewController: UIViewController {
         
         completeHandler()
         
+    }
+    
+    
+    
+    func textChenge() {
+        if #available(iOS 13.0, *) {
+            if todoInputTableView.titletextField.text!.isEmpty &&
+                todoInputTableView.dateTextField.text!.isEmpty &&
+                todoInputTableView.detailTextViwe.text.isEmpty {
+                isModalInPresentation = false
+            } else {
+                isModalInPresentation = true
+            }
+        }
     }
     
 }

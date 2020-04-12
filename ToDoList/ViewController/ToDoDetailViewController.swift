@@ -26,7 +26,7 @@ class ToDoDetailViewController: UIViewController {
     private var toDoModel: ToDoModel!
     
     private lazy var toDoDetailView:ToDoDetailTableView = {
-        let tableView: ToDoDetailTableView = ToDoDetailTableView(frame: frame_Size(self), style: .plain)
+        let tableView: ToDoDetailTableView = ToDoDetailTableView(frame: frame_Size(self), style: .grouped)
         
         return tableView
     }()
@@ -91,8 +91,6 @@ class ToDoDetailViewController: UIViewController {
     
     /// アクションシートを開く
     @objc private func rightBarAction(){
-        let createTime = toDoModel.createTime
-        
         let alertSheet:UIAlertController = UIAlertController(title: nil, message: "Todoをどうしますか?", preferredStyle: .actionSheet)
         alertSheet.addAction(UIAlertAction(title: "編集", style: .default) {[weak self] action in
             let inputViewController:InputViewController = InputViewController(todoId: (self?.todoId!)!, createTime: self?.createTime)
@@ -101,7 +99,7 @@ class ToDoDetailViewController: UIViewController {
         
         alertSheet.addAction(UIAlertAction(title: "削除", style: .destructive) { [weak self] action in
             
-            ToDoModel.deleteRealm(self!, todoId: (self?.todoId!)!, createTime: createTime) {
+            ToDoModel.deleteRealm(self!, todoId: (self?.todoId!)!, createTime: self?.createTime) {
                 self?.navigationController?.popViewController(animated: true)
             }
             
