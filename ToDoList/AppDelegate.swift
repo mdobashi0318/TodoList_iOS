@@ -8,6 +8,7 @@
 
 import UIKit
 import UserNotifications
+import Toast_Swift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -29,6 +30,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window = UIWindow(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
         self.window?.rootViewController = navigation
         self.window?.makeKeyAndVisible()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(showToast(notification:)), name: NSNotification.Name(rawValue: toast), object: nil)
         
         return true
     }
@@ -58,3 +61,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
+
+extension AppDelegate {
+    
+    @objc func showToast(notification: Notification) {
+        if notification.object as! Bool == false {
+            self.window?.makeToast("期限の登録に失敗しました", duration: 5.0, position: .bottom)
+        }
+    }
+    
+}

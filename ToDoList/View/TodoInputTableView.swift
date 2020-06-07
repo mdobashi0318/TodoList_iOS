@@ -62,7 +62,7 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
     private(set) var tmpDate:Date?
     
     /// 編集するToDoのID
-    private var todoId:Int?
+    private var todoId: String?
     
     
     // MARK: Init
@@ -73,7 +73,7 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
     }
     
     
-    convenience init(frame: CGRect, style: UITableView.Style = .grouped, todoId:Int?, tableValue:TableValue?) {
+    convenience init(frame: CGRect, style: UITableView.Style = .grouped, todoId: String?, tableValue:TableValue?) {
         self.init(frame: frame, style: style)
         
         
@@ -197,15 +197,10 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
     // MARK: UIDatePicker func
     
     @objc private func onDidChangeDate(sender:UIDatePicker){
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy/MM/dd hh:mm"
-        formatter.locale = Locale(identifier: "ja_JP")
-        
         tmpDate = sender.date
-        let s_Date:String = formatter.string(from: sender.date)
+        let s_Date:String = Format().stringFromDate(date: sender.date)
         datePicker.minimumDate = Date()
         dateTextField.text = s_Date
-        
     }
 
     //MARK: TapGesture func

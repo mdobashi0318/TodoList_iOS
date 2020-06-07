@@ -7,6 +7,7 @@ target 'ToDoList' do
   
   pod 'RealmSwift', '4.4.0'
   pod 'NotificationBannerSwift', '~> 3.0.0'
+  pod 'Toast-Swift', '~> 5.0.1'
 
   # Pods for ToDoList
 

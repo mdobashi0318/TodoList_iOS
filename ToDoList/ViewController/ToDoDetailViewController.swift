@@ -15,9 +15,7 @@ class ToDoDetailViewController: UIViewController {
     
     // MARK: Properties
     
-    private let realm: Realm = try! Realm()
-    
-    private var todoId:Int?
+    private var todoId:String?
     
     private var createTime:String?
     
@@ -38,7 +36,7 @@ class ToDoDetailViewController: UIViewController {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
     
-    convenience init(todoId:Int, createTime: String?) {
+    convenience init(todoId:String, createTime: String?) {
         self.init(nibName: nil, bundle: nil)
         self.todoId = todoId
         self.createTime = createTime
@@ -56,7 +54,7 @@ class ToDoDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(self.rightBarAction))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(self.rightButtonAction))
         
         view.addSubview(toDoDetailView)
     }
@@ -90,7 +88,7 @@ class ToDoDetailViewController: UIViewController {
     
     
     /// アクションシートを開く
-    @objc private func rightBarAction(){
+    @objc private func rightButtonAction() {
         let alertSheet:UIAlertController = UIAlertController(title: nil, message: "Todoをどうしますか?", preferredStyle: .actionSheet)
         alertSheet.addAction(UIAlertAction(title: "編集", style: .default) {[weak self] action in
             let inputViewController:InputViewController = InputViewController(todoId: (self?.todoId!)!, createTime: self?.createTime)

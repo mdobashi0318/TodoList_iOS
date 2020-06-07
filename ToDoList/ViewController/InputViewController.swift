@@ -16,9 +16,6 @@ class InputViewController: UIViewController, TodoInputTableViewDelegate ,UIAdapt
     
     // MARK: Properties
     
-    /// Realmのインタンス
-    private var realm: Realm?
-    
     /// ToDoを入力するためのView
     private lazy var todoInputTableView: TodoInputTableView = {
         
@@ -41,7 +38,7 @@ class InputViewController: UIViewController, TodoInputTableViewDelegate ,UIAdapt
     }()
         
     /// ToDoのIDを格納
-    private var todoId: Int?
+    private var todoId: String?
     
     /// ToDoModelのインスタンス
     private var toDoModel: ToDoModel!
@@ -55,15 +52,13 @@ class InputViewController: UIViewController, TodoInputTableViewDelegate ,UIAdapt
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        setRealm()
-        
     }
     
     
     /// 編集時のinit
     ///
     /// - Parameter todoId: 編集するTodoのid
-    convenience init(todoId:Int, createTime: String?) {
+    convenience init(todoId: String, createTime: String?) {
         self.init(nibName: nil, bundle: nil)
         self.todoId = todoId
         toDoModel = ToDoModel.findRealm(self, todoId: todoId, createTime: createTime)
@@ -156,9 +151,6 @@ class InputViewController: UIViewController, TodoInputTableViewDelegate ,UIAdapt
         } else {
             
             addRealm { [weak self] in
-                if #available(iOS 13.0, *) {
-                    NotificationCenter.default.post(name: Notification.Name(ViewUpdate), object: nil)
-                }
                 AlertManager().alertAction(self!, message: "ToDoを登録しました") { [weak self] action in
                     self?.dismiss(animated: true)
                 }
@@ -174,23 +166,9 @@ class InputViewController: UIViewController, TodoInputTableViewDelegate ,UIAdapt
     
     // MARK: Realm func
     
-    /// Realmのインスタンスを生成
-    func setRealm() {
-        do {
-            realm = try Realm()
-            
-        } catch {
-            AlertManager().alertAction(self,
-                                       message: "エラーが発生しました") { _ in
-                                        return
-            }
-            return
-        }
-    }
-    
     /// ToDoを追加する
     private func addRealm(completeHandler: () -> Void) {
-        let id: String = String((realm?.objects(ToDoModel.self).count)! + 1)
+        let id: String = String(ToDoModel.allFindRealm(self)!.count + 1)
         
         ToDoModel.addRealm(self, addValue: TableValue(id: id,
                                                 title: (todoInputTableView.titletextField.text)!,
