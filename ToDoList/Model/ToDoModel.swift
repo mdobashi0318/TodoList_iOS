@@ -60,21 +60,18 @@ class ToDoModel:Object {
         guard let realm = initRealm(vc) else { return }
         let toDoModel: ToDoModel = ToDoModel()
         
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
-        formatter.locale = Locale(identifier: "ja_JP")
-        let s_Date:String = formatter.string(from: Date())
-        
         toDoModel.id = addValue.id
         toDoModel.toDoName = addValue.title
         toDoModel.todoDate = addValue.date
         toDoModel.toDo = addValue.detail
-        toDoModel.createTime = s_Date
+        toDoModel.createTime = Format().stringFromDate(date: Date(), addSec: true)
         
         do {
             try realm.write() {
                 realm.add(toDoModel)
             }
+            ToDoModel.addNotification(toDoModel: toDoModel)
+            
         }
         catch {
             AlertManager().alertAction(vc, message: "ToDoの登録に失敗しました") { _ in
@@ -100,6 +97,9 @@ class ToDoModel:Object {
                 toDoModel.todoDate = updateValue.date
                 toDoModel.toDo = updateValue.detail
             }
+            
+            ToDoModel.addNotification(toDoModel: toDoModel)
+            
         }
         catch {
             AlertManager().alertAction(vc,
@@ -152,7 +152,7 @@ class ToDoModel:Object {
         
         UNUserNotificationCenter
             .current()
-            .removePendingNotificationRequests(withIdentifiers: [toDoModel.toDoName])
+            .removePendingNotificationRequests(withIdentifiers: [toDoModel.createTime!])
         
         do {
             try realm.write() {
@@ -199,5 +199,42 @@ class ToDoModel:Object {
         }
     }
     
+    
+    
+    
+    // MARK: Set Notification
+    
+    /// 通知を設定する
+    private class func addNotification(toDoModel: ToDoModel) {
+        
+        let content:UNMutableNotificationContent = UNMutableNotificationContent()
+        
+        content.title = toDoModel.toDoName
+        
+        content.body = toDoModel.toDo
+        
+        content.sound = UNNotificationSound.default
+        
+        
+        //通知する日付を設定
+        guard let date:Date = Format().dateFromString(string: toDoModel.todoDate!) else {
+            print("期限の登録に失敗しました")
+            return
+        }
+        
+        let calendar = Calendar.current
+        let dateComponent = calendar.dateComponents([.year, .month, .day, .hour, .minute] , from: date)
+        
+        
+        let trigger:UNCalendarNotificationTrigger = UNCalendarNotificationTrigger(dateMatching: dateComponent, repeats: false)
+        
+        let request:UNNotificationRequest = UNNotificationRequest.init(identifier: toDoModel.createTime!, content: content, trigger: trigger)
+        
+        let center:UNUserNotificationCenter = UNUserNotificationCenter.current()
+        center.add(request) { (error) in
+            
+        }
+        
+    }
     
 }

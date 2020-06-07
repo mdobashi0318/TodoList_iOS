@@ -216,6 +216,7 @@ class ToDoListUITests: XCTestCase {
     
     func editTodo(title: String, detail: String) {
         let app: XCUIApplication = XCUIApplication()
+        sleep(1)
         // タイトル入力
         app.cells.textFields["titleTextField"].tap()
         for _ in 0...app.cells.textFields["titleTextField"].label.count - 1 {

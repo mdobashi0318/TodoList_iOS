@@ -29,12 +29,13 @@ class ToDoModelTests: XCTestCase {
     func test_AddModel() {
         
 //        let view = ToDoListViewController()
-        ToDoModel.addRealm(view, addValue: TableValue(id: "0", title: "UnitTest", todoDate: "123", detail: "詳細"))
+        let addTodoDate = Format().stringFromDate(date: Date())
+        ToDoModel.addRealm(view, addValue: TableValue(id: "0", title: "UnitTest", todoDate: addTodoDate, detail: "詳細"))
         let todoModel = ToDoModel.findRealm(view, todoId: 0, createTime: nil)
         
         XCTAssert(todoModel?.id == "0", "idが登録されていない")
         XCTAssert(todoModel?.toDoName == "UnitTest", "Todoのタイトルが登録されていない")
-        XCTAssert(todoModel?.todoDate == "123", "　Todoの期限が登録されていない")
+        XCTAssert(todoModel?.todoDate == addTodoDate, "　Todoの期限が登録されていない")
         XCTAssert(todoModel?.toDo == "詳細", "　Todoの詳細が登録されていない")
         XCTAssert(!(todoModel?.createTime!.isEmpty)!, "Todo作成時間が登録されていない")
     }
@@ -42,16 +43,17 @@ class ToDoModelTests: XCTestCase {
     
     
     func test_EditModel() {
-        ToDoModel.addRealm(view, addValue: TableValue(id: "0", title: "UnitTest", todoDate: "123", detail: "詳細"))
+        let addTodoDate = Format().stringFromDate(date: Date())
+        ToDoModel.addRealm(view, addValue: TableValue(id: "0", title: "UnitTest", todoDate: addTodoDate, detail: "詳細"))
     
-        
-        ToDoModel.updateRealm(view, todoId: 0, updateValue: TableValue(id: "0", title: "EditUnitTest", todoDate: "123456", detail: "詳細編集"))
+        let updateTodoDate = Format().stringFromDate(date: Date())
+        ToDoModel.updateRealm(view, todoId: 0, updateValue: TableValue(id: "0", title: "EditUnitTest", todoDate: updateTodoDate, detail: "詳細編集"))
         
         
         let todoModel = ToDoModel.findRealm(view, todoId: 0, createTime: nil)
         XCTAssert(todoModel?.id == "0", "idが登録されていない")
         XCTAssert(todoModel?.toDoName == "EditUnitTest", "Todoのタイトルが登録されていない")
-        XCTAssert(todoModel?.todoDate == "123456", "　Todoの期限が登録されていない")
+        XCTAssert(todoModel?.todoDate == updateTodoDate, "　Todoの期限が登録されていない")
         XCTAssert(todoModel?.toDo == "詳細編集", "　Todoの詳細が登録されていない")
         XCTAssert(!(todoModel?.createTime!.isEmpty)!, "Todo作成時間が登録されていない")
     }

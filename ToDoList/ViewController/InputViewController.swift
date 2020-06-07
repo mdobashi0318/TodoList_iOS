@@ -146,8 +146,6 @@ class InputViewController: UIViewController, TodoInputTableViewDelegate ,UIAdapt
         
         if todoId != nil {
             updateRealm() { [weak self] in
-                self?.addNotification()
-                
                 AlertManager().alertAction(self!,
                                            message: "ToDoを更新しました") { [weak self] action in
                                             
@@ -158,7 +156,6 @@ class InputViewController: UIViewController, TodoInputTableViewDelegate ,UIAdapt
         } else {
             
             addRealm { [weak self] in
-                self?.addNotification()
                 if #available(iOS 13.0, *) {
                     NotificationCenter.default.post(name: Notification.Name(ViewUpdate), object: nil)
                 }
@@ -172,38 +169,6 @@ class InputViewController: UIViewController, TodoInputTableViewDelegate ,UIAdapt
     
     
     
-    // MARK: Set Notification
-    
-    /// 通知を設定する
-    private func addNotification() {
-        
-        let content:UNMutableNotificationContent = UNMutableNotificationContent()
-        
-        content.title = (todoInputTableView.titletextField.text)!
-        
-        content.body = (todoInputTableView.detailTextViwe.text)!
-        
-        content.sound = UNNotificationSound.default
-        
-        
-        //通知する日付を設定
-        guard let date:Date = (todoInputTableView.tmpDate) else {
-            return
-        }
-        let calendar = Calendar.current
-        let dateComponent = calendar.dateComponents([.year, .month, .day, .hour, .minute] , from: date)
-        
-        
-        let trigger:UNCalendarNotificationTrigger = UNCalendarNotificationTrigger(dateMatching: dateComponent, repeats: false)
-        
-        let request:UNNotificationRequest = UNNotificationRequest.init(identifier: content.title, content: content, trigger: trigger)
-        
-        let center:UNUserNotificationCenter = UNUserNotificationCenter.current()
-        center.add(request) { (error) in
-            
-        }
-        
-    }
     
     
     

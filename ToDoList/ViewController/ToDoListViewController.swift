@@ -195,7 +195,7 @@ final class ToDoListViewController: UIViewController, ToDoListViewDelegate, UNUs
                                 withCompletionHandler completionHandler: (UNNotificationPresentationOptions) -> Void) {
         
         completionHandler([.sound])
-        let banner = FloatingNotificationBanner(title: notification.request.identifier,
+        let banner = FloatingNotificationBanner(title: notification.request.content.title,
                                                 subtitle: notification.request.content.body,
                                                 style: .success
         )
