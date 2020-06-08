@@ -9,33 +9,53 @@
 import Foundation
 import RealmSwift
 
-class ToDoModel:Object {
+final class ToDoModel: Object {
+
+    // MARK: Properties
     
-    @objc dynamic var id:String = ""
+    /// todoのid(非推奨)
+    @objc dynamic var id: String = ""
     
     /// Todoの期限
-    @objc dynamic var todoDate:String?
+    @objc dynamic var todoDate: String?
     
     /// Todoのタイトル
-    @objc dynamic var toDoName:String = ""
+    @objc dynamic var toDoName: String = ""
     
     /// Todoの詳細
-    @objc dynamic var toDo:String = ""
+    @objc dynamic var toDo: String = ""
     
-    /// Todoの作成日時
-    @objc dynamic var createTime:String?
+    /// Todoの作成日時(プライマリキー)
+    @objc dynamic var createTime: String?
     
     
-    // idをプライマリキーに設定
+    // createTimeをプライマリキーに設定
     override static func primaryKey() -> String? {
         return "createTime"
     }
     
     
+    
+    // MARK: init
+    
+    convenience init(id: String, toDoName: String, todoDate: String?, toDo: String, createTime: String?) {
+        self.init()
+        
+        self.id = id
+        self.toDoName = toDoName
+        self.todoDate = todoDate
+        self.toDo = toDo
+        self.createTime = createTime
+    }
+    
+    
+    
+    
+    
     /// Realmのインスタンス化
     private class func initRealm(_ vc: UIViewController) -> Realm? {
-        
         let realm: Realm
+        
         do {
             realm = try Realm()
             
@@ -56,15 +76,15 @@ class ToDoModel:Object {
     ///   - vc: 呼び出し元のViewController
     ///   - addValue: 登録するTodoの値
     class func addRealm(_ vc: UIViewController, addValue:TableValue) {
-        
         guard let realm = initRealm(vc) else { return }
-        let toDoModel: ToDoModel = ToDoModel()
         
-        toDoModel.id = addValue.id
-        toDoModel.toDoName = addValue.title
-        toDoModel.todoDate = addValue.date
-        toDoModel.toDo = addValue.detail
-        toDoModel.createTime = Format().stringFromDate(date: Date(), addSec: true)
+        let toDoModel: ToDoModel = ToDoModel(id: addValue.id,
+                                             toDoName: addValue.title,
+                                             todoDate: addValue.date,
+                                             toDo: addValue.detail,
+                                             createTime: Format().stringFromDate(date: Date(), addSec: true)
+        )
+        
         
         do {
             try realm.write() {
@@ -93,7 +113,8 @@ class ToDoModel:Object {
     ///   - updateValue: 更新する値
     class func updateRealm(_ vc: UIViewController, todoId: String, updateValue: TableValue) {
         guard let realm = initRealm(vc) else { return }
-        let toDoModel: ToDoModel = (realm.objects(ToDoModel.self).filter("id == '\(String(describing: todoId))'").first!)
+        
+        let toDoModel: ToDoModel = ToDoModel.findRealm(vc, todoId: updateValue.id, createTime: updateValue.createTime)!
         
         do {
             try realm.write() {
@@ -106,8 +127,7 @@ class ToDoModel:Object {
                 NotificationCenter.default.post(name: Notification.Name(ViewUpdate), object: nil)
                 NotificationCenter.default.post(name: Notification.Name(toast), object: result)
             }
-            
-            
+              
         }
         catch {
             AlertManager().alertAction(vc,
@@ -154,15 +174,10 @@ class ToDoModel:Object {
     ///   - todoId: TodoId
     ///   - createTime: Todoの作成時間
     ///   - completion: 削除完了後の動作
-    class func deleteRealm(_ vc: UIViewController, todoId: String, createTime: String?, completion: () ->Void) {
+    class func deleteRealm(_ vc: UIViewController, todoId: String, createTime: String?, completion: () -> Void) {
         guard let realm = initRealm(vc) else { return }
-        var toDoModel: ToDoModel!
         
-        if let _createTime = createTime {
-            toDoModel = (realm.objects(ToDoModel.self).filter("createTime == '\(String(describing: _createTime))'").first)
-        } else {
-            toDoModel = (realm.objects(ToDoModel.self).filter("id == '\(todoId)'").first!)
-        }
+        let toDoModel: ToDoModel = ToDoModel.findRealm(vc, todoId: todoId, createTime: createTime)!
         
         UNUserNotificationCenter
             .current()
@@ -172,8 +187,8 @@ class ToDoModel:Object {
             try realm.write() {
                 realm.delete(toDoModel)
             }
+            completion()
         }
-            
         catch {
             AlertManager().alertAction(vc,
                                        message: "ToDoの削除に失敗しました") { _ in
@@ -182,7 +197,7 @@ class ToDoModel:Object {
         }
         
         
-        completion()
+        
     }
     
     
@@ -204,10 +219,10 @@ class ToDoModel:Object {
     }
     
     
+    
+    /// 全件削除
     class func allDelete() {
-
         let realm = try! Realm()
-        
         try! realm.write {
             realm.deleteAll()
         }
@@ -219,7 +234,6 @@ class ToDoModel:Object {
     // MARK: Set Notification
     
     
-    
     /// 通知を設定する
     /// - Parameters:
     ///   - toDoModel: ToDoModels
@@ -227,29 +241,24 @@ class ToDoModel:Object {
     private class func addNotification(toDoModel: ToDoModel, isRequestResponse: @escaping(Bool) -> ()) {
         
         let content:UNMutableNotificationContent = UNMutableNotificationContent()
-        
         content.title = toDoModel.toDoName
-        
         content.body = toDoModel.toDo
-        
         content.sound = UNNotificationSound.default
-        
         
         //通知する日付を設定
         guard let date:Date = Format().dateFromString(string: toDoModel.todoDate!) else {
             print("期限の登録に失敗しました")
             isRequestResponse(false)
+            
             return
         }
         
         let calendar = Calendar.current
         let dateComponent = calendar.dateComponents([.year, .month, .day, .hour, .minute] , from: date)
-        
         let trigger:UNCalendarNotificationTrigger = UNCalendarNotificationTrigger(dateMatching: dateComponent, repeats: false)
-        
         let request:UNNotificationRequest = UNNotificationRequest.init(identifier: toDoModel.createTime!, content: content, trigger: trigger)
-        
         let center:UNUserNotificationCenter = UNUserNotificationCenter.current()
+        
         center.add(request) { (error) in
             print("request: \(request)")
             
@@ -260,11 +269,10 @@ class ToDoModel:Object {
             } else {
                 print("通知の登録をしました")
                 isRequestResponse(true)
-                
+   
             }
         }
-        
-        
     }
+    
     
 }
