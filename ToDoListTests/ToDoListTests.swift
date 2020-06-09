@@ -46,7 +46,7 @@ class ToDoModelTests: XCTestCase {
         XCTAssert(todoModel2.toDoName == "UnitTest", "Todoのタイトルが代入されていない")
         XCTAssert(todoModel2.todoDate == todoDate, "　Todoの期限が代入されていない")
         XCTAssert(todoModel2.toDo == "詳細", "　Todoの詳細が代入されていない")
-        XCTAssert(todoModel2.createTime == "createTime", "Todo作成時間が代入されている")
+        XCTAssert(todoModel2.createTime == "createTime", "Todo作成時間が代入されていない")
     }
     
     

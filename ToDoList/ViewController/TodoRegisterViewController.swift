@@ -17,9 +17,6 @@ class TodoRegisterViewController: UIViewController, TodoRegisterDelegate {
     
     /// ToDoを入力するためのView
     private lazy var todoInputTableView: TodoRegisterTableView = {
-        
-        
-        
         if todoId == nil {
             let view = TodoRegisterTableView(frame: frame_Size(self), toDoModel: nil)
             
