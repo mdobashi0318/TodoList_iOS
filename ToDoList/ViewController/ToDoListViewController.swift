@@ -86,7 +86,7 @@ final class ToDoListViewController: UITableViewController {
     
     /// Todoの入力画面を開く
     @objc func rightButtonAction(){
-        let inputViewController:InputViewController = InputViewController()
+        let inputViewController:TodoRegisterViewController = TodoRegisterViewController()
         naviController = UINavigationController(rootViewController: inputViewController)
         naviController.presentationController?.delegate = self
         present(naviController,animated: true, completion: nil)
@@ -118,7 +118,7 @@ final class ToDoListViewController: UITableViewController {
     ///
     /// - Parameter indexPath: 選択したcellの行
     private func editAction(indexPath: IndexPath) {
-        let inputViewController:InputViewController = InputViewController(todoId: (toDoModel?[indexPath.row].id)!, createTime: toDoModel?[indexPath.row].createTime)
+        let inputViewController:TodoRegisterViewController = TodoRegisterViewController(todoId: (toDoModel?[indexPath.row].id)!, createTime: toDoModel?[indexPath.row].createTime)
         self.navigationController?.pushViewController(inputViewController, animated: true)
     }
     
@@ -136,7 +136,7 @@ final class ToDoListViewController: UITableViewController {
             ToDoModel.deleteRealm(self!, todoId: todoid!, createTime: createTime) {
                 NotificationCenter.default.post(name: Notification.Name(ViewUpdate), object: nil)
             }
-            self?.viewWillAppear(true)
+            
             }){ _ in }
     }
     

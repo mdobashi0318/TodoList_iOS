@@ -9,18 +9,19 @@
 import UIKit
 
 
-protocol TodoInputTableViewDelegate: AnyObject {
+protocol TodoRegisterDelegate: AnyObject {
     func textChenge()
 }
 
 
 
-class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIPickerViewDelegate {
+final class TodoRegisterTableView: UITableView, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIPickerViewDelegate {
     
-    private var tableValue:TableValue?
+    private var toDoModel: ToDoModel?
+    
     private let leading:CGFloat = 15
     
-    weak var inputDeleagte: TodoInputTableViewDelegate?
+    weak var toDoregisterDelegate: TodoRegisterDelegate?
     
     /// ToDoのタイトル入力テキストフィールド
     let titletextField:UITextField = {
@@ -58,8 +59,7 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
         return datePicker
     }()
     
-    /// 日付の一時保存
-    private(set) var tmpDate:Date?
+    
     
     /// 編集するToDoのID
     private var todoId: String?
@@ -70,38 +70,28 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
     
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
-    }
-    
-    
-    convenience init(frame: CGRect, style: UITableView.Style = .grouped, todoId: String?, tableValue:TableValue?) {
-        self.init(frame: frame, style: style)
-        
-        
-        if let _todoId = todoId {
-            self.todoId = _todoId
-        }
-        
-        if let _tableValue = tableValue {
-            self.tableValue = TableValue(id: _tableValue.id,
-                                         title: _tableValue.title,
-                                         todoDate: _tableValue.date,
-                                         detail: _tableValue.detail,
-                                         createTime: _tableValue.createTime
-            )
-        }
         
         delegate = self
         dataSource = self
         separatorInset = .zero
         separatorStyle = .singleLine
-        
         estimatedSectionHeaderHeight = 0
         estimatedSectionFooterHeight = 0
         
-        
         let tapGesture:UITapGestureRecognizer = UITapGestureRecognizer(target: self, action:
             #selector(tapView(_:)))
-        self.addGestureRecognizer(tapGesture)
+        addGestureRecognizer(tapGesture)
+    }
+    
+    
+    convenience init(frame: CGRect, style: UITableView.Style = .grouped, toDoModel:ToDoModel?) {
+        self.init(frame: frame, style: style)
+        
+        if let _toDoModel = toDoModel {
+            self.todoId = _toDoModel.id
+            self.toDoModel = _toDoModel
+        }
+
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -130,9 +120,9 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
         cell.backgroundColor = cellWhite
         // ToDoの編集時はTextFieldに表示
         if todoId != nil {
-            titletextField.text = tableValue?.title
-            dateTextField.text = tableValue?.date
-            detailTextViwe.text = tableValue?.detail
+            titletextField.text = toDoModel?.toDoName
+            dateTextField.text = toDoModel?.todoDate
+            detailTextViwe.text = toDoModel?.toDo
         }
         
         
@@ -151,6 +141,7 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
         case 2: /* Todoの詳細 */
             detailTextViwe.backgroundColor = cellWhite
             cell.addSubview(detailTextViwe)
+            
             detailTextViwe.translatesAutoresizingMaskIntoConstraints = false
             detailTextViwe.topAnchor.constraint(equalTo: cell.topAnchor).isActive = true
             detailTextViwe.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: leading).isActive = true
@@ -197,13 +188,14 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
     // MARK: UIDatePicker func
     
     @objc private func onDidChangeDate(sender:UIDatePicker){
-        tmpDate = sender.date
-        let s_Date:String = Format().stringFromDate(date: sender.date)
         datePicker.minimumDate = Date()
-        dateTextField.text = s_Date
+        dateTextField.text = Format().stringFromDate(date: sender.date)
     }
 
+    
     //MARK: TapGesture func
+    
+    /// Viweをタップした時に
     @objc private func tapView(_:UITapGestureRecognizer){
         titletextField.resignFirstResponder()
         dateTextField.resignFirstResponder()
@@ -228,7 +220,7 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
     // MARK: TextField Delegate
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
-        inputDeleagte?.textChenge()
+        toDoregisterDelegate?.textChenge()
     }
     
     
@@ -237,7 +229,7 @@ class TodoInputTableView: UITableView, UITableViewDelegate, UITableViewDataSourc
     // MARK: TextView Delegate
     
     func textViewDidChange(_ textView: UITextView) {
-        inputDeleagte?.textChenge()
+        toDoregisterDelegate?.textChenge()
     }
     
 }

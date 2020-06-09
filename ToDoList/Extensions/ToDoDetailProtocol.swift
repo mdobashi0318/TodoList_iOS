@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 
-extension TodoInputTableView: ToDoDetailProtocol {}
+extension TodoRegisterTableView: ToDoDetailProtocol {}
 extension ToDoDetailTableView: ToDoDetailProtocol {}
 
 

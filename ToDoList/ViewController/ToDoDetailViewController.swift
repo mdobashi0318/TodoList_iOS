@@ -91,7 +91,7 @@ class ToDoDetailViewController: UIViewController {
     @objc private func rightButtonAction() {
         let alertSheet:UIAlertController = UIAlertController(title: nil, message: "Todoをどうしますか?", preferredStyle: .actionSheet)
         alertSheet.addAction(UIAlertAction(title: "編集", style: .default) {[weak self] action in
-            let inputViewController:InputViewController = InputViewController(todoId: (self?.todoId!)!, createTime: self?.createTime)
+            let inputViewController:TodoRegisterViewController = TodoRegisterViewController(todoId: (self?.todoId!)!, createTime: self?.createTime)
             self?.navigationController?.pushViewController(inputViewController, animated: true)
         })
         

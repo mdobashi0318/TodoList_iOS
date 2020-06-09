@@ -8,30 +8,25 @@
 
 import UIKit
 import UserNotifications
-import RealmSwift
 
-class InputViewController: UIViewController, TodoInputTableViewDelegate ,UIAdaptivePresentationControllerDelegate {
+class TodoRegisterViewController: UIViewController, TodoRegisterDelegate {
     
     
     
     // MARK: Properties
     
     /// ToDoを入力するためのView
-    private lazy var todoInputTableView: TodoInputTableView = {
+    private lazy var todoInputTableView: TodoRegisterTableView = {
+        
+        
         
         if todoId == nil {
-            let view = TodoInputTableView(frame: frame_Size(self), todoId: nil, tableValue: nil)
+            let view = TodoRegisterTableView(frame: frame_Size(self), toDoModel: nil)
             
             return view
             
         } else {
-            tableValue = TableValue(id: toDoModel.id,
-                                    title: toDoModel.toDoName,
-                                    todoDate: toDoModel.todoDate!,
-                                    detail: toDoModel.toDo,
-                                    createTime: toDoModel.createTime
-            )
-            let view = TodoInputTableView(frame: frame_Size(self),todoId: todoId, tableValue: tableValue)
+            let view = TodoRegisterTableView(frame: frame_Size(self), toDoModel: self.toDoModel)
             
             return view
         }
@@ -42,10 +37,6 @@ class InputViewController: UIViewController, TodoInputTableViewDelegate ,UIAdapt
     
     /// ToDoModelのインスタンス
     private var toDoModel: ToDoModel!
-    
-    /// ToDoのValueの格納するインスタンス
-    private var tableValue: TableValue?
-    
     
     
     // MARK: Init
@@ -71,22 +62,15 @@ class InputViewController: UIViewController, TodoInputTableViewDelegate ,UIAdapt
     
     // MARK LifeCycle
     
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
-        todoInputTableView.inputDeleagte = self
-        
         view.backgroundColor = UIColor.white
-        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel,
-                                                           target: self,
-                                                           action: #selector(leftButton)
-        )
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save,
-                                                            target: self,
-                                                            action: #selector(rightButton)
-        )
+        setNavigationItem()
         
+        todoInputTableView.toDoregisterDelegate = self
         view.addSubview(todoInputTableView)
     }
 
@@ -98,6 +82,19 @@ class InputViewController: UIViewController, TodoInputTableViewDelegate ,UIAdapt
   
     
     // MARK: NavigationButton Action
+    
+    
+    private func setNavigationItem() {
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel,
+                                                           target: self,
+                                                           action: #selector(leftButton)
+        )
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save,
+                                                            target: self,
+                                                            action: #selector(rightButton)
+        )
+    }
+    
     
     /// Todoの新規作成時はモーダルを閉じる,編集時はも一つ前の画面に戻る
     @objc func leftButton() {
@@ -193,7 +190,7 @@ class InputViewController: UIViewController, TodoInputTableViewDelegate ,UIAdapt
     }
     
     
-    
+    /// Todoの追加時にテキスト入力中だったらモーダルを本当に閉じるかの確認フラグをtrueにする
     func textChenge() {
         if #available(iOS 13.0, *) {
             if todoInputTableView.titletextField.text!.isEmpty &&
