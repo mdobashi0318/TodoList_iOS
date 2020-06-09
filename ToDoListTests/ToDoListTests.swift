@@ -26,10 +26,36 @@ class ToDoModelTests: XCTestCase {
     }
     
     
+    
+    
+    /// ToDoModelのInitTest
+    func test_initTodoModel() {
+        let todoDate = Format().stringFromDate(date: Date())
+        let todoModel1 = ToDoModel(id: "0", toDoName: "UnitTest", todoDate: todoDate, toDo: "詳細", createTime: nil)
+        
+        XCTAssert(todoModel1.id == "0", "idが代入されていない")
+        XCTAssert(todoModel1.toDoName == "UnitTest", "Todoのタイトルが代入されていない")
+        XCTAssert(todoModel1.todoDate == todoDate, "　Todoの期限が代入されていない")
+        XCTAssert(todoModel1.toDo == "詳細", "　Todoの詳細が代入されていない")
+        XCTAssertNil(todoModel1.createTime, "Todo作成時間が作成されている")
+        
+        
+        let todoModel2 = ToDoModel(id: "0", toDoName: "UnitTest", todoDate: todoDate, toDo: "詳細", createTime: "createTime")
+        
+        XCTAssert(todoModel2.id == "0", "idが代入されていない")
+        XCTAssert(todoModel2.toDoName == "UnitTest", "Todoのタイトルが代入されていない")
+        XCTAssert(todoModel2.todoDate == todoDate, "　Todoの期限が代入されていない")
+        XCTAssert(todoModel2.toDo == "詳細", "　Todoの詳細が代入されていない")
+        XCTAssert(todoModel2.createTime == "createTime", "Todo作成時間が代入されている")
+    }
+    
+    
+    
+    
     func test_AddModel() {
         
         let addTodoDate = Format().stringFromDate(date: Date())
-        ToDoModel.addRealm(view, addValue: TableValue(id: "0", title: "UnitTest", todoDate: addTodoDate, detail: "詳細"))
+        ToDoModel.addRealm(view, addValue: ToDoModel(id: "0", toDoName: "UnitTest", todoDate: addTodoDate, toDo: "詳細", createTime: nil))
         let todoModel = ToDoModel.findRealm(view, todoId: "0", createTime: nil)
         
         XCTAssert(todoModel?.id == "0", "idが登録されていない")
@@ -43,10 +69,10 @@ class ToDoModelTests: XCTestCase {
     
     func test_EditModel() {
         let addTodoDate = Format().stringFromDate(date: Date())
-        ToDoModel.addRealm(view, addValue: TableValue(id: "0", title: "UnitTest", todoDate: addTodoDate, detail: "詳細"))
+        ToDoModel.addRealm(view, addValue: ToDoModel(id: "0", toDoName: "UnitTest", todoDate: addTodoDate, toDo: "詳細", createTime: nil))
     
         let updateTodoDate = Format().stringFromDate(date: Date())
-        ToDoModel.updateRealm(view, todoId: "0", updateValue: TableValue(id: "0", title: "EditUnitTest", todoDate: updateTodoDate, detail: "詳細編集"))
+        ToDoModel.updateRealm(view, todoId: "0", updateValue: ToDoModel(id: "0", toDoName: "EditUnitTest", todoDate: updateTodoDate, toDo: "詳細編集", createTime: nil))
         
         
         let todoModel = ToDoModel.findRealm(view, todoId: "0", createTime: nil)
@@ -62,7 +88,7 @@ class ToDoModelTests: XCTestCase {
     
     func test_DeleteModel() {
         let addTodoDate = Format().stringFromDate(date: Date())
-        ToDoModel.addRealm(view, addValue: TableValue(id: "0", title: "UnitTest", todoDate: addTodoDate, detail: "詳細"))
+        ToDoModel.addRealm(view, addValue: ToDoModel(id: "0", toDoName: "UnitTest", todoDate: addTodoDate, toDo: "詳細", createTime: nil))
         
         let todoModel = ToDoModel.findRealm(view, todoId: "0", createTime: nil)
         
@@ -83,9 +109,9 @@ class ToDoModelTests: XCTestCase {
     
     func test_allDeleteModel() {
         let addTodoDate = Format().stringFromDate(date: Date())
-        ToDoModel.addRealm(view, addValue: TableValue(id: "0", title: "UnitTest1", todoDate: addTodoDate, detail: "詳細1"))
+        ToDoModel.addRealm(view, addValue: ToDoModel(id: "0", toDoName: "UnitTest1", todoDate: addTodoDate, toDo: "詳細1", createTime: nil))
         sleep(1)
-        ToDoModel.addRealm(view, addValue: TableValue(id: "1", title: "UnitTest2", todoDate: addTodoDate, detail: "詳細2"))
+        ToDoModel.addRealm(view, addValue: ToDoModel(id: "1", toDoName: "UnitTest2", todoDate: addTodoDate, toDo: "詳細2", createTime: nil))
         
         let todoModel1 = ToDoModel.findRealm(view, todoId: "0", createTime: nil)
         

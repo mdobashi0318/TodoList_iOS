@@ -167,10 +167,11 @@ class TodoRegisterViewController: UIViewController, TodoRegisterDelegate {
     private func addRealm(completeHandler: () -> Void) {
         let id: String = String(ToDoModel.allFindRealm(self)!.count + 1)
         
-        ToDoModel.addRealm(self, addValue: TableValue(id: id,
-                                                title: (todoInputTableView.titletextField.text)!,
-                                                todoDate: todoInputTableView.dateTextField.text!,
-                                                detail: (todoInputTableView.detailTextViwe.text)!)
+        ToDoModel.addRealm(self, addValue: ToDoModel(id: id,
+                                                     toDoName: (todoInputTableView.titletextField.text)!,
+                                                     todoDate: todoInputTableView.dateTextField.text!,
+                                                     toDo: (todoInputTableView.detailTextViwe.text)!,
+                                                     createTime: nil)
         )
         
         completeHandler()
@@ -180,10 +181,12 @@ class TodoRegisterViewController: UIViewController, TodoRegisterDelegate {
     /// ToDoの更新
     private func updateRealm(completeHandler: () -> Void) {
         ToDoModel.updateRealm(self, todoId: todoId!,
-                              updateValue: TableValue(id: String(todoId!),
-                                                      title: (todoInputTableView.titletextField.text)!,
-                                                      todoDate: todoInputTableView.dateTextField.text!,
-                                                      detail: (todoInputTableView.detailTextViwe.text)!))
+                              updateValue: ToDoModel(id: String(todoId!),
+                                                     toDoName: (todoInputTableView.titletextField.text)!,
+                                                     todoDate: todoInputTableView.dateTextField.text!,
+                                                     toDo: (todoInputTableView.detailTextViwe.text)!,
+                                                     createTime: self.toDoModel.createTime)
+        )
         
         completeHandler()
         

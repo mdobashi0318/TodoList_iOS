@@ -19,8 +19,6 @@ class ToDoDetailViewController: UIViewController {
     
     private var createTime:String?
     
-    private var tableValue:TableValue?
-    
     private var toDoModel: ToDoModel!
     
     private lazy var toDoDetailView:ToDoDetailTableView = {
@@ -64,9 +62,7 @@ class ToDoDetailViewController: UIViewController {
         super.viewWillAppear(animated)
         
         // テーブルビューの更新
-        tableValue = setTableValue()
-        
-        toDoDetailView.tableValue = tableValue
+        toDoDetailView.todoModel = toDoModel
         toDoDetailView.reloadData()
         
         
@@ -75,16 +71,6 @@ class ToDoDetailViewController: UIViewController {
     
     
     // MARK: Private Func
-    
-    /// ToDoのValueをセットする
-    private func setTableValue() -> TableValue {
-        return TableValue(id: toDoModel.id,
-                          title: toDoModel.toDoName,
-                          todoDate: toDoModel.todoDate!,
-                          detail: toDoModel.toDo,
-                          createTime: toDoModel?.createTime
-        )
-    }
     
     
     /// アクションシートを開く

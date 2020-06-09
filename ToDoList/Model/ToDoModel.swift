@@ -75,13 +75,13 @@ final class ToDoModel: Object {
     /// - Parameters:
     ///   - vc: 呼び出し元のViewController
     ///   - addValue: 登録するTodoの値
-    class func addRealm(_ vc: UIViewController, addValue:TableValue) {
+    class func addRealm(_ vc: UIViewController, addValue: ToDoModel) {
         guard let realm = initRealm(vc) else { return }
         
         let toDoModel: ToDoModel = ToDoModel(id: addValue.id,
-                                             toDoName: addValue.title,
-                                             todoDate: addValue.date,
-                                             toDo: addValue.detail,
+                                             toDoName: addValue.toDoName,
+                                             todoDate: addValue.todoDate,
+                                             toDo: addValue.toDo,
                                              createTime: Format().stringFromDate(date: Date(), addSec: true)
         )
         
@@ -111,16 +111,16 @@ final class ToDoModel: Object {
     ///   - vc: 呼び出し元のViewController
     ///   - todoId: TodoId
     ///   - updateValue: 更新する値
-    class func updateRealm(_ vc: UIViewController, todoId: String, updateValue: TableValue) {
+    class func updateRealm(_ vc: UIViewController, todoId: String, updateValue: ToDoModel) {
         guard let realm = initRealm(vc) else { return }
         
         let toDoModel: ToDoModel = ToDoModel.findRealm(vc, todoId: updateValue.id, createTime: updateValue.createTime)!
         
         do {
             try realm.write() {
-                toDoModel.toDoName = updateValue.title
-                toDoModel.todoDate = updateValue.date
-                toDoModel.toDo = updateValue.detail
+                toDoModel.toDoName = updateValue.toDoName
+                toDoModel.todoDate = updateValue.todoDate
+                toDoModel.toDo = updateValue.toDo
             }
             
             ToDoModel.addNotification(toDoModel: toDoModel) { result in

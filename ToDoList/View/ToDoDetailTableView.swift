@@ -10,7 +10,7 @@ import UIKit
 
 class ToDoDetailTableView: UITableView, UITableViewDelegate, UITableViewDataSource {
     
-    var tableValue:TableValue!
+    var todoModel: ToDoModel!
     
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
@@ -51,11 +51,11 @@ class ToDoDetailTableView: UITableView, UITableViewDelegate, UITableViewDataSour
         
         switch indexPath.section {
         case 0:
-            cell.textLabel!.text = tableValue.title
+            cell.textLabel!.text = todoModel.toDoName
         case 1:
-            cell.textLabel!.text = tableValue.date
+            cell.textLabel!.text = todoModel.todoDate
         default:
-            cell.textLabel!.text = tableValue.detail
+            cell.textLabel!.text = todoModel.toDo
             cell.textLabel?.numberOfLines = 0
         }
         
