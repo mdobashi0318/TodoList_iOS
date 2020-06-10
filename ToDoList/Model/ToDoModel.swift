@@ -208,7 +208,7 @@ final class ToDoModel: Object {
     class func allDeleteRealm(_ vc: UIViewController, completion:@escaping () ->Void) {
         guard let realm = initRealm(vc) else { return }
         
-        AlertManager().alertAction(vc, title: "データベースの削除", message: "作成した問題や履歴を全件削除します", handler1: { (action) in
+        AlertManager().alertAction(vc, title: "データベースの削除", message: "作成した問題や履歴を全件削除します", didTapDeleteButton: { (action) in
             try! realm.write {
                 realm.deleteAll()
             }

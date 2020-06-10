@@ -129,7 +129,7 @@ final class ToDoListViewController: UITableViewController {
     ///
     /// - Parameter indexPath: 選択したcellの行
     private func deleteAction(indexPath: IndexPath) {
-        AlertManager().alertAction(self, message: "削除しますか?", handler1: {[weak self] action in
+        AlertManager().alertAction(self, message: "削除しますか?", didTapDeleteButton: {[weak self] action in
             
             let todoid = self?.toDoModel![indexPath.row].id
             let createTime = self?.toDoModel?[indexPath.row].createTime
@@ -275,7 +275,7 @@ extension ToDoListViewController {
 extension ToDoListViewController: UIAdaptivePresentationControllerDelegate {
 
     func presentationControllerDidAttemptToDismiss(_ presentationController: UIPresentationController) {
-        AlertManager().alertAction(naviController, message: "編集途中の内容がありますが削除しますか?", handler1: { [weak self] action in
+        AlertManager().alertAction(naviController, message: "編集途中の内容がありますが削除しますか?", didTapDeleteButton: { [weak self] action in
             self?.naviController.dismiss(animated: true) {
                 NotificationCenter.default.post(name: Notification.Name(TableReload), object: nil)
             }
