@@ -7,9 +7,7 @@
 //
 
 import UIKit
-import UserNotifications
 import RealmSwift
-import NotificationBannerSwift
 
 
 final class ToDoListViewController: UITableViewController {
@@ -17,9 +15,6 @@ final class ToDoListViewController: UITableViewController {
     // MARK: Properties
         
     private var naviController: UINavigationController!
-    
-    private let center = UNUserNotificationCenter.current()
-   
     
     /// ToDoを格納する配列
     private var toDoModel: Results<ToDoModel>? {
@@ -34,18 +29,17 @@ final class ToDoListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        center.delegate = self
+        toDoModel = ToDoModel.allFindRealm(self)
         setNavigationItem()
         setupTableView()
-        updateTodoModel()
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadTable(notification:)), name: NSNotification.Name(rawValue: ViewUpdate), object: nil)
-        
+        setNotificationCenter()
     }
     
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        reloadTableView()
         
         #if DEBUG
         print("Model\(String(describing: toDoModel!))")
@@ -62,11 +56,18 @@ final class ToDoListViewController: UITableViewController {
     // MARK: TableView
     
     private func setupTableView() {
-        tableView.separatorStyle = .none
         tableView.dataSource = self
         tableView.delegate = self
         tableView.separatorInset = .zero
+        tableView.separatorStyle = toDoModel?.count != 0 ? .none : .singleLine
         tableView.register(TodoListCell.self, forCellReuseIdentifier: "listCell")
+    }
+    
+    
+    /// テーブルとセパレート線を更新する
+    func reloadTableView() {
+        tableView.separatorStyle = toDoModel?.count != 0 ? .none : .singleLine
+        tableView.reloadData()
     }
     
     
@@ -97,7 +98,7 @@ final class ToDoListViewController: UITableViewController {
     /// データベース内の全件削除(Debug)
     @objc override func leftButtonAction() {
         ToDoModel.allDeleteRealm(self) {
-            self.updateTodoModel()
+            NotificationCenter.default.post(name: Notification.Name(TableReload), object: nil)
         }
     }
     
@@ -134,7 +135,7 @@ final class ToDoListViewController: UITableViewController {
             let createTime = self?.toDoModel?[indexPath.row].createTime
             
             ToDoModel.deleteRealm(self!, todoId: todoid!, createTime: createTime) {
-                NotificationCenter.default.post(name: Notification.Name(ViewUpdate), object: nil)
+                NotificationCenter.default.post(name: Notification.Name(TableReload), object: nil)
             }
             
             }){ _ in }
@@ -144,23 +145,18 @@ final class ToDoListViewController: UITableViewController {
     
     // MARK: Notification
     
+    /// NotificationCenterを追加する
+    private func setNotificationCenter() {
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadTable(notification:)), name: NSNotification.Name(rawValue: TableReload), object: nil)
+    }
+    
     /// テーブルの更新とセパレート線の設定
     @objc func reloadTable(notification: Notification) {
         DispatchQueue.main.async { [weak self] in
-            self?.tableView.reloadData()
-            self?.tableView.separatorStyle = self?.toDoModel?.count != 0 ? .none : .singleLine
+            self?.reloadTableView()
         }
-        
     }
     
-    
-    // MARK: Other Func
-    
-    /// 配列に追加とViewのTableに反映
-    func updateTodoModel() {
-        toDoModel = ToDoModel.allFindRealm(self)
-        tableView.separatorStyle = toDoModel?.count != 0 ? .none : .singleLine
-    }
     
 }
 
@@ -281,7 +277,7 @@ extension ToDoListViewController: UIAdaptivePresentationControllerDelegate {
     func presentationControllerDidAttemptToDismiss(_ presentationController: UIPresentationController) {
         AlertManager().alertAction(naviController, message: "編集途中の内容がありますが削除しますか?", handler1: { [weak self] action in
             self?.naviController.dismiss(animated: true) {
-                self?.updateTodoModel()
+                NotificationCenter.default.post(name: Notification.Name(TableReload), object: nil)
             }
         }) { _ in return }
 
@@ -290,31 +286,3 @@ extension ToDoListViewController: UIAdaptivePresentationControllerDelegate {
 }
 
 
-
-
-// MARK: - UNUserNotificationCenterDelegate
-
-extension ToDoListViewController: UNUserNotificationCenterDelegate {
- 
-    /// フォアグラウンドの時の通知
-    func userNotificationCenter(_ center: UNUserNotificationCenter,
-                                willPresent notification: UNNotification,
-                                withCompletionHandler completionHandler: (UNNotificationPresentationOptions) -> Void) {
-        
-        completionHandler([.sound])
-        let banner = FloatingNotificationBanner(title: notification.request.content.title,
-                                                subtitle: notification.request.content.body,
-                                                style: .success
-        )
-        banner.autoDismiss = false
-        banner.onSwipeUp = { [weak self] in
-            banner.dismiss()
-            self?.tableView.reloadData()
-        }
-        
-        banner.show(queuePosition: .front,
-                    bannerPosition: .top,
-                    cornerRadius: 10)
-    }
-    
-}

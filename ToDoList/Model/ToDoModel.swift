@@ -92,7 +92,7 @@ final class ToDoModel: Object {
             }
             
             ToDoModel.addNotification(toDoModel: toDoModel) { result in
-                NotificationCenter.default.post(name: Notification.Name(ViewUpdate), object: nil)
+                NotificationCenter.default.post(name: Notification.Name(TableReload), object: nil)
                 NotificationCenter.default.post(name: Notification.Name(toast), object: result)
             }
             
@@ -124,7 +124,7 @@ final class ToDoModel: Object {
             }
             
             ToDoModel.addNotification(toDoModel: toDoModel) { result in
-                NotificationCenter.default.post(name: Notification.Name(ViewUpdate), object: nil)
+                NotificationCenter.default.post(name: Notification.Name(TableReload), object: nil)
                 NotificationCenter.default.post(name: Notification.Name(toast), object: result)
             }
               

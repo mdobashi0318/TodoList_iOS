@@ -27,8 +27,8 @@ let cellWhite: UIColor = UIColor.changeAppearnceColor(light: .white, dark: .rgba
 
 // MARK: - STRINGS
 
-/// iOS13以降でモーダルを閉じた時にViewWillAppearを呼ぶ
-let ViewUpdate: String = "viewUpdate"
+/// ToDoListViewControllerのテーブルを更新する
+let TableReload: String = "TableReload"
 
 /// 期限の登録に失敗した際にトーストを表示する
 let toast: String = "toast"

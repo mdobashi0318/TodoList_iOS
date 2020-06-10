@@ -139,8 +139,6 @@ class ToDoListUITests: XCTestCase {
         
         // 詳細入力
         app.cells.textViews["detailTextViwe"].tap()
-        
-        
         app.typeText("detailEdit")
         
         // 保存
@@ -171,15 +169,6 @@ class ToDoListUITests: XCTestCase {
         
         
     }
-    
-    /*
-    func testCreate() {
-        
-        for i in 0..<10 {
-            createToDo(num: i)
-        }
-    }
-    */
     
     
     func createToDo(num: Int, isOpen: Bool = true) {

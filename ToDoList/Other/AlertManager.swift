@@ -8,9 +8,7 @@
 
 import UIKit
 
-class AlertManager {
-    
-    
+struct AlertManager {
     
     /// 閉じるボタンが付いたアラート
     func alertAction(_ viewController:UIViewController, title: String? = nil, message: String, handler: @escaping (UIAlertAction) -> ()){
