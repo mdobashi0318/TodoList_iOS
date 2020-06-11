@@ -115,8 +115,9 @@ class ToDoListUITests: XCTestCase {
         createToDo(num: 1, isOpen: false)
         
 
-        
+        sleep(1)
         app.tables.cells.firstMatch.swipeLeft()
+        sleep(1)
         let edit = app.tables.buttons["編集"]
         if app.waitForExistence(timeout: 1.0){
             edit.tap()

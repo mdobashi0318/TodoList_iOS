@@ -7,11 +7,8 @@
 //
 
 import UIKit
-import UserNotifications
 
 class TodoRegisterViewController: UIViewController, TodoRegisterDelegate {
-    
-    
     
     // MARK: Properties
     
@@ -109,9 +106,9 @@ class TodoRegisterViewController: UIViewController, TodoRegisterDelegate {
     ///
     /// バリデーションチェックを通った場合は、Todoの保存または更新をする
     @objc func didTapRightButton() {
-        validateCheck { result in
+        validateCheck { [weak self] result in
             if result == true {
-                realmAction()
+                self?.realmAction()
             }
         }
     }
@@ -220,4 +217,43 @@ class TodoRegisterViewController: UIViewController, TodoRegisterDelegate {
 
 
 
+
+
+/// Private関数のテスト
+protocol TodoRegisterVCTestProtocol {
+    /// テキストをセットする
+    func addText(toDoName: String?, todoDate: String?, toDo: String?)
+    /// TodoIdを取得する
+    func gettodoId() -> String?
+    /// ToDoModelを取得する
+    func getToDoModel() -> ToDoModel!
+    /// バリデーションチェックの結果を取得
+    func getValidateCheck() -> Bool
+}
+
+
+extension TodoRegisterViewController: TodoRegisterVCTestProtocol {
+    func addText(toDoName: String?, todoDate: String?, toDo: String?) {
+        todoRegisterTableView.titletextField.text = toDoName
+        todoRegisterTableView.dateTextField.text = todoDate
+        todoRegisterTableView.detailTextViwe.text = toDo
+    }
+    
+    func gettodoId() -> String? {
+        todoId
+    }
+    
+    func getToDoModel() -> ToDoModel! {
+        toDoModel
+    }
+    
+    func getValidateCheck() -> Bool {
+        var isValidate: Bool!
+        validateCheck { result in
+            isValidate = result
+        }
+        return isValidate
+    }
+     
+}
 
