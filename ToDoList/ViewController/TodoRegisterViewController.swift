@@ -176,17 +176,17 @@ class TodoRegisterViewController: UIViewController, TodoRegisterDelegate {
         
         if todoRegisterTableView.titletextField.text!.isEmpty {
             AlertManager().alertAction(self,
-                                       message: "ToDoのタイトルが入力されていません") { _ in return }
+                                       message: "ToDoのタイトルが入力されていません")
             
             result(false)
         } else if todoRegisterTableView.dateTextField.text!.isEmpty {
             AlertManager().alertAction(self,
-                                       message: "ToDoの期限が入力されていません") { _ in return }
+                                       message: "ToDoの期限が入力されていません")
             
             result(false)
         } else if todoRegisterTableView.detailTextViwe.text.isEmpty {
             AlertManager().alertAction(self,
-                                       message: "ToDoの詳細が入力されていません") { _ in return }
+                                       message: "ToDoの詳細が入力されていません")
             
             result(false)
         } else {

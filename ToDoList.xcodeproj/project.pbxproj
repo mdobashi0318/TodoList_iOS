@@ -19,12 +19,11 @@
 		D0A6A5F3219C4D0200D6A526 /* ToDoListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A6A5F2219C4D0200D6A526 /* ToDoListTests.swift */; };
 		D0A6A5FD219C4D6000D6A526 /* TodoListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A6A5FC219C4D6000D6A526 /* TodoListCell.swift */; };
 		D0A6A5FF219C4D8900D6A526 /* TodoRegisterTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A6A5FE219C4D8900D6A526 /* TodoRegisterTableView.swift */; };
-		D0A6A602219C4DB500D6A526 /* ToDoDetailTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A6A601219C4DB500D6A526 /* ToDoDetailTableView.swift */; };
 		D0BB76D1219DAC7F000AF1E4 /* ToDoListUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BB76D0219DAC7F000AF1E4 /* ToDoListUITests.swift */; };
 		D0BDC06F2271EBAB00D1280B /* ToDoDetailProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BDC06E2271EBAB00D1280B /* ToDoDetailProtocol.swift */; };
 		D0BDC0712271EBD900D1280B /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BDC0702271EBD800D1280B /* UIColorExtension.swift */; };
 		D0E57E172219312E0001D1C3 /* UIViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E57E162219312E0001D1C3 /* UIViewControllerExtension.swift */; };
-		D0EAD27221999D23006D43E6 /* ToDoDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0EAD27121999D23006D43E6 /* ToDoDetailViewController.swift */; };
+		D0EAD27221999D23006D43E6 /* ToDoDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0EAD27121999D23006D43E6 /* ToDoDetailTableViewController.swift */; };
 		D0F9CC3A214A8E6000C51BD6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F9CC39214A8E6000C51BD6 /* AppDelegate.swift */; };
 		D0F9CC41214A8E6300C51BD6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0F9CC40214A8E6300C51BD6 /* Assets.xcassets */; };
 		D0F9CC4C214A8F5900C51BD6 /* TodoRegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F9CC4B214A8F5900C51BD6 /* TodoRegisterViewController.swift */; };
@@ -69,14 +68,13 @@
 		D0A6A5F4219C4D0200D6A526 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D0A6A5FC219C4D6000D6A526 /* TodoListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoListCell.swift; sourceTree = "<group>"; };
 		D0A6A5FE219C4D8900D6A526 /* TodoRegisterTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoRegisterTableView.swift; sourceTree = "<group>"; };
-		D0A6A601219C4DB500D6A526 /* ToDoDetailTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoDetailTableView.swift; sourceTree = "<group>"; };
 		D0BB76CE219DAC7F000AF1E4 /* ToDoListUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ToDoListUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0BB76D0219DAC7F000AF1E4 /* ToDoListUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListUITests.swift; sourceTree = "<group>"; };
 		D0BB76D2219DAC7F000AF1E4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D0BDC06E2271EBAB00D1280B /* ToDoDetailProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoDetailProtocol.swift; sourceTree = "<group>"; };
 		D0BDC0702271EBD800D1280B /* UIColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
 		D0E57E162219312E0001D1C3 /* UIViewControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtension.swift; sourceTree = "<group>"; };
-		D0EAD27121999D23006D43E6 /* ToDoDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoDetailViewController.swift; sourceTree = "<group>"; };
+		D0EAD27121999D23006D43E6 /* ToDoDetailTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoDetailTableViewController.swift; sourceTree = "<group>"; };
 		D0F9CC36214A8E6000C51BD6 /* ToDoList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0F9CC39214A8E6000C51BD6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D0F9CC40214A8E6300C51BD6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -151,7 +149,7 @@
 			children = (
 				D0F9CC4D214A8FCF00C51BD6 /* ToDoListViewController.swift */,
 				D0F9CC4B214A8F5900C51BD6 /* TodoRegisterViewController.swift */,
-				D0EAD27121999D23006D43E6 /* ToDoDetailViewController.swift */,
+				D0EAD27121999D23006D43E6 /* ToDoDetailTableViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -161,7 +159,6 @@
 			children = (
 				D0A6A5FC219C4D6000D6A526 /* TodoListCell.swift */,
 				D0A6A5FE219C4D8900D6A526 /* TodoRegisterTableView.swift */,
-				D0A6A601219C4DB500D6A526 /* ToDoDetailTableView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -518,9 +515,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				D0F9CC3A214A8E6000C51BD6 /* AppDelegate.swift in Sources */,
-				D0A6A602219C4DB500D6A526 /* ToDoDetailTableView.swift in Sources */,
 				D047CE21248C8F4A009354DC /* Format.swift in Sources */,
-				D0EAD27221999D23006D43E6 /* ToDoDetailViewController.swift in Sources */,
+				D0EAD27221999D23006D43E6 /* ToDoDetailTableViewController.swift in Sources */,
 				D0BDC06F2271EBAB00D1280B /* ToDoDetailProtocol.swift in Sources */,
 				D018BA5B215BBC60008EC964 /* ToDoModel.swift in Sources */,
 				D0E57E172219312E0001D1C3 /* UIViewControllerExtension.swift in Sources */,

@@ -11,7 +11,7 @@ import UIKit
 
 
 extension TodoRegisterTableView: ToDoDetailProtocol {}
-extension ToDoDetailTableView: ToDoDetailProtocol {}
+extension ToDoDetailTableViewController: ToDoDetailProtocol {}
 
 
 protocol ToDoDetailProtocol {}

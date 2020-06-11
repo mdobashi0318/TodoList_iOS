@@ -110,7 +110,7 @@ final class ToDoListViewController: UITableViewController {
     ///
     /// - Parameter indexPath: 選択したcellの行
     private func cellTapAction(indexPath: IndexPath) {
-        let toDoDetailViewController:ToDoDetailViewController = ToDoDetailViewController(todoId: (toDoModel?[indexPath.row].id)!, createTime: toDoModel?[indexPath.row].createTime)
+        let toDoDetailViewController:ToDoDetailTableViewController = ToDoDetailTableViewController(todoId: (toDoModel?[indexPath.row].id)!, createTime: toDoModel?[indexPath.row].createTime)
         self.navigationController?.pushViewController(toDoDetailViewController, animated: true)
     }
     
@@ -138,7 +138,7 @@ final class ToDoListViewController: UITableViewController {
                 NotificationCenter.default.post(name: Notification.Name(TableReload), object: nil)
             }
             
-            }){ _ in }
+            })
     }
     
     
@@ -279,8 +279,8 @@ extension ToDoListViewController: UIAdaptivePresentationControllerDelegate {
             self?.naviController.dismiss(animated: true) {
                 NotificationCenter.default.post(name: Notification.Name(TableReload), object: nil)
             }
-        }) { _ in return }
-
+        })
+        
     }
     
 }
