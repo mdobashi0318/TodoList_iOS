@@ -91,7 +91,7 @@ final class ToDoModel: Object {
                 realm.add(toDoModel)
             }
             
-            ToDoModel.addNotification(toDoModel: toDoModel) { result in
+            NotificationManager().addNotification(toDoModel: toDoModel) { result in
                 NotificationCenter.default.post(name: Notification.Name(TableReload), object: nil)
                 NotificationCenter.default.post(name: Notification.Name(toast), object: result)
             }
@@ -123,7 +123,7 @@ final class ToDoModel: Object {
                 toDoModel.toDo = updateValue.toDo
             }
             
-            ToDoModel.addNotification(toDoModel: toDoModel) { result in
+            NotificationManager().addNotification(toDoModel: toDoModel) { result in
                 NotificationCenter.default.post(name: Notification.Name(TableReload), object: nil)
                 NotificationCenter.default.post(name: Notification.Name(toast), object: result)
             }
@@ -179,9 +179,7 @@ final class ToDoModel: Object {
         
         let toDoModel: ToDoModel = ToDoModel.findRealm(vc, todoId: todoId, createTime: createTime)!
         
-        UNUserNotificationCenter
-            .current()
-            .removePendingNotificationRequests(withIdentifiers: [toDoModel.createTime!])
+        NotificationManager().removeNotification([toDoModel.createTime!])
         
         do {
             try realm.write() {
@@ -211,7 +209,9 @@ final class ToDoModel: Object {
         AlertManager().alertAction(vc, title: "データベースの削除", message: "作成した問題や履歴を全件削除します", didTapDeleteButton: { (action) in
             try! realm.write {
                 realm.deleteAll()
+                print("ToDoを全件削除しました")
             }
+            NotificationManager().allRemoveNotification()
             completion()
 
         }) { (action) in return }
@@ -225,54 +225,12 @@ final class ToDoModel: Object {
         let realm = try! Realm()
         try! realm.write {
             realm.deleteAll()
+            print("ToDoを全件削除しました")
         }
+        NotificationManager().allRemoveNotification()
+        
     }
     
     
-    
-    
-    // MARK: Set Notification
-    
-    
-    /// 通知を設定する
-    /// - Parameters:
-    ///   - toDoModel: ToDoModels
-    ///   - isRequestResponse: 通知の登録に成功したかを返す
-    private class func addNotification(toDoModel: ToDoModel, isRequestResponse: @escaping(Bool) -> ()) {
-        
-        let content:UNMutableNotificationContent = UNMutableNotificationContent()
-        content.title = toDoModel.toDoName
-        content.body = toDoModel.toDo
-        content.sound = UNNotificationSound.default
-        
-        //通知する日付を設定
-        guard let date:Date = Format().dateFromString(string: toDoModel.todoDate!) else {
-            print("期限の登録に失敗しました")
-            isRequestResponse(false)
-            
-            return
-        }
-        
-        let calendar = Calendar.current
-        let dateComponent = calendar.dateComponents([.year, .month, .day, .hour, .minute] , from: date)
-        let trigger:UNCalendarNotificationTrigger = UNCalendarNotificationTrigger(dateMatching: dateComponent, repeats: false)
-        let request:UNNotificationRequest = UNNotificationRequest.init(identifier: toDoModel.createTime!, content: content, trigger: trigger)
-        let center:UNUserNotificationCenter = UNUserNotificationCenter.current()
-        
-        center.add(request) { (error) in
-            print("request: \(request)")
-            
-            if error != nil {
-                print("通知の登録に失敗しました: \(error!)")
-                isRequestResponse(false)
-                
-            } else {
-                print("通知の登録をしました")
-                isRequestResponse(true)
-   
-            }
-        }
-    }
-    
-    
+
 }
