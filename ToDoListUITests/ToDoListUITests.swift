@@ -22,6 +22,12 @@ class ToDoListUITests: XCTestCase {
         // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
         
         let app: XCUIApplication = XCUIApplication()
+        
+        if app.alerts.buttons["Allow"].exists {
+           app.alerts.buttons["Allow"].tap()
+            sleep(1)
+        }
+        
         app.navigationBars["ToDoリスト"].buttons["allDelete"].tap()
         app.alerts.buttons["削除"].tap()
     }
@@ -63,10 +69,16 @@ class ToDoListUITests: XCTestCase {
         
         let datePicker = app.datePickers["detailPicker"]
         XCTAssert(datePicker.exists)
-//        datePicker.pickerWheels.element(boundBy: 0).adjust(toPickerWheelValue: "Sep 22")
-        datePicker.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "5")
-        datePicker.pickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: "50")
-
+        if #available(iOS 13.0, *) {
+            datePicker.pickerWheels.element(boundBy: 0).swipeUp()
+            datePicker.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "5")
+            datePicker.pickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: "50")
+        } else {
+            datePicker.pickerWheels.element(boundBy: 0).swipeDown()
+            datePicker.pickerWheels.element(boundBy: 1).swipeDown()
+            datePicker.pickerWheels.element(boundBy: 2).swipeDown()
+        }
+        
         
         app.cells.textViews["detailTextViwe"].tap()
         app.typeText("testDetail")
@@ -80,22 +92,22 @@ class ToDoListUITests: XCTestCase {
         XCTAssertEqual(app.tables.staticTexts["test"].label, "test", "登録したタイトルが表示されていない")
         XCTAssertEqual(app.tables.staticTexts["testDetail"].label, "testDetail", "登録した詳細が表示されていない")
         
-            app.tables.cells.firstMatch.swipeLeft()
-            let edit = app.tables.buttons["編集"]
-            let delete = app.tables.buttons["削除"]
-            XCTAssert(edit.exists)
-            XCTAssert(delete.exists)
-            
-            edit.tap()
-            app.navigationBars.buttons["Cancel"].tap()
-            
-            app.tables.cells.firstMatch.swipeLeft()
-            delete.tap()
-            app.alerts.buttons["削除"].tap()
+        app.tables.cells.firstMatch.swipeLeft()
+        let edit = app.tables.buttons["編集"]
+        let delete = app.tables.buttons["削除"]
+        XCTAssert(edit.exists)
+        XCTAssert(delete.exists)
         
-
+        edit.tap()
+        app.navigationBars.buttons["Cancel"].tap()
+        
+        app.tables.cells.firstMatch.swipeLeft()
+        delete.tap()
+        app.alerts.buttons["削除"].tap()
+        
+        
     }
-
+    
     
     func testTodoInputTableView() {
         let app: XCUIApplication = XCUIApplication()
@@ -114,9 +126,10 @@ class ToDoListUITests: XCTestCase {
         
         createToDo(num: 1, isOpen: false)
         
-
         
+        sleep(1)
         app.tables.cells.firstMatch.swipeLeft()
+        sleep(1)
         let edit = app.tables.buttons["編集"]
         if app.waitForExistence(timeout: 1.0){
             edit.tap()
@@ -133,14 +146,18 @@ class ToDoListUITests: XCTestCase {
         
         // 期限入力
         app.cells.textFields["dateTextField"].tap()
-                datePicker.pickerWheels.element(boundBy: 0).swipeUp()
-        datePicker.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "8")
-        datePicker.pickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: "00")
+        if #available(iOS 13.0, *) {
+            datePicker.pickerWheels.element(boundBy: 0).swipeUp()
+            datePicker.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "5")
+            datePicker.pickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: "50")
+        } else {
+            datePicker.pickerWheels.element(boundBy: 0).swipeDown()
+            datePicker.pickerWheels.element(boundBy: 1).swipeDown()
+            datePicker.pickerWheels.element(boundBy: 2).swipeDown()
+        }
         
         // 詳細入力
         app.cells.textViews["detailTextViwe"].tap()
-        
-        
         app.typeText("detailEdit")
         
         // 保存
@@ -172,15 +189,6 @@ class ToDoListUITests: XCTestCase {
         
     }
     
-    /*
-    func testCreate() {
-        
-        for i in 0..<10 {
-            createToDo(num: i)
-        }
-    }
-    */
-    
     
     func createToDo(num: Int, isOpen: Bool = true) {
         let app: XCUIApplication = XCUIApplication()
@@ -197,9 +205,16 @@ class ToDoListUITests: XCTestCase {
         app.cells.textFields["dateTextField"].tap()
         let datePicker = app.datePickers["detailPicker"]
         XCTAssert(datePicker.exists)
-        datePicker.pickerWheels.element(boundBy: 0).swipeUp()
-        datePicker.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "5")
-        datePicker.pickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: "50")
+        
+        if #available(iOS 13.0, *) {
+            datePicker.pickerWheels.element(boundBy: 0).swipeUp()
+            datePicker.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "5")
+            datePicker.pickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: "50")
+        } else {
+            datePicker.pickerWheels.element(boundBy: 0).swipeDown()
+            datePicker.pickerWheels.element(boundBy: 1).swipeDown()
+            datePicker.pickerWheels.element(boundBy: 2).swipeDown()
+        }
         
         // 詳細入力
         app.cells.textViews["detailTextViwe"].tap()
@@ -216,6 +231,7 @@ class ToDoListUITests: XCTestCase {
     
     func editTodo(title: String, detail: String) {
         let app: XCUIApplication = XCUIApplication()
+        sleep(1)
         // タイトル入力
         app.cells.textFields["titleTextField"].tap()
         for _ in 0...app.cells.textFields["titleTextField"].label.count - 1 {
@@ -226,12 +242,24 @@ class ToDoListUITests: XCTestCase {
         // 期限入力
         let datePicker = app.datePickers["detailPicker"]
         app.cells.textFields["dateTextField"].tap()
-        datePicker.pickerWheels.element(boundBy: 0).swipeUp()
-        datePicker.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "8")
-        datePicker.pickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: "00")
+        if #available(iOS 13.0, *) {
+            datePicker.pickerWheels.element(boundBy: 0).swipeUp()
+            datePicker.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "5")
+            datePicker.pickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: "50")
+        } else {
+            datePicker.pickerWheels.element(boundBy: 0).swipeDown()
+            datePicker.pickerWheels.element(boundBy: 1).swipeDown()
+            datePicker.pickerWheels.element(boundBy: 2).swipeDown()
+        }
         
         // 詳細入力
-        app.cells.textViews["detailTextViwe"].doubleTap()
+        
+        if #available(iOS 13.0, *) {
+            app.cells.textViews["detailTextViwe"].doubleTap()
+        } else {
+            app.cells.textViews["detailTextViwe"].doubleTap()
+            app.cells.textViews["detailTextViwe"].doubleTap()
+        }
         app.typeText(detail)
         
         // 保存

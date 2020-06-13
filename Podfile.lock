@@ -9,10 +9,12 @@ PODS:
   - RealmSwift (4.4.0):
     - Realm (= 4.4.0)
   - SnapKit (5.0.1)
+  - Toast-Swift (5.0.1)
 
 DEPENDENCIES:
   - NotificationBannerSwift (~> 3.0.0)
   - RealmSwift (= 4.4.0)
+  - Toast-Swift (~> 5.0.1)
 
 SPEC REPOS:
   trunk:
@@ -21,6 +23,7 @@ SPEC REPOS:
     - Realm
     - RealmSwift
     - SnapKit
+    - Toast-Swift
 
 SPEC CHECKSUMS:
   MarqueeLabel: f762aa681ae201f66c1d511858b171f75d83013a
@@ -28,7 +31,8 @@ SPEC CHECKSUMS:
   Realm: e125f464884cda953ebefe70c671b75b03b81b9b
   RealmSwift: 33656a42bd300959a081fc13347376bc478071af
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
+  Toast-Swift: 9b6a70f28b3bf0b96c40d46c0c4b9d6639846711
 
-PODFILE CHECKSUM: b12272f4d32263b67251930feeab6260e4b2b794
+PODFILE CHECKSUM: f0486baf35dbfd57da15f6c6016a6e561bfd9056
 
-COCOAPODS: 1.9.1
+COCOAPODS: 1.9.3
