@@ -16,20 +16,39 @@ extension ToDoDetailTableViewController: ToDoDetailProtocol {}
 
 protocol ToDoDetailProtocol {}
 extension ToDoDetailProtocol {
-    func todoHeadrView(viewForHeaderInSection section: Int) -> UIView {
+    
+    func todoHeadrView(viewForHeaderInSection section: Int, isEditMode: Bool) -> UIView {
         let headerView:UIView = UIView()
         let headerLabel:UILabel = UILabel()
         
         switch section {
         case 0:
-            headerLabel.text = "タイトル"
+            if isEditMode {
+                headerLabel.text = "タイトル *必須"
+                setAttributes(headerLabel)
+            } else {
+                headerLabel.text = "タイトル"
+            }
             headerLabel.accessibilityLabel = "titleLabel"
+            
         case 1:
-            headerLabel.text = "期限"
+            if isEditMode {
+                headerLabel.text = "期限 *必須"
+                setAttributes(headerLabel)
+            } else {
+                headerLabel.text = "期限"
+            }
             headerLabel.accessibilityLabel = "dateLabel"
+            
         case 2:
-            headerLabel.text = "詳細"
+            if isEditMode {
+                headerLabel.text = "詳細 *必須"
+                setAttributes(headerLabel)
+            } else {
+                headerLabel.text = "詳細"
+            }
             headerLabel.accessibilityLabel = "detailLabel"
+            
         default:
             break
         }
@@ -44,4 +63,17 @@ extension ToDoDetailProtocol {
         
         return headerView
     }
+    
+    
+    
+    private func setAttributes(_ label: UILabel) {
+        let attrText = NSMutableAttributedString(string: label.text!)
+        let attributes: [NSAttributedString.Key : Any] = [
+            .font : UIFont.systemFont(ofSize: 12.0),
+            .foregroundColor : UIColor.red,
+        ]
+        attrText.addAttributes(attributes, range: NSMakeRange(label.text!.count - 3, 3))
+        label.attributedText = attrText
+    }
+    
 }
