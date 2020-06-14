@@ -170,7 +170,7 @@ final class TodoRegisterTableView: UITableView, UITableViewDelegate, UITableView
     
     /// ヘッダー内のビューを設定
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return todoHeadrView(viewForHeaderInSection: section)
+        return todoHeadrView(viewForHeaderInSection: section, isEditMode: true)
     }
     
     
