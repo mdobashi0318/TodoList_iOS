@@ -40,10 +40,6 @@ final class ToDoListViewController: UITableViewController {
         super.viewWillAppear(animated)
         
         reloadTableView()
-        
-        #if DEBUG
-        print("Model\(String(describing: toDoModel!))")
-        #endif
     }
 
     
@@ -66,7 +62,13 @@ final class ToDoListViewController: UITableViewController {
     
     /// テーブルとセパレート線を更新する
     func reloadTableView() {
-        tableView.separatorStyle = toDoModel?.count != 0 ? .none : .singleLine
+        guard let _toDoModel = toDoModel else {
+            ToDoModel.devprint("toDoModelがnilのためテーブルの更新失敗")
+            return
+        }
+        
+        ToDoModel.devprint("ToDoModel: \(_toDoModel)")
+        tableView.separatorStyle = _toDoModel.count != 0 ? .none : .singleLine
         tableView.reloadData()
     }
     

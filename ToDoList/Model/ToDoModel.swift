@@ -90,7 +90,7 @@ final class ToDoModel: Object {
             try realm.write() {
                 realm.add(toDoModel)
             }
-            
+            devprint("Todoを作成しました: \(toDoModel)")
             NotificationManager().addNotification(toDoModel: toDoModel) { result in
                 NotificationCenter.default.post(name: Notification.Name(TableReload), object: nil)
                 NotificationCenter.default.post(name: Notification.Name(toast), object: result)
@@ -122,7 +122,7 @@ final class ToDoModel: Object {
                 toDoModel.todoDate = updateValue.todoDate
                 toDoModel.toDo = updateValue.toDo
             }
-            
+            devprint("Todoを更新しました: \(toDoModel)")
             NotificationManager().addNotification(toDoModel: toDoModel) { result in
                 NotificationCenter.default.post(name: Notification.Name(TableReload), object: nil)
                 NotificationCenter.default.post(name: Notification.Name(toast), object: result)
@@ -149,9 +149,13 @@ final class ToDoModel: Object {
         guard let realm = initRealm(vc) else { return nil }
         
         if let _createTime = createTime {
-            return (realm.objects(ToDoModel.self).filter("createTime == '\(String(describing: _createTime))'").first)
+            let todo = (realm.objects(ToDoModel.self).filter("createTime == '\(String(describing: _createTime))'").first)
+            devprint("Todoを１件表示します: \(String(describing: todo))")
+            return todo
         } else {
-            return(realm.objects(ToDoModel.self).filter("id == '\(todoId)'").first!)
+            let todo = (realm.objects(ToDoModel.self).filter("id == '\(todoId)'").first!)
+            devprint("Todoを１件表示します: \(todo)")
+            return todo
         }
         
         
@@ -163,8 +167,9 @@ final class ToDoModel: Object {
     /// - Returns: 取得したTodoを全件返す
     class func allFindRealm(_ vc: UIViewController) -> Results<ToDoModel>? {
         guard let realm = initRealm(vc) else { return nil }
-        
-        return realm.objects(ToDoModel.self)
+        let todo = realm.objects(ToDoModel.self)
+        devprint("Todoを全件表示します: \(todo)")
+        return todo
     }
     
     
@@ -182,9 +187,11 @@ final class ToDoModel: Object {
         NotificationManager().removeNotification([toDoModel.createTime!])
         
         do {
+            devprint("Todoを削除します: \(toDoModel)")
             try realm.write() {
                 realm.delete(toDoModel)
             }
+            devprint("Todoを削除しました")
             completion()
         }
         catch {
@@ -209,8 +216,8 @@ final class ToDoModel: Object {
         AlertManager().alertAction(vc, title: "データベースの削除", message: "作成した問題や履歴を全件削除します", didTapDeleteButton: { (action) in
             try! realm.write {
                 realm.deleteAll()
-                print("ToDoを全件削除しました")
             }
+            devprint("ToDoを全件削除しました")
             NotificationManager().allRemoveNotification()
             completion()
 
@@ -225,12 +232,20 @@ final class ToDoModel: Object {
         let realm = try! Realm()
         try! realm.write {
             realm.deleteAll()
-            print("ToDoを全件削除しました")
         }
+        devprint("ToDoを全件削除しました")
         NotificationManager().allRemoveNotification()
         
     }
     
+    
+    
+    
+    class func devprint(_ message: String) {
+        #if DEBUG
+        print("\(message)")
+        #endif
+    }
     
 
 }
