@@ -33,7 +33,7 @@ class TodoRegisterViewControllerTest: XCTestCase {
     
     func test_ConvenienceInit() {
         let todoDate = Format().stringFromDate(date: Date())
-        ToDoModel.addRealm(UIViewController(),
+        ToDoModel.addToDo(UIViewController(),
                            addValue: ToDoModel(id: "0",
                                                toDoName: "UnitTest",
                                                todoDate: todoDate,
@@ -41,7 +41,7 @@ class TodoRegisterViewControllerTest: XCTestCase {
                                                createTime: nil)
         )
         
-        let todoModel = ToDoModel.findRealm(UIViewController(), todoId: "0", createTime: nil)
+        let todoModel = ToDoModel.findToDo(UIViewController(), todoId: "0", createTime: nil)
         let vc = TodoRegisterViewController(todoId: todoModel!.id, createTime: todoModel?.createTime)
         
         

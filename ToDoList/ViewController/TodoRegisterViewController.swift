@@ -46,7 +46,7 @@ class TodoRegisterViewController: UIViewController, TodoRegisterDelegate {
     convenience init(todoId: String, createTime: String?) {
         self.init(nibName: nil, bundle: nil)
         self.todoId = todoId
-        toDoModel = ToDoModel.findRealm(self, todoId: todoId, createTime: createTime)
+        toDoModel = ToDoModel.findToDo(self, todoId: todoId, createTime: createTime)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -140,9 +140,9 @@ class TodoRegisterViewController: UIViewController, TodoRegisterDelegate {
     
     /// ToDoを追加する
     private func addRealm(completeHandler: () -> Void) {
-        let id: String = String(ToDoModel.allFindRealm(self)!.count + 1)
+        let id: String = String(ToDoModel.allFindToDo(self)!.count + 1)
         
-        ToDoModel.addRealm(self, addValue: ToDoModel(id: id,
+        ToDoModel.addToDo(self, addValue: ToDoModel(id: id,
                                                      toDoName: (todoRegisterTableView.titletextField.text)!,
                                                      todoDate: todoRegisterTableView.dateTextField.text!,
                                                      toDo: (todoRegisterTableView.detailTextViwe.text)!,
@@ -155,7 +155,7 @@ class TodoRegisterViewController: UIViewController, TodoRegisterDelegate {
     
     /// ToDoの更新
     private func updateRealm(completeHandler: () -> Void) {
-        ToDoModel.updateRealm(self, todoId: todoId!,
+        ToDoModel.updateToDo(self, todoId: todoId!,
                               updateValue: ToDoModel(id: String(todoId!),
                                                      toDoName: (todoRegisterTableView.titletextField.text)!,
                                                      todoDate: todoRegisterTableView.dateTextField.text!,

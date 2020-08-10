@@ -30,7 +30,7 @@ class ToDoDetailTableViewController: UITableViewController {
         self.todoId = todoId
         self.createTime = createTime
         
-        toDoModel = ToDoModel.findRealm(self, todoId: todoId, createTime: createTime)
+        toDoModel = ToDoModel.findToDo(self, todoId: todoId, createTime: createTime)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -77,7 +77,7 @@ class ToDoDetailTableViewController: UITableViewController {
                                             self?.navigationController?.pushViewController(inputViewController, animated: true)
             },
                                         didTapDeleteButton: { [weak self] action in
-                                            ToDoModel.deleteRealm(self!, todoId: (self?.todoId!)!, createTime: self?.createTime) {
+                                            ToDoModel.deleteToDo(self!, todoId: (self?.todoId!)!, createTime: self?.createTime) {
                                                 self?.navigationController?.popViewController(animated: true)
                                             }
                                             

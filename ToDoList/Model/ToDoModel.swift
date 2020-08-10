@@ -75,7 +75,7 @@ final class ToDoModel: Object {
     /// - Parameters:
     ///   - vc: 呼び出し元のViewController
     ///   - addValue: 登録するTodoの値
-    class func addRealm(_ vc: UIViewController, addValue: ToDoModel) {
+    class func addToDo(_ vc: UIViewController, addValue: ToDoModel) {
         guard let realm = initRealm(vc) else { return }
         
         let toDoModel: ToDoModel = ToDoModel(id: addValue.id,
@@ -111,10 +111,10 @@ final class ToDoModel: Object {
     ///   - vc: 呼び出し元のViewController
     ///   - todoId: TodoId
     ///   - updateValue: 更新する値
-    class func updateRealm(_ vc: UIViewController, todoId: String, updateValue: ToDoModel) {
+    class func updateToDo(_ vc: UIViewController, todoId: String, updateValue: ToDoModel) {
         guard let realm = initRealm(vc) else { return }
         
-        let toDoModel: ToDoModel = ToDoModel.findRealm(vc, todoId: updateValue.id, createTime: updateValue.createTime)!
+        let toDoModel: ToDoModel = ToDoModel.findToDo(vc, todoId: updateValue.id, createTime: updateValue.createTime)!
         
         do {
             try realm.write() {
@@ -145,7 +145,7 @@ final class ToDoModel: Object {
     ///   - todoId: TodoId
     ///   - createTime: Todoの作成時間
     /// - Returns: 取得したTodoの最初の1件を返す
-    class func findRealm(_ vc: UIViewController, todoId: String, createTime: String?) -> ToDoModel? {
+    class func findToDo(_ vc: UIViewController, todoId: String, createTime: String?) -> ToDoModel? {
         guard let realm = initRealm(vc) else { return nil }
         
         if let _createTime = createTime {
@@ -165,7 +165,7 @@ final class ToDoModel: Object {
     /// 全件取得
     /// - Parameter vc: 呼び出し元のViewController
     /// - Returns: 取得したTodoを全件返す
-    class func allFindRealm(_ vc: UIViewController) -> Results<ToDoModel>? {
+    class func allFindToDo(_ vc: UIViewController) -> Results<ToDoModel>? {
         guard let realm = initRealm(vc) else { return nil }
         let todo = realm.objects(ToDoModel.self)
         devprint("Todoを全件表示します: \(todo)")
@@ -179,10 +179,10 @@ final class ToDoModel: Object {
     ///   - todoId: TodoId
     ///   - createTime: Todoの作成時間
     ///   - completion: 削除完了後の動作
-    class func deleteRealm(_ vc: UIViewController, todoId: String, createTime: String?, completion: () -> Void) {
+    class func deleteToDo(_ vc: UIViewController, todoId: String, createTime: String?, completion: () -> Void) {
         guard let realm = initRealm(vc) else { return }
         
-        let toDoModel: ToDoModel = ToDoModel.findRealm(vc, todoId: todoId, createTime: createTime)!
+        let toDoModel: ToDoModel = ToDoModel.findToDo(vc, todoId: todoId, createTime: createTime)!
         
         NotificationManager().removeNotification([toDoModel.createTime!])
         
@@ -210,7 +210,7 @@ final class ToDoModel: Object {
     /// - Parameters:
     ///   - vc: 呼び出し元のViewController
     ///   - completion: 削除完了後の動作
-    class func allDeleteRealm(_ vc: UIViewController, completion:@escaping () ->Void) {
+    class func allDeleteToDo(_ vc: UIViewController, completion:@escaping () ->Void) {
         guard let realm = initRealm(vc) else { return }
         
         AlertManager().alertAction(vc, title: "データベースの削除", message: "作成した問題や履歴を全件削除します", didTapDeleteButton: { (action) in

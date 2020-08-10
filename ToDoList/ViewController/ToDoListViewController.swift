@@ -29,7 +29,7 @@ final class ToDoListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        toDoModel = ToDoModel.allFindRealm(self)
+        toDoModel = ToDoModel.allFindToDo(self)
         setNavigationItem()
         setupTableView()
         setNotificationCenter()
@@ -99,7 +99,7 @@ final class ToDoListViewController: UITableViewController {
     
     /// データベース内の全件削除(Debug)
     @objc override func leftButtonAction() {
-        ToDoModel.allDeleteRealm(self) {
+        ToDoModel.allDeleteToDo(self) {
             NotificationCenter.default.post(name: Notification.Name(TableReload), object: nil)
         }
     }
@@ -136,7 +136,7 @@ final class ToDoListViewController: UITableViewController {
             let todoid = self?.toDoModel![indexPath.row].id
             let createTime = self?.toDoModel?[indexPath.row].createTime
             
-            ToDoModel.deleteRealm(self!, todoId: todoid!, createTime: createTime) {
+            ToDoModel.deleteToDo(self!, todoId: todoid!, createTime: createTime) {
                 NotificationCenter.default.post(name: Notification.Name(TableReload), object: nil)
             }
             
