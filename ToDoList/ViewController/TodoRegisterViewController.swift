@@ -140,14 +140,14 @@ class TodoRegisterViewController: UIViewController, TodoRegisterDelegate {
     
     /// ToDoを追加する
     private func addRealm(completeHandler: () -> Void) {
-        let id: String = String(ToDoModel.allFindToDo(self)!.count + 1)
-        
-        ToDoModel.addToDo(self, addValue: ToDoModel(id: id,
-                                                     toDoName: (todoRegisterTableView.titletextField.text)!,
-                                                     todoDate: todoRegisterTableView.dateTextField.text!,
-                                                     toDo: (todoRegisterTableView.detailTextViwe.text)!,
-                                                     createTime: nil)
-        )
+//        let id: String = String(ToDoModel.allFindToDo(self)!.count + 1)
+//        
+//        ToDoModel.addToDo(self, addValue: ToDoModel(id: id,
+//                                                     toDoName: (todoRegisterTableView.titletextField.text)!,
+//                                                     todoDate: todoRegisterTableView.dateTextField.text!,
+//                                                     toDo: (todoRegisterTableView.detailTextViwe.text)!,
+//                                                     createTime: nil)
+//        )
         
         completeHandler()
     }

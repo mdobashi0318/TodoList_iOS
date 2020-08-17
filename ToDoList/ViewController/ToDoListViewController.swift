@@ -10,26 +10,28 @@ import UIKit
 import RealmSwift
 
 
+protocol ToDoListViewControllerProtocol {
+    func fetchTodoModel()
+}
+
+
 final class ToDoListViewController: UITableViewController {
     
     // MARK: Properties
         
     private var naviController: UINavigationController!
     
-    /// ToDoを格納する配列
-    private var toDoModel: Results<ToDoModel>? {
-        didSet {
-            tableView.reloadData()
-        }
-    }
-
+    
+    private var presenter: ToDoListPresenter?
     
     // MARK: LifeCycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        toDoModel = ToDoModel.allFindToDo(self)
+        presenter = ToDoListPresenter()
+        
+        
         setNavigationItem()
         setupTableView()
         setNotificationCenter()
@@ -55,20 +57,15 @@ final class ToDoListViewController: UITableViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.separatorInset = .zero
-        tableView.separatorStyle = toDoModel?.count != 0 ? .none : .singleLine
+        tableView.separatorStyle = presenter?.model?.count != 0 ? .none : .singleLine
         tableView.register(TodoListCell.self, forCellReuseIdentifier: "listCell")
     }
     
     
     /// テーブルとセパレート線を更新する
     func reloadTableView() {
-        guard let _toDoModel = toDoModel else {
-            ToDoModel.devprint("toDoModelがnilのためテーブルの更新失敗")
-            return
-        }
-        
-        ToDoModel.devprint("ToDoModel: \(_toDoModel)")
-        tableView.separatorStyle = _toDoModel.count != 0 ? .none : .singleLine
+        fetchTodoModel()
+        tableView.separatorStyle = presenter?.model?.count != 0 ? .none : .singleLine
         tableView.reloadData()
     }
     
@@ -112,7 +109,7 @@ final class ToDoListViewController: UITableViewController {
     ///
     /// - Parameter indexPath: 選択したcellの行
     private func cellTapAction(indexPath: IndexPath) {
-        let toDoDetailViewController:ToDoDetailTableViewController = ToDoDetailTableViewController(todoId: (toDoModel?[indexPath.row].id)!, createTime: toDoModel?[indexPath.row].createTime)
+        let toDoDetailViewController:ToDoDetailTableViewController = ToDoDetailTableViewController(todoId: (presenter?.model?[indexPath.row].id)!, createTime: presenter?.model?[indexPath.row].createTime)
         self.navigationController?.pushViewController(toDoDetailViewController, animated: true)
     }
     
@@ -121,7 +118,7 @@ final class ToDoListViewController: UITableViewController {
     ///
     /// - Parameter indexPath: 選択したcellの行
     private func editAction(indexPath: IndexPath) {
-        let inputViewController:TodoRegisterViewController = TodoRegisterViewController(todoId: (toDoModel?[indexPath.row].id)!, createTime: toDoModel?[indexPath.row].createTime)
+        let inputViewController:TodoRegisterViewController = TodoRegisterViewController(todoId: (presenter?.model?[indexPath.row].id)!, createTime: presenter?.model?[indexPath.row].createTime)
         self.navigationController?.pushViewController(inputViewController, animated: true)
     }
     
@@ -133,8 +130,8 @@ final class ToDoListViewController: UITableViewController {
     private func deleteAction(indexPath: IndexPath) {
         AlertManager().alertAction(self, message: "削除しますか?", didTapDeleteButton: {[weak self] action in
             
-            let todoid = self?.toDoModel![indexPath.row].id
-            let createTime = self?.toDoModel?[indexPath.row].createTime
+            let todoid = self?.presenter?.model![indexPath.row].id
+            let createTime = self?.presenter?.model?[indexPath.row].createTime
             
             ToDoModel.deleteToDo(self!, todoId: todoid!, createTime: createTime) {
                 NotificationCenter.default.post(name: Notification.Name(TableReload), object: nil)
@@ -180,11 +177,11 @@ extension ToDoListViewController {
     
     /// セクションの行数を設定
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if toDoModel?.count == 0 {
+        if presenter?.model?.count == 0 || presenter?.model == nil {
             return 1
         }
         
-        return toDoModel!.count
+        return (presenter?.model!.count)!
     }
 
     
@@ -193,7 +190,7 @@ extension ToDoListViewController {
     /// セル内の設定
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        if toDoModel?.count == 0 {
+        if presenter?.model?.count == 0 || presenter?.model == nil {
             let cell:UITableViewCell = UITableViewCell(style: .default, reuseIdentifier: "cell")
             cell.backgroundColor = cellWhite
             cell.selectionStyle = .none
@@ -203,9 +200,9 @@ extension ToDoListViewController {
         
         /// ToDoを表示するセル
         let listCell = tableView.dequeueReusableCell(withIdentifier: "listCell") as! TodoListCell
-        listCell.setText(title: (toDoModel?[indexPath.row].toDoName)!,
-                         date: (toDoModel?[indexPath.row].todoDate!)!,
-                         detail: (toDoModel?[indexPath.row].toDo)!
+        listCell.setText(title: (presenter?.model?[indexPath.row].toDoName)!,
+                         date: (presenter?.model?[indexPath.row].todoDate!)!,
+                         detail: (presenter?.model?[indexPath.row].toDo)!
         )
         
         return listCell
@@ -222,7 +219,7 @@ extension ToDoListViewController {
     
     /// ToDoの個数が0個の時に選択させない
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if toDoModel?.count == 0 {
+        if presenter?.model?.count == 0 {
             return
         }
         tableView.deselectRow(at: indexPath, animated: true)
@@ -231,7 +228,7 @@ extension ToDoListViewController {
     
     
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        if toDoModel?.count == 0 {
+        if presenter?.model?.count == 0 {
             return nil
         }
         
@@ -261,7 +258,7 @@ extension ToDoListViewController {
     
     /// ToDoの個数が0の時はスワイプさせない
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        if toDoModel?.count == 0 {
+        if presenter?.model?.count == 0 {
             return false
         }
         return true
@@ -288,3 +285,20 @@ extension ToDoListViewController: UIAdaptivePresentationControllerDelegate {
 }
 
 
+
+
+extension ToDoListViewController: ToDoListViewControllerProtocol {
+    func fetchTodoModel() {
+        presenter?.fetchToDoList(success: {
+            self.tableView.reloadData()
+            
+        }, failure: { error in
+            AlertManager().alertAction(self,
+                                       title: error, message: "") { _ in
+                                        return
+            }
+        })
+    }
+    
+    
+}
