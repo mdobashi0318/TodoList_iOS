@@ -96,7 +96,7 @@ final class ToDoListViewController: UITableViewController {
     
     /// データベース内の全件削除(Debug)
     @objc override func leftButtonAction() {
-        ToDoModel.allDeleteToDo(self) {
+        ToDoModel.allDeleteToDo {_ in 
             NotificationCenter.default.post(name: Notification.Name(TableReload), object: nil)
         }
     }
@@ -133,11 +133,11 @@ final class ToDoListViewController: UITableViewController {
             let todoid = self?.presenter?.model![indexPath.row].id
             let createTime = self?.presenter?.model?[indexPath.row].createTime
             
-            ToDoModel.deleteToDo(self!, todoId: todoid!, createTime: createTime) {
+            ToDoModel.deleteToDo(todoId: todoid!, createTime: createTime) {_ in 
                 NotificationCenter.default.post(name: Notification.Name(TableReload), object: nil)
             }
             
-            })
+        })
     }
     
     

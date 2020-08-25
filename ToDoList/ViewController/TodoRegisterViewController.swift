@@ -8,7 +8,16 @@
 
 import UIKit
 
-class TodoRegisterViewController: UIViewController, TodoRegisterDelegate {
+
+
+protocol TodoRegisterViewControllerProtocol {
+    func findTodo()
+    func addTodo()
+    func updateTodo()
+}
+
+
+final class TodoRegisterViewController: UIViewController {
     
     // MARK: Properties
     
@@ -20,7 +29,7 @@ class TodoRegisterViewController: UIViewController, TodoRegisterDelegate {
             return view
             
         } else {
-            let view = TodoRegisterTableView(frame: frame_Size(self), toDoModel: self.toDoModel)
+            let view = TodoRegisterTableView(frame: frame_Size(self), toDoModel: self.presenter?.model)
             
             return view
         }
@@ -29,14 +38,18 @@ class TodoRegisterViewController: UIViewController, TodoRegisterDelegate {
     /// ToDoのIDを格納
     private var todoId: String?
     
-    /// ToDoModelのインスタンス
-    private var toDoModel: ToDoModel!
+    private var create_time: String?
+    
+
+    private var presenter: TodoRegisterPresenter?
     
     
     // MARK: Init
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        
+        presenter = TodoRegisterPresenter()
     }
     
     
@@ -46,7 +59,9 @@ class TodoRegisterViewController: UIViewController, TodoRegisterDelegate {
     convenience init(todoId: String, createTime: String?) {
         self.init(nibName: nil, bundle: nil)
         self.todoId = todoId
-        toDoModel = ToDoModel.findToDo(self, todoId: todoId, createTime: createTime)
+        self.create_time = createTime
+        
+        findTodo()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -120,53 +135,14 @@ class TodoRegisterViewController: UIViewController, TodoRegisterDelegate {
     /// Todoの追加または更新をする
     private func realmAction() {
         if todoId != nil {
-            updateRealm() { [weak self] in
-                AlertManager().alertAction(self!, message: "ToDoを更新しました") { action in
-                    self?.navigationController?.popViewController(animated: true)
-                }
-            }
-            
+            updateTodo()
         } else {
-            addRealm { [weak self] in
-                AlertManager().alertAction(self!, message: "ToDoを登録しました") { action in
-                    self?.dismiss(animated: true)
-                }
-            }
-            
+            addTodo()
         }
     }
     
     
-    
-    /// ToDoを追加する
-    private func addRealm(completeHandler: () -> Void) {
-//        let id: String = String(ToDoModel.allFindToDo(self)!.count + 1)
-//        
-//        ToDoModel.addToDo(self, addValue: ToDoModel(id: id,
-//                                                     toDoName: (todoRegisterTableView.titletextField.text)!,
-//                                                     todoDate: todoRegisterTableView.dateTextField.text!,
-//                                                     toDo: (todoRegisterTableView.detailTextViwe.text)!,
-//                                                     createTime: nil)
-//        )
-        
-        completeHandler()
-    }
-    
-    
-    /// ToDoの更新
-    private func updateRealm(completeHandler: () -> Void) {
-        ToDoModel.updateToDo(self, todoId: todoId!,
-                              updateValue: ToDoModel(id: String(todoId!),
-                                                     toDoName: (todoRegisterTableView.titletextField.text)!,
-                                                     todoDate: todoRegisterTableView.dateTextField.text!,
-                                                     toDo: (todoRegisterTableView.detailTextViwe.text)!,
-                                                     createTime: self.toDoModel.createTime)
-        )
-        
-        completeHandler()
-    }
-    
-    
+ 
     
     
     /// バリデーションチェックをする
@@ -196,6 +172,15 @@ class TodoRegisterViewController: UIViewController, TodoRegisterDelegate {
     }
     
     
+}
+
+
+
+
+// MARK: - TodoRegisterDelegate
+
+extension TodoRegisterViewController: TodoRegisterDelegate {
+    
     /// Todoの追加時にテキスト入力中だったらモーダルを本当に閉じるかの確認フラグをtrueにする
     func textChenge() {
         if #available(iOS 13.0, *) {
@@ -208,9 +193,62 @@ class TodoRegisterViewController: UIViewController, TodoRegisterDelegate {
             }
         }
     }
-    
+        
 }
 
+
+
+
+// MARK: - TodoRegisterViewControllerProtocol
+
+extension TodoRegisterViewController: TodoRegisterViewControllerProtocol {
+    
+    func findTodo() {
+        presenter?.findTodo(todoId: todoId, createTime: create_time, success: {
+            print("Todoを検索: \(String(describing: self.presenter?.model))")
+        }) { error in
+            AlertManager().alertAction(self, message: error!) { action in
+                return
+            }
+        }
+    }
+    
+    
+    func addTodo() {
+        presenter?.addTodo(addValue: ToDoModel(toDoName: todoRegisterTableView.titletextField.text!,
+                                               todoDate: todoRegisterTableView.dateTextField.text!,
+                                               toDo: todoRegisterTableView.detailTextViwe.text!,
+                                               createTime: nil),
+                           success: {
+                            AlertManager().alertAction(self, message: "ToDoを登録しました") { action in
+                                self.dismiss(animated: true)
+                            }
+        }) { error in
+            AlertManager().alertAction(self, message: error!) { action in
+                return
+            }
+        }
+    }
+    
+    
+    func updateTodo() {
+        presenter?.updateTodo(updateTodo: ToDoModel(toDoName: todoRegisterTableView.titletextField.text!,
+                                                    todoDate: todoRegisterTableView.dateTextField.text!,
+                                                    toDo: todoRegisterTableView.detailTextViwe.text!,
+                                                    createTime: create_time),
+                              success: {
+                                AlertManager().alertAction(self, message: "ToDoを更新しました") { action in
+                                    self.navigationController?.popViewController(animated: true)
+                                }
+        }) { error in
+            AlertManager().alertAction(self, message: error!) { action in
+                return
+            }
+        }
+    }
+    
+    
+}
 
 
 
@@ -244,7 +282,7 @@ extension TodoRegisterViewController: TodoRegisterVCTestProtocol {
     }
     
     func getToDoModel() -> ToDoModel! {
-        toDoModel
+        presenter?.model
     }
     
     func getValidateCheck() -> Bool {

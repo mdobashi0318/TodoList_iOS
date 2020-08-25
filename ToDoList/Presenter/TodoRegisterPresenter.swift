@@ -8,13 +8,31 @@
 
 import Foundation
 
-class TodoRegisterPresenter {
+final class TodoRegisterPresenter {
     
+    /// ToDoModel
     var model: ToDoModel?
     
     
-    func findTodo(todoId: String, createTime: String, success: @escaping()->(), failure: @escaping (String?)->()) {
-        self.model = ToDoModel.findToDo(todoId: todoId, createTime: createTime)
+    
+    /// ToDoを１件検索
+    /// - Parameters:
+    ///   - todoId: todoId
+    ///   - createTime: 作成時間
+    ///   - success: 検索成功時
+    ///   - failure: 検索失敗時
+    func findTodo(todoId: String?, createTime: String?, success: @escaping()->(), failure: @escaping (String?)->()) {
+        
+        guard let _todoId = todoId else {
+            failure("ToDoが見つかりませんでした")
+            return
+        }
+
+        guard let _createTime = createTime else {
+            failure("ToDoが見つかりませんでした")
+            return
+        }
+        self.model = ToDoModel.findToDo(todoId: _todoId, createTime: _createTime)
         
         if model == nil {
             failure("ToDoが見つかりませんでした")
@@ -25,28 +43,38 @@ class TodoRegisterPresenter {
     }
     
     
+    
+    /// ToDoの追加をする
+    /// - Parameters:
+    ///   - addValue: 追加するToDoの値
+    ///   - success: 追加成功時のクロージャ
+    ///   - failure: 追加失敗時のクロージャ
     func addTodo(addValue: ToDoModel, success: @escaping()->(), failure: @escaping (String?)->()) {
         ToDoModel.addToDo(addValue: addValue) { error in
-            
             if let _error = error {
                 failure(_error)
                 return
             }
-            
-            success()
         }
+        success()
     }
     
     
+    
+    /// ToDoの更新をする
+    /// - Parameters:
+    ///   - addValue: 更新するToDoの値
+    ///   - success: 更新成功時のクロージャ
+    ///   - failure: 更新失敗時のクロージャ
     func updateTodo(updateTodo: ToDoModel, success: @escaping()->(), failure: @escaping (String?)->()) {
         ToDoModel.updateToDo(updateValue: updateTodo) { error in
             if let _error = error {
                 failure(_error)
                 return
             }
-            
-            success()
         }
+        success()
     }
+    
     
 }

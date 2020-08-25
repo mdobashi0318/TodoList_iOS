@@ -38,7 +38,7 @@ final class ToDoModel: Object {
     
     // MARK: init
     
-    convenience init(id: String, toDoName: String, todoDate: String?, toDo: String, createTime: String?) {
+    convenience init(id: String = "", toDoName: String, todoDate: String?, toDo: String, createTime: String?) {
         self.init()
         
         self.id = id
@@ -67,12 +67,18 @@ final class ToDoModel: Object {
     }
     
     
+    
+    
+    
     /// ToDoを追加する
     /// - Parameters:
-    ///   - vc: 呼び出し元のViewController
-    ///   - addValue: 登録するTodoの値
-    class func addToDo( addValue: ToDoModel) {
-        guard let realm = initRealm() else { return }
+    ///   - addValue: 追加するToDo
+    ///   - addError: エラー発生時のクロージャー
+    class func addToDo(addValue: ToDoModel, addError:(String?) -> ()) {
+        guard let realm = initRealm() else {
+            addError("エラーが発生しました")
+            return
+        }
         
         let toDoModel: ToDoModel = ToDoModel(id: addValue.id,
                                              toDoName: addValue.toDoName,
@@ -80,7 +86,6 @@ final class ToDoModel: Object {
                                              toDo: addValue.toDo,
                                              createTime: Format().stringFromDate(date: Date(), addSec: true)
         )
-        
         
         do {
             try realm.write() {
@@ -94,23 +99,26 @@ final class ToDoModel: Object {
             
         }
         catch {
-//            AlertManager().alertAction(vc, message: "ToDoの登録に失敗しました") { _ in
-//                                        return
-//            }
+            addError("Todoの追加に失敗しました")
         }
     
     }
     
     
+    
+    
+    
     /// ToDoの更新
     /// - Parameters:
-    ///   - vc: 呼び出し元のViewController
-    ///   - todoId: TodoId
-    ///   - updateValue: 更新する値
-    class func updateToDo(_ vc: UIViewController, todoId: String, updateValue: ToDoModel) {
-        guard let realm = initRealm() else { return }
+    ///   - updateValue: 更新するToDo
+    ///   - updateError: エラー発生時のクロージャー
+    class func updateToDo(updateValue: ToDoModel, updateError:(String?) -> ()) {
+        guard let realm = initRealm() else {
+            updateError("エラーが発生しました")
+            return
+        }
         
-        let toDoModel: ToDoModel = ToDoModel.findToDo(vc, todoId: updateValue.id, createTime: updateValue.createTime)!
+        let toDoModel: ToDoModel = ToDoModel.findToDo(todoId: updateValue.id, createTime: updateValue.createTime)!
         
         do {
             try realm.write() {
@@ -126,22 +134,21 @@ final class ToDoModel: Object {
               
         }
         catch {
-            AlertManager().alertAction(vc,
-                                       message: "ToDoの更新に失敗しました") { _ in
-                                        return
-            }
+            updateError("ToDoの更新に失敗しました")
+            
         }
         
     }
     
     
+    
+    
+    
     /// １件取得
     /// - Parameters:
-    ///   - vc: 呼び出し元のViewController
-    ///   - todoId: TodoId
-    ///   - createTime: Todoの作成時間
-    /// - Returns: 取得したTodoの最初の1件を返す
-    class func findToDo(_ vc: UIViewController, todoId: String, createTime: String?) -> ToDoModel? {
+    ///   - todoId: todoId
+    ///   - createTime: 作成時間
+    class func findToDo(todoId: String, createTime: String?) -> ToDoModel? {
         guard let realm = initRealm() else { return nil }
         
         if let _createTime = createTime {
@@ -175,10 +182,10 @@ final class ToDoModel: Object {
     ///   - todoId: TodoId
     ///   - createTime: Todoの作成時間
     ///   - completion: 削除完了後の動作
-    class func deleteToDo(_ vc: UIViewController, todoId: String, createTime: String?, completion: () -> Void) {
+    class func deleteToDo(todoId: String, createTime: String?, completion: (String?) -> Void) {
         guard let realm = initRealm() else { return }
         
-        let toDoModel: ToDoModel = ToDoModel.findToDo(vc, todoId: todoId, createTime: createTime)!
+        let toDoModel: ToDoModel = ToDoModel.findToDo(todoId: todoId, createTime: createTime)!
         
         NotificationManager().removeNotification([toDoModel.createTime!])
         
@@ -188,13 +195,10 @@ final class ToDoModel: Object {
                 realm.delete(toDoModel)
             }
             devprint("Todoを削除しました")
-            completion()
+            completion(nil)
         }
         catch {
-            AlertManager().alertAction(vc,
-                                       message: "ToDoの削除に失敗しました") { _ in
-                                        return
-            }
+            completion("ToDoの削除に失敗しました")
         }
         
         
@@ -206,18 +210,21 @@ final class ToDoModel: Object {
     /// - Parameters:
     ///   - vc: 呼び出し元のViewController
     ///   - completion: 削除完了後の動作
-    class func allDeleteToDo(_ vc: UIViewController, completion:@escaping () ->Void) {
+    class func allDeleteToDo(completion:@escaping (String?) ->Void) {
         guard let realm = initRealm() else { return }
         
-        AlertManager().alertAction(vc, title: "データベースの削除", message: "作成した問題や履歴を全件削除します", didTapDeleteButton: { (action) in
-            try! realm.write {
+        
+        do {
+            try realm.write {
                 realm.deleteAll()
+                devprint("ToDoを全件削除しました")
+                NotificationManager().allRemoveNotification()
+                completion(nil)
             }
-            devprint("ToDoを全件削除しました")
-            NotificationManager().allRemoveNotification()
-            completion()
-
-        }) { (action) in return }
+        } catch {
+            completion("ToDoの削除に失敗しました")
+        }
+            
         
     }
     
