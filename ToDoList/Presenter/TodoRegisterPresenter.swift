@@ -28,11 +28,7 @@ final class TodoRegisterPresenter {
             return
         }
 
-        guard let _createTime = createTime else {
-            failure("ToDoが見つかりませんでした")
-            return
-        }
-        self.model = ToDoModel.findToDo(todoId: _todoId, createTime: _createTime)
+        self.model = ToDoModel.findToDo(todoId: _todoId, createTime: createTime)
         
         if model == nil {
             failure("ToDoが見つかりませんでした")

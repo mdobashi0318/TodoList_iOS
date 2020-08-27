@@ -80,7 +80,7 @@ final class ToDoModel: Object {
             return
         }
         
-        let toDoModel: ToDoModel = ToDoModel(id: addValue.id,
+        let toDoModel: ToDoModel = ToDoModel(id: String(allFindToDo()!.count),
                                              toDoName: addValue.toDoName,
                                              todoDate: addValue.todoDate,
                                              toDo: addValue.toDo,

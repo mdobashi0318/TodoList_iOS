@@ -28,8 +28,8 @@ class ToDoListPresenterTests: XCTestCase {
         presenter?.fetchToDoList(success: {
             XCTAssertNotNil(self.presenter?.model, "モデルに格納されていない")
             exp.fulfill()
-        }, failure: { _ in
-            
+        }, failure: { error in
+            XCTAssertNil(error, "エラーが入っている")
         })
         wait(for: [exp], timeout: 3.0)
     }
