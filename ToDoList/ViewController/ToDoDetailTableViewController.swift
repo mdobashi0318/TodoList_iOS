@@ -8,6 +8,13 @@
 
 import UIKit
 
+
+protocol ToDoDetailTableViewControllerProtocol {
+    func findTodo()
+    func deleteTodo()
+}
+
+
 class ToDoDetailTableViewController: UITableViewController {
     
     // MARK: Properties
@@ -16,13 +23,15 @@ class ToDoDetailTableViewController: UITableViewController {
     
     private var createTime:String?
     
-    private var toDoModel: ToDoModel!
+    private var presenter: ToDoDetailTableViewControllerPresenter!
     
     
     // MARK: Init
     
     override init(style: UITableView.Style) {
         super.init(style: style)
+        
+        presenter = ToDoDetailTableViewControllerPresenter()
     }
     
     convenience init(todoId:String, createTime: String?) {
@@ -30,7 +39,7 @@ class ToDoDetailTableViewController: UITableViewController {
         self.todoId = todoId
         self.createTime = createTime
         
-        toDoModel = ToDoModel.findToDo(todoId: todoId, createTime: createTime)
+        findTodo()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -77,10 +86,7 @@ class ToDoDetailTableViewController: UITableViewController {
                                             self?.navigationController?.pushViewController(inputViewController, animated: true)
             },
                                         didTapDeleteButton: { [weak self] action in
-                                            ToDoModel.deleteToDo(todoId: (self?.todoId!)!, createTime: self?.createTime) {_ in 
-                                                self?.navigationController?.popViewController(animated: true)
-                                            }
-                                            
+                                            self?.deleteTodo()
         })
     }
     
@@ -117,11 +123,11 @@ extension ToDoDetailTableViewController {
         
         switch indexPath.section {
         case 0:
-            cell.textLabel!.text = toDoModel.toDoName
+            cell.textLabel!.text = presenter.model?.toDoName
         case 1:
-            cell.textLabel!.text = toDoModel.todoDate
+            cell.textLabel!.text = presenter.model?.todoDate
         default:
-            cell.textLabel!.text = toDoModel.toDo
+            cell.textLabel!.text = presenter.model?.toDo
             cell.textLabel?.numberOfLines = 0
         }
         
@@ -156,3 +162,30 @@ extension ToDoDetailTableViewController {
     }
     
 }
+
+
+
+
+extension ToDoDetailTableViewController: ToDoDetailTableViewControllerProtocol {
+    func findTodo() {
+        presenter.findTodo(todoId: todoId, createTime: createTime, success: {
+            
+        }) { error in
+            AlertManager().alertAction(self, message: error!)
+            
+        }
+    }
+    
+    func deleteTodo() {
+        presenter.deleteTodo(todoId: todoId, createTime: createTime, success: {
+            self.navigationController?.popViewController(animated: true)
+        }, failure: { error in
+            AlertManager().alertAction(self, message: error!)
+        })
+    }
+    
+    
+    
+    
+}
+

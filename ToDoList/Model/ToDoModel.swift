@@ -195,7 +195,6 @@ final class ToDoModel: Object {
                 realm.delete(toDoModel)
             }
             devprint("Todoを削除しました")
-            completion(nil)
         }
         catch {
             completion("ToDoの削除に失敗しました")
