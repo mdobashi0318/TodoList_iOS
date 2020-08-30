@@ -12,6 +12,7 @@ import RealmSwift
 
 protocol ToDoListViewControllerProtocol {
     func fetchTodoModel()
+    func todoAllDelete()
 }
 
 
@@ -96,9 +97,9 @@ final class ToDoListViewController: UITableViewController {
     
     /// データベース内の全件削除(Debug)
     @objc override func leftButtonAction() {
-        ToDoModel.allDeleteToDo {_ in 
-            NotificationCenter.default.post(name: Notification.Name(TableReload), object: nil)
-        }
+        AlertManager().alertAction(self, message: "ToDoを全件削除しますか?", didTapDeleteButton: { _ in
+            self.todoAllDelete()
+        })
     }
     
 
@@ -297,6 +298,16 @@ extension ToDoListViewController: ToDoListViewControllerProtocol {
                                        title: error, message: "") { _ in
                                         return
             }
+        })
+    }
+    
+    
+    
+    func todoAllDelete() {
+        presenter?.allDelete(success: {
+            NotificationCenter.default.post(name: Notification.Name(TableReload), object: nil)
+        }, failure: { error in
+            AlertManager().alertAction(self, message: error!)
         })
     }
     

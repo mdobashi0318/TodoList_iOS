@@ -209,19 +209,17 @@ final class ToDoModel: Object {
     /// - Parameters:
     ///   - vc: 呼び出し元のViewController
     ///   - completion: 削除完了後の動作
-    class func allDeleteToDo(completion:@escaping (String?) ->Void) {
+    class func allDeleteToDo(deleteError:@escaping (String?) ->Void) {
         guard let realm = initRealm() else { return }
-        
         
         do {
             try realm.write {
                 realm.deleteAll()
                 devprint("ToDoを全件削除しました")
                 NotificationManager().allRemoveNotification()
-                completion(nil)
             }
         } catch {
-            completion("ToDoの削除に失敗しました")
+            deleteError("ToDoの削除に失敗しました")
         }
             
         

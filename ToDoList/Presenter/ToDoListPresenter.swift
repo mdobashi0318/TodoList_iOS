@@ -25,4 +25,15 @@ final class ToDoListPresenter {
     }
     
     
+    
+    func allDelete(success: @escaping()->(), failure: @escaping (String?)->()) {
+        ToDoModel.allDeleteToDo { error in
+            failure(error)
+            return
+        }
+        
+        success()
+    }
+    
+    
 }
