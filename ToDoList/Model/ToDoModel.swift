@@ -182,7 +182,7 @@ final class ToDoModel: Object {
     ///   - todoId: TodoId
     ///   - createTime: Todoの作成時間
     ///   - completion: 削除完了後の動作
-    class func deleteToDo(todoId: String, createTime: String?, completion: (String?) -> Void) {
+    class func deleteToDo(todoId: String, createTime: String?, deleteError: (String?) -> Void) {
         guard let realm = initRealm() else { return }
         
         let toDoModel: ToDoModel = ToDoModel.findToDo(todoId: todoId, createTime: createTime)!
@@ -197,7 +197,7 @@ final class ToDoModel: Object {
             devprint("Todoを削除しました")
         }
         catch {
-            completion("ToDoの削除に失敗しました")
+            deleteError("ToDoの削除に失敗しました")
         }
         
         
