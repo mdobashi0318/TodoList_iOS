@@ -76,7 +76,7 @@ final class ToDoModel: Object {
     ///   - addError: エラー発生時のクロージャー
     class func addToDo(addValue: ToDoModel, addError:(String?) -> ()) {
         guard let realm = initRealm() else {
-            addError("エラーが発生しました")
+            addError(R.string.localizable.errorMessage())
             return
         }
         
@@ -114,7 +114,7 @@ final class ToDoModel: Object {
     ///   - updateError: エラー発生時のクロージャー
     class func updateToDo(updateValue: ToDoModel, updateError:(String?) -> ()) {
         guard let realm = initRealm() else {
-            updateError("エラーが発生しました")
+            updateError(R.string.localizable.errorMessage())
             return
         }
         

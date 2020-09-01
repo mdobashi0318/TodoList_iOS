@@ -152,17 +152,17 @@ final class TodoRegisterViewController: UIViewController {
         
         if todoRegisterTableView.titletextField.text!.isEmpty {
             AlertManager().alertAction(self,
-                                       message: "ToDoのタイトルが入力されていません")
+                                       message: R.string.localizable.titleAlert())
             
             result(false)
         } else if todoRegisterTableView.dateTextField.text!.isEmpty {
             AlertManager().alertAction(self,
-                                       message: "ToDoの期限が入力されていません")
+                                       message: R.string.localizable.dateAlert())
             
             result(false)
         } else if todoRegisterTableView.detailTextViwe.text.isEmpty {
             AlertManager().alertAction(self,
-                                       message: "ToDoの詳細が入力されていません")
+                                       message: R.string.localizable.detailAlert())
             
             result(false)
         } else {
@@ -220,7 +220,7 @@ extension TodoRegisterViewController: TodoRegisterViewControllerProtocol {
                                                toDo: todoRegisterTableView.detailTextViwe.text!,
                                                createTime: nil),
                            success: {
-                            AlertManager().alertAction(self, message: "ToDoを登録しました") { action in
+                            AlertManager().alertAction(self, message: R.string.localizable.addMessage()) { action in
                                 self.dismiss(animated: true)
                             }
         }) { error in
@@ -237,7 +237,7 @@ extension TodoRegisterViewController: TodoRegisterViewControllerProtocol {
                                                     toDo: todoRegisterTableView.detailTextViwe.text!,
                                                     createTime: create_time),
                               success: {
-                                AlertManager().alertAction(self, message: "ToDoを更新しました") { action in
+                                AlertManager().alertAction(self, message: R.string.localizable.updateMessage()) { action in
                                     self.navigationController?.popViewController(animated: true)
                                 }
         }) { error in

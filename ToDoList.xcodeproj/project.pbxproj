@@ -17,6 +17,8 @@
 		D05FD4AC24EAB6C800355C6D /* ToDoListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05FD4AB24EAB6C800355C6D /* ToDoListPresenter.swift */; };
 		D05FD4AE24EABE7A00355C6D /* ToDoListPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05FD4AD24EABE7A00355C6D /* ToDoListPresenterTests.swift */; };
 		D07EAF9722428210009FB684 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07EAF9622428210009FB684 /* Constant.swift */; };
+		D08754B324FE87B20058634F /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08754B224FE87B20058634F /* R.generated.swift */; };
+		D08754B924FE89990058634F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D08754BB24FE89990058634F /* Localizable.strings */; };
 		D09CBC6B21A2E8E100981E32 /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09CBC6A21A2E8E100981E32 /* AlertManager.swift */; };
 		D09FD91D24F7EBCB00B27633 /* TodoRegisterPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09FD91C24F7EBCB00B27633 /* TodoRegisterPresenterTests.swift */; };
 		D0A6A5F3219C4D0200D6A526 /* ToDoListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A6A5F2219C4D0200D6A526 /* ToDoListTests.swift */; };
@@ -71,6 +73,8 @@
 		D05FD4AB24EAB6C800355C6D /* ToDoListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListPresenter.swift; sourceTree = "<group>"; };
 		D05FD4AD24EABE7A00355C6D /* ToDoListPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoListPresenterTests.swift; sourceTree = "<group>"; };
 		D07EAF9622428210009FB684 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
+		D08754B224FE87B20058634F /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = SOURCE_ROOT; };
+		D08754BA24FE89990058634F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		D09CBC6A21A2E8E100981E32 /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
 		D09FD91C24F7EBCB00B27633 /* TodoRegisterPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoRegisterPresenterTests.swift; sourceTree = "<group>"; };
 		D0A6A5F0219C4D0200D6A526 /* ToDoListTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ToDoListTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -142,9 +146,11 @@
 			isa = PBXGroup;
 			children = (
 				D09CBC6A21A2E8E100981E32 /* AlertManager.swift */,
+				D08754B224FE87B20058634F /* R.generated.swift */,
 				D07EAF9622428210009FB684 /* Constant.swift */,
 				D0E15CA424939503006B2A5E /* NotificationManager.swift */,
 				D047CE20248C8F4A009354DC /* Format.swift */,
+				D08754BB24FE89990058634F /* Localizable.strings */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -315,6 +321,7 @@
 			buildConfigurationList = D0F9CC48214A8E6300C51BD6 /* Build configuration list for PBXNativeTarget "ToDoList" */;
 			buildPhases = (
 				6838C52BCEBBAACECC9FFE48 /* [CP] Check Pods Manifest.lock */,
+				D0CE9BBE24FE85CA00D6D6D2 /* ShellScript */,
 				D0F9CC32214A8E6000C51BD6 /* Sources */,
 				D0F9CC33214A8E6000C51BD6 /* Frameworks */,
 				D0F9CC34214A8E6000C51BD6 /* Resources */,
@@ -395,6 +402,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D05566FC22509409002EA61A /* LaunchScreen.storyboard in Resources */,
+				D08754B924FE89990058634F /* Localizable.strings in Resources */,
 				D0F9CC41214A8E6300C51BD6 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -502,6 +510,25 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		D0CE9BBE24FE85CA00D6D6D2 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$TEMP_DIR/rswift-lastrun",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				$SRCROOT/R.generated.swift,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"$PODS_ROOT/R.swift/rswift\" generate \"$SRCROOT/R.generated.swift\"\n";
+		};
 		FBE4653D194E94E2E2F0F2F7 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -557,6 +584,7 @@
 				D0F8327C24FBB598005B851F /* ToDoDetailTableViewControllerPresenter.swift in Sources */,
 				D0BDC0712271EBD900D1280B /* UIColorExtension.swift in Sources */,
 				D0B3BA0324EC08EB003BEC2D /* TodoRegisterPresenter.swift in Sources */,
+				D08754B324FE87B20058634F /* R.generated.swift in Sources */,
 				D0F9CC4E214A8FCF00C51BD6 /* ToDoListViewController.swift in Sources */,
 				D09CBC6B21A2E8E100981E32 /* AlertManager.swift in Sources */,
 				D0A6A5FF219C4D8900D6A526 /* TodoRegisterTableView.swift in Sources */,
@@ -580,6 +608,17 @@
 			targetProxy = D0BB76D3219DAC7F000AF1E4 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		D08754BB24FE89990058634F /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D08754BA24FE89990058634F /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		D0A6A5F8219C4D0200D6A526 /* Debug */ = {

@@ -1,0 +1,20 @@
+/* 
+  Localizable.strings
+  ToDoList
+
+  Created by 土橋正晴 on 2020/09/01.
+  Copyright © 2020 m.dobashi. All rights reserved.
+*/
+
+
+
+
+"AddMessage" = "ToDoを登録しました";
+"UpdateMessage" =  "ToDoを更新しました";
+
+"TitleAlert" = "ToDoのタイトルが入力されていません";
+"DateAlert" = "ToDoの期限が入力されていません";
+"DetailAlert" = "ToDoの詳細が入力されていません";
+
+
+"ErrorMessage" = "エラーが発生しました";
