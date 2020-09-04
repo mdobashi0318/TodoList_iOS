@@ -36,4 +36,25 @@ final class ToDoListPresenter {
     }
     
     
+    
+    
+    /// ToDoを１件削除
+    /// - Parameters:
+    ///   - todoId: todoId
+    ///   - createTime: 作成時間
+    ///   - success: 検索成功時
+    ///   - failure: 検索失敗時
+    func deleteTodo(todoId: String?, createTime: String?, success: @escaping()->(), failure: @escaping (String?)->()) {
+        
+        ToDoModel.deleteToDo(todoId: todoId!, createTime: createTime) { error in
+            if let _error = error {
+                failure(_error)
+                return
+            }
+        }
+        
+        success()
+    }
+    
+    
 }

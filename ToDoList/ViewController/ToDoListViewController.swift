@@ -13,6 +13,7 @@ import RealmSwift
 protocol ToDoListViewControllerProtocol {
     func fetchTodoModel()
     func todoAllDelete()
+    func deleteTodo(row: Int)
 }
 
 
@@ -130,14 +131,7 @@ final class ToDoListViewController: UITableViewController {
     /// - Parameter indexPath: 選択したcellの行
     private func deleteAction(indexPath: IndexPath) {
         AlertManager().alertAction(self, message: "削除しますか?", didTapDeleteButton: {[weak self] action in
-            
-            let todoid = self?.presenter?.model![indexPath.row].id
-            let createTime = self?.presenter?.model?[indexPath.row].createTime
-            
-            ToDoModel.deleteToDo(todoId: todoid!, createTime: createTime) {_ in 
-                NotificationCenter.default.post(name: Notification.Name(TableReload), object: nil)
-            }
-            
+            self?.deleteTodo(row: indexPath.row)
         })
     }
     
@@ -289,6 +283,7 @@ extension ToDoListViewController: UIAdaptivePresentationControllerDelegate {
 
 
 extension ToDoListViewController: ToDoListViewControllerProtocol {
+
     func fetchTodoModel() {
         presenter?.fetchToDoList(success: {
             self.tableView.reloadData()
@@ -298,6 +293,19 @@ extension ToDoListViewController: ToDoListViewControllerProtocol {
                                        title: error, message: "") { _ in
                                         return
             }
+        })
+    }
+    
+    
+    
+    func deleteTodo(row: Int) {
+        let todoid = presenter?.model![row].id
+        let createTime = presenter?.model?[row].createTime
+        
+        presenter?.deleteTodo(todoId: todoid, createTime: createTime, success: {
+            NotificationCenter.default.post(name: Notification.Name(TableReload), object: nil)
+        }, failure: { error in
+            AlertManager().alertAction(self, message: error!)
         })
     }
     
