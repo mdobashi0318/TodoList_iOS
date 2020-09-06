@@ -34,5 +34,48 @@ class ToDoListPresenterTests: XCTestCase {
         wait(for: [exp], timeout: 3.0)
     }
     
+    func test_deleteTodo() {
+         
+         ToDoModel.addToDo(addValue: ToDoModel(id: "", toDoName: "UnitTestTitle", todoDate: "UnitDate", toDo: "UnitDetile", createTime: nil)) { error in
+             XCTAssertNil(error, "エラーが入っている")
+         }
+         
+         let model = ToDoModel.findToDo(todoId: "0", createTime: nil)
+         let exp = expectation(description: "exp")
+         presenter?.deleteTodo(todoId: model?.id, createTime: model?.createTime, success: {
+             XCTAssertTrue(ToDoModel.allFindToDo()?.count == 0, "ToDoが残っている")
+             exp.fulfill()
+             
+         }, failure: { error in
+             XCTAssertNil(error, "エラーが入っている")
+         })
+         wait(for: [exp], timeout: 3.0)
+         
+         
+     }
+    
+    
+    
+    func test_allDeleteTodo() {
+        
+        ToDoModel.addToDo(addValue: ToDoModel(id: "", toDoName: "UnitTestTitle1", todoDate: "UnitDate", toDo: "UnitDetile", createTime: nil)) { error in
+            XCTAssertNil(error, "エラーが入っている")
+        }
+        sleep(1)
+        ToDoModel.addToDo(addValue: ToDoModel(id: "", toDoName: "UnitTestTitle2", todoDate: "UnitDate", toDo: "UnitDetile", createTime: nil)) { error in
+            XCTAssertNil(error, "エラーが入っている")
+        }
+        sleep(1)
+        
+        
+        presenter?.allDelete(success: {
+            XCTAssertTrue(ToDoModel.allFindToDo()?.count == 0, "ToDoが残っている")
+            
+        }, failure: { error in
+            XCTAssertNil(error, "エラーが入っている")
+        })
+        
+    }
+    
     
 }
