@@ -23,7 +23,7 @@ struct AlertManager {
                                                              preferredStyle: .alert
         )
         
-        controller.addAction(UIAlertAction(title: "閉じる",
+        controller.addAction(UIAlertAction(title: R.string.localizable.close(),
                                            style: .cancel,
                                            handler: didTapCloseButton)
         )
@@ -47,12 +47,12 @@ struct AlertManager {
                                                              preferredStyle: .alert
         )
         
-        controller.addAction(UIAlertAction(title: "削除",
+        controller.addAction(UIAlertAction(title: R.string.localizable.delete(),
                                            style: .destructive,
                                            handler: didTapDeleteButton)
         )
         
-        controller.addAction(UIAlertAction(title: "キャンセル",
+        controller.addAction(UIAlertAction(title: R.string.localizable.cancel(),
                                            style: .cancel,
                                            handler: didTapCancelButton)
         )
@@ -76,17 +76,17 @@ struct AlertManager {
                                                              message: message,
                                                              preferredStyle: .actionSheet
         )
-        alertSheet.addAction(UIAlertAction(title: "編集",
+        alertSheet.addAction(UIAlertAction(title: R.string.localizable.edit(),
                                            style: .default,
                                            handler: didTapEditButton
         ))
         
-        alertSheet.addAction(UIAlertAction(title: "削除",
+        alertSheet.addAction(UIAlertAction(title: R.string.localizable.delete(),
                                            style: .destructive,
                                            handler: didTapDeleteButton
         ))
         
-        alertSheet.addAction(UIAlertAction(title: "キャンセル",
+        alertSheet.addAction(UIAlertAction(title: R.string.localizable.cancel(),
                                            style: .cancel,
                                            handler: didTapCancelButton
         ))

@@ -9,12 +9,32 @@
 
 
 
+/// Message
+
 "AddMessage" = "ToDoを登録しました";
 "UpdateMessage" =  "ToDoを更新しました";
+
+
+ // MARK: - バリデーションメッセージ
 
 "TitleAlert" = "ToDoのタイトルが入力されていません";
 "DateAlert" = "ToDoの期限が入力されていません";
 "DetailAlert" = "ToDoの詳細が入力されていません";
 
 
+// MARK: - Error
+
 "ErrorMessage" = "エラーが発生しました";
+
+
+// MARK: - Cell
+
+"NoToDo" = "Todoがまだ登録されていません";
+
+
+// MARK: - Alert,AlertSheet
+
+"Edit" = "編集";
+"Delete" = "削除";
+"Cancel" = "キャンセル";
+"Close" = "閉じる";

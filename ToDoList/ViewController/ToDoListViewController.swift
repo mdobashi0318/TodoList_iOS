@@ -189,7 +189,7 @@ extension ToDoListViewController {
             let cell:UITableViewCell = UITableViewCell(style: .default, reuseIdentifier: "cell")
             cell.backgroundColor = cellWhite
             cell.selectionStyle = .none
-            cell.textLabel?.text = "Todoがまだ登録されていません"
+            cell.textLabel?.text = R.string.localizable.noToDo()
             return cell
         }
         
@@ -234,14 +234,14 @@ extension ToDoListViewController {
     /// 編集と削除のスワイプをセット
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         
-        let edit = UITableViewRowAction(style: .default, title: "編集") {
+        let edit = UITableViewRowAction(style: .default, title: R.string.localizable.edit()) {
             (action, indexPath) in
             
             self.editAction(indexPath: indexPath)
         }
         edit.backgroundColor = .orange
         
-        let del = UITableViewRowAction(style: .destructive, title: "削除") {
+        let del = UITableViewRowAction(style: .destructive, title: R.string.localizable.delete()) {
             (action, indexPath) in
             
             self.deleteAction(indexPath: indexPath)
