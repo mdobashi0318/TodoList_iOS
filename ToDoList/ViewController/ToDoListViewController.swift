@@ -12,8 +12,16 @@ import RealmSwift
 
 protocol ToDoListViewControllerProtocol {
     func fetchTodoModel()
+    func activeFindToDo()
     func todoAllDelete()
     func deleteTodo(row: Int)
+}
+
+
+enum SegmenteIndex: Int {
+    case all = 0
+    case active = 1
+    case expired = 2
 }
 
 
@@ -26,6 +34,12 @@ final class ToDoListViewController: UITableViewController {
     
     private var presenter: ToDoListPresenter?
     
+    
+    private var segmentedControl: UISegmentedControl!
+    
+    
+    private var segmenteIndex: SegmenteIndex!
+    
     // MARK: LifeCycle
     
     override func viewDidLoad() {
@@ -36,6 +50,7 @@ final class ToDoListViewController: UITableViewController {
         
         setNavigationItem()
         setupTableView()
+        setupSegmentedControl()
         setNotificationCenter()
     }
     
@@ -64,15 +79,50 @@ final class ToDoListViewController: UITableViewController {
     }
     
     
+    
+    private func setupSegmentedControl(){
+        segmenteIndex = .all
+        segmentedControl = UISegmentedControl(items: ["全て", "アクティブ", "期限切れ"])
+        segmentedControl.selectedSegmentIndex = segmenteIndex.rawValue
+        segmentedControl.addTarget(self, action: #selector(segmentedSelect), for: .valueChanged)
+    }
+    
+    
+    @objc private func segmentedSelect(_ segment :UISegmentedControl) {
+        segmenteIndex = SegmenteIndex(rawValue: segment.selectedSegmentIndex)
+        
+        reloadTableView()
+    }
+    
+    
     /// テーブルとセパレート線を更新する
     func reloadTableView() {
-        fetchTodoModel()
+        findToDo()
         tableView.separatorStyle = presenter?.model?.count != 0 ? .none : .singleLine
         tableView.reloadData()
     }
     
     
-    // MARK: NavigationItem
+    /// 選択されたセグメントによってToDoListの呼び出し条件を変える
+    private func findToDo() {
+        switch segmenteIndex {
+        case .all:
+            fetchTodoModel()
+        case .active, .expired:
+            activeFindToDo()
+        default:
+            break
+        }
+    }
+    
+}
+
+
+
+// MARK: - NavigationItem
+
+
+extension ToDoListViewController {
     
     /// setNavigationItemをセットする
     private func setNavigationItem() {
@@ -103,59 +153,7 @@ final class ToDoListViewController: UITableViewController {
         })
     }
     
-
-    
-    // MARK: Todo Func
-    
-    /// Todoの詳細を開く
-    ///
-    /// - Parameter indexPath: 選択したcellの行
-    private func cellTapAction(indexPath: IndexPath) {
-        let toDoDetailViewController:ToDoDetailTableViewController = ToDoDetailTableViewController(todoId: (presenter?.model?[indexPath.row].id)!, createTime: presenter?.model?[indexPath.row].createTime)
-        self.navigationController?.pushViewController(toDoDetailViewController, animated: true)
-    }
-    
-    
-    /// 選択したToDoの編集画面を開く
-    ///
-    /// - Parameter indexPath: 選択したcellの行
-    private func editAction(indexPath: IndexPath) {
-        let inputViewController:TodoRegisterViewController = TodoRegisterViewController(todoId: (presenter?.model?[indexPath.row].id)!, createTime: presenter?.model?[indexPath.row].createTime)
-        self.navigationController?.pushViewController(inputViewController, animated: true)
-    }
-    
-    
-    
-    /// 選択したToDoの削除
-    ///
-    /// - Parameter indexPath: 選択したcellの行
-    private func deleteAction(indexPath: IndexPath) {
-        AlertManager().alertAction(self, message: "削除しますか?", didTapDeleteButton: {[weak self] action in
-            self?.deleteTodo(row: indexPath.row)
-        })
-    }
-    
-    
-    
-    // MARK: Notification
-    
-    /// NotificationCenterを追加する
-    private func setNotificationCenter() {
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadTable(notification:)), name: NSNotification.Name(rawValue: TableReload), object: nil)
-    }
-    
-    /// テーブルの更新とセパレート線の設定
-    @objc func reloadTable(notification: Notification) {
-        DispatchQueue.main.async { [weak self] in
-            self?.reloadTableView()
-        }
-    }
-    
-    
 }
-
-
-
 
 
 
@@ -210,6 +208,7 @@ extension ToDoListViewController {
     }
     
     
+    
     // MARK: Select cell
     
     /// ToDoの個数が0個の時に選択させない
@@ -222,6 +221,17 @@ extension ToDoListViewController {
     }
     
     
+    
+    /// Todoの詳細を開く
+    ///
+    /// - Parameter indexPath: 選択したcellの行
+    private func cellTapAction(indexPath: IndexPath) {
+        let toDoDetailViewController:ToDoDetailTableViewController = ToDoDetailTableViewController(todoId: (presenter?.model?[indexPath.row].id)!, createTime: presenter?.model?[indexPath.row].createTime)
+        self.navigationController?.pushViewController(toDoDetailViewController, animated: true)
+    }
+    
+    
+    
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         if presenter?.model?.count == 0 {
             return nil
@@ -230,6 +240,9 @@ extension ToDoListViewController {
         return indexPath
     }
     
+    
+    
+    // MARK: Swipe cell
     
     /// 編集と削除のスワイプをセット
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
@@ -250,6 +263,27 @@ extension ToDoListViewController {
         return [del, edit]
     }
     
+
+    
+    /// 選択したToDoの編集画面を開く
+    ///
+    /// - Parameter indexPath: 選択したcellの行
+    private func editAction(indexPath: IndexPath) {
+        let inputViewController:TodoRegisterViewController = TodoRegisterViewController(todoId: (presenter?.model?[indexPath.row].id)!, createTime: presenter?.model?[indexPath.row].createTime)
+        self.navigationController?.pushViewController(inputViewController, animated: true)
+    }
+    
+    
+    
+    /// 選択したToDoの削除
+    ///
+    /// - Parameter indexPath: 選択したcellの行
+    private func deleteAction(indexPath: IndexPath) {
+        AlertManager().alertAction(self, message: "削除しますか?", didTapDeleteButton: {[weak self] action in
+            self?.deleteTodo(row: indexPath.row)
+        })
+    }
+    
     
     /// ToDoの個数が0の時はスワイプさせない
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -257,6 +291,27 @@ extension ToDoListViewController {
             return false
         }
         return true
+    }
+    
+    
+    
+    
+    // MARK: Header
+    
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView()
+        
+        headerView.addSubview(segmentedControl)
+        segmentedControl.translatesAutoresizingMaskIntoConstraints = false
+        segmentedControl.centerXAnchor.constraint(equalTo: headerView.centerXAnchor).isActive = true
+        segmentedControl.centerYAnchor.constraint(equalTo: headerView.centerYAnchor).isActive = true
+        
+        return headerView
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 50
     }
   
 }
@@ -274,13 +329,36 @@ extension ToDoListViewController: UIAdaptivePresentationControllerDelegate {
                 NotificationCenter.default.post(name: Notification.Name(TableReload), object: nil)
             }
         })
-        
     }
     
 }
 
 
 
+
+// MARK: - Notification
+
+extension ToDoListViewController {
+    
+    /// NotificationCenterを追加する
+    private func setNotificationCenter() {
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadTable(notification:)), name: NSNotification.Name(rawValue: TableReload), object: nil)
+    }
+    
+    /// テーブルの更新とセパレート線の設定
+    @objc func reloadTable(notification: Notification) {
+        DispatchQueue.main.async { [weak self] in
+            self?.reloadTableView()
+        }
+    }
+    
+}
+
+
+
+
+
+// MARK: - ToDoListViewControllerProtocol
 
 extension ToDoListViewController: ToDoListViewControllerProtocol {
 
@@ -290,12 +368,23 @@ extension ToDoListViewController: ToDoListViewControllerProtocol {
             
         }, failure: { error in
             AlertManager().alertAction(self,
-                                       title: error, message: "") { _ in
+                                       message: error!) { _ in
                                         return
             }
         })
     }
     
+    
+    func activeFindToDo() {
+        presenter?.activeFindToDo(segmenteIndex: segmenteIndex, success: {
+            self.tableView.reloadData()
+        }, failure: { error in
+            AlertManager().alertAction(self,
+                                       message: error!) { _ in
+                                        return
+            }
+        })
+    }
     
     
     func deleteTodo(row: Int) {

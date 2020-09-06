@@ -12,10 +12,21 @@ import RealmSwift
 
 final class ToDoListPresenter {
     
-    var model: Results<ToDoModel>?
+    var model: [ToDoModel]?
     
     func fetchToDoList(success: @escaping()->(), failure: @escaping (String?)->()) {
         model = ToDoModel.allFindToDo()
+        if model == nil {
+            failure("エラーが発生しました")
+            return
+            
+        }
+        success()
+    }
+    
+    
+    func activeFindToDo(segmenteIndex index: SegmenteIndex, success: @escaping()->(), failure: @escaping (String?)->()) {
+        model = ToDoModel.activeFindToDo(index: index)
         if model == nil {
             failure("エラーが発生しました")
             return

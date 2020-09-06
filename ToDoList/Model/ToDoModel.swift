@@ -168,12 +168,50 @@ final class ToDoModel: Object {
     /// 全件取得
     /// - Parameter vc: 呼び出し元のViewController
     /// - Returns: 取得したTodoを全件返す
-    class func allFindToDo() -> Results<ToDoModel>? {
+    class func allFindToDo() -> [ToDoModel]? {
         guard let realm = initRealm() else { return nil }
+        
+        var todomodel = [ToDoModel]()
         let todo = realm.objects(ToDoModel.self)
+        todo.forEach { value in
+            todomodel.append(value)
+        }
         devprint("Todoを全件表示します: \(todo)")
-        return todo
+        return todomodel
     }
+    
+    
+    
+    /// 全件取得
+    class func activeFindToDo(index: SegmenteIndex) -> [ToDoModel]? {
+        guard let realm = initRealm() else { return nil }
+        
+        var todomodel = [ToDoModel]()
+        let todo = realm.objects(ToDoModel.self)
+        todo.forEach { value in
+            todomodel.append(value)
+        }
+        
+        switch index {
+        case .active:
+            let filterToDo = todomodel.filter {
+                $0.todoDate! > Format().stringFromDate(date: Date())
+            }
+            devprint("期限が過ぎていないToD0を表示します: \(filterToDo)")
+            return filterToDo
+        case .expired:
+            let filterToDo = todomodel.filter {
+                $0.todoDate! < Format().stringFromDate(date: Date())
+            }
+            devprint("期限の過ぎたToD0を表示します: \(filterToDo)")
+            return filterToDo
+        default:
+            break
+        }
+        
+        return nil
+    }
+    
     
     
     /// ToDoの削除
