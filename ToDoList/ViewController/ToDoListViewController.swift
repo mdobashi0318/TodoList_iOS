@@ -39,6 +39,9 @@ final class ToDoListViewController: UITableViewController {
     
     private var segmenteIndex: SegmentIndex!
     
+    private let refreshCtr = UIRefreshControl()
+    
+    
     // MARK: LifeCycle
     
     override func viewDidLoad() {
@@ -75,6 +78,8 @@ final class ToDoListViewController: UITableViewController {
         tableView.separatorInset = .zero
         tableView.separatorStyle = presenter?.model?.count != 0 ? .none : .singleLine
         tableView.register(TodoListCell.self, forCellReuseIdentifier: "listCell")
+        tableView.refreshControl = refreshCtr
+        refreshCtr.addTarget(self, action: #selector(refresh(sender:)), for: .valueChanged)
     }
     
     
@@ -99,6 +104,12 @@ final class ToDoListViewController: UITableViewController {
         fetchTodoModel()
         tableView.separatorStyle = presenter?.model?.count != 0 ? .none : .singleLine
         tableView.reloadData()
+    }
+    
+    
+    @objc func refresh(sender: UIRefreshControl) {
+        reloadTableView()
+        sender.endRefreshing()
     }
     
 }
@@ -287,7 +298,7 @@ extension ToDoListViewController {
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView()
-        
+        headerView.backgroundColor = headerColor
         headerView.addSubview(segmentedControl)
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
         segmentedControl.centerXAnchor.constraint(equalTo: headerView.centerXAnchor).isActive = true
