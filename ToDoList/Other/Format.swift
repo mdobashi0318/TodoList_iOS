@@ -12,11 +12,11 @@ import Foundation
 struct Format {
     
     /// フォーマットを返す
-    /// - Parameter addSec: 秒数もフォーマットに設定するかの判定
-    private func _dateFormatter(addSec: Bool) -> DateFormatter {
+    /// - Parameter addSec: ミリ秒もフォーマットに設定するかの判定
+    private func _dateFormatter(addms: Bool) -> DateFormatter {
         let formatter: DateFormatter = DateFormatter()
-        if addSec {
-            formatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
+        if addms {
+            formatter.dateFormat = "yyyy/MM/dd HH:mm:ss.SSS"
         } else {
             formatter.dateFormat = "yyyy/MM/dd HH:mm"
         }
@@ -29,14 +29,14 @@ struct Format {
     
     /// Stringのフォーマットを設定Dateを返す
     func dateFromString(string: String, addSec: Bool = false) -> Date? {
-        let formatter: DateFormatter = _dateFormatter(addSec: addSec)
+        let formatter: DateFormatter = _dateFormatter(addms: addSec)
         return formatter.date(from: string)
     }
     
     
     /// Dateのフォーマットを設定しStringを返す
     func stringFromDate(date: Date, addSec: Bool = false) -> String {
-        let formatter = _dateFormatter(addSec: addSec)
+        let formatter = _dateFormatter(addms: addSec)
         let s_Date:String = formatter.string(from: date)
         
         return s_Date
@@ -45,7 +45,7 @@ struct Format {
     
     /// Dateのフォーマットを設定して返す
     func dateFormat(addSec: Bool = false) -> Date {
-        let formatter = _dateFormatter(addSec: addSec)
+        let formatter = _dateFormatter(addms: addSec)
         let s_Date:String = formatter.string(from: Date())
         
         return formatter.date(from: s_Date)!

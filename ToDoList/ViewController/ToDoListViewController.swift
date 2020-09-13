@@ -12,13 +12,12 @@ import RealmSwift
 
 protocol ToDoListViewControllerProtocol {
     func fetchTodoModel()
-    func activeFindToDo()
     func todoAllDelete()
     func deleteTodo(row: Int)
 }
 
 
-enum SegmenteIndex: Int {
+enum SegmentIndex: Int, CaseIterable {
     case all = 0
     case active = 1
     case expired = 2
@@ -38,7 +37,7 @@ final class ToDoListViewController: UITableViewController {
     private var segmentedControl: UISegmentedControl!
     
     
-    private var segmenteIndex: SegmenteIndex!
+    private var segmenteIndex: SegmentIndex!
     
     // MARK: LifeCycle
     
@@ -89,7 +88,7 @@ final class ToDoListViewController: UITableViewController {
     
     
     @objc private func segmentedSelect(_ segment :UISegmentedControl) {
-        segmenteIndex = SegmenteIndex(rawValue: segment.selectedSegmentIndex)
+        segmenteIndex = SegmentIndex(rawValue: segment.selectedSegmentIndex)
         
         reloadTableView()
     }
@@ -97,22 +96,9 @@ final class ToDoListViewController: UITableViewController {
     
     /// テーブルとセパレート線を更新する
     func reloadTableView() {
-        findToDo()
+        fetchTodoModel()
         tableView.separatorStyle = presenter?.model?.count != 0 ? .none : .singleLine
         tableView.reloadData()
-    }
-    
-    
-    /// 選択されたセグメントによってToDoListの呼び出し条件を変える
-    private func findToDo() {
-        switch segmenteIndex {
-        case .all:
-            fetchTodoModel()
-        case .active, .expired:
-            activeFindToDo()
-        default:
-            break
-        }
     }
     
 }
@@ -362,21 +348,9 @@ extension ToDoListViewController {
 
 extension ToDoListViewController: ToDoListViewControllerProtocol {
 
+    
     func fetchTodoModel() {
-        presenter?.fetchToDoList(success: {
-            self.tableView.reloadData()
-            
-        }, failure: { error in
-            AlertManager().alertAction(self,
-                                       message: error!) { _ in
-                                        return
-            }
-        })
-    }
-    
-    
-    func activeFindToDo() {
-        presenter?.activeFindToDo(segmenteIndex: segmenteIndex, success: {
+        presenter?.fetchToDoList(segmentIndex: segmenteIndex, success: {
             self.tableView.reloadData()
         }, failure: { error in
             AlertManager().alertAction(self,

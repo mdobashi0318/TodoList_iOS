@@ -19,7 +19,7 @@ final class ToDoDetailTableViewControllerPresenter {
     ///   - createTime: 作成時間
     ///   - success: 検索成功時
     ///   - failure: 検索失敗時
-    func findTodo(todoId: String?, createTime: String?, success: @escaping()->(), failure: @escaping (String?)->()) {
+    func findTodo(todoId: String?, createTime: String?, success: ()->(), failure:  (String?)->()) {
         
         guard let _todoId = todoId else {
             failure("ToDoが見つかりませんでした")
@@ -44,7 +44,7 @@ final class ToDoDetailTableViewControllerPresenter {
     ///   - createTime: 作成時間
     ///   - success: 検索成功時
     ///   - failure: 検索失敗時
-    func deleteTodo(todoId: String?, createTime: String?, success: @escaping()->(), failure: @escaping (String?)->()) {
+    func deleteTodo(todoId: String?, createTime: String?, success: ()->(), failure: (String?)->()) {
         
         ToDoModel.deleteToDo(todoId: todoId!, createTime: createTime) { error in
             if let _error = error {

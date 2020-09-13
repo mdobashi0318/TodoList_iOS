@@ -176,14 +176,14 @@ final class ToDoModel: Object {
         todo.forEach { value in
             todomodel.append(value)
         }
-        devprint("Todoを全件表示します: \(todo)")
+        devprint("Todoを全件表示します: \(todomodel)")
         return todomodel
     }
     
     
     
     /// 全件取得
-    class func activeFindToDo(index: SegmenteIndex) -> [ToDoModel]? {
+    class func activeFindToDo(index: SegmentIndex) -> [ToDoModel]? {
         guard let realm = initRealm() else { return nil }
         
         var todomodel = [ToDoModel]()
@@ -197,13 +197,13 @@ final class ToDoModel: Object {
             let filterToDo = todomodel.filter {
                 $0.todoDate! > Format().stringFromDate(date: Date())
             }
-            devprint("期限が過ぎていないToD0を表示します: \(filterToDo)")
+            devprint("期限が過ぎていないToDoを表示します: \(filterToDo)")
             return filterToDo
         case .expired:
             let filterToDo = todomodel.filter {
-                $0.todoDate! < Format().stringFromDate(date: Date())
+                $0.todoDate! <= Format().stringFromDate(date: Date())
             }
-            devprint("期限の過ぎたToD0を表示します: \(filterToDo)")
+            devprint("期限の過ぎたToDoを表示します: \(filterToDo)")
             return filterToDo
         default:
             break
