@@ -171,9 +171,9 @@ extension ToDoListViewController {
         
         if presenter?.model?.count == 0 || presenter?.model == nil {
             let cell:UITableViewCell = UITableViewCell(style: .default, reuseIdentifier: "cell")
-            cell.backgroundColor = cellWhite
+            cell.backgroundColor = cellColor
             cell.selectionStyle = .none
-            cell.textLabel?.text = R.string.localizable.noToDo()
+            cell.textLabel?.text = R.string.message.noToDo()
             return cell
         }
         
@@ -233,14 +233,14 @@ extension ToDoListViewController {
     /// 編集と削除のスワイプをセット
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         
-        let edit = UITableViewRowAction(style: .default, title: R.string.localizable.edit()) {
+        let edit = UITableViewRowAction(style: .default, title: R.string.message.edit()) {
             (action, indexPath) in
             
             self.editAction(indexPath: indexPath)
         }
         edit.backgroundColor = .orange
         
-        let del = UITableViewRowAction(style: .destructive, title: R.string.localizable.delete()) {
+        let del = UITableViewRowAction(style: .destructive, title: R.string.message.delete()) {
             (action, indexPath) in
             
             self.deleteAction(indexPath: indexPath)
@@ -312,7 +312,7 @@ extension ToDoListViewController: UIAdaptivePresentationControllerDelegate {
     func presentationControllerDidAttemptToDismiss(_ presentationController: UIPresentationController) {
         AlertManager().alertAction(naviController, message: "編集途中の内容がありますが削除しますか?", didTapDeleteButton: { [weak self] action in
             self?.naviController.dismiss(animated: true) {
-                NotificationCenter.default.post(name: Notification.Name(TableReload), object: nil)
+                NotificationCenter.default.post(name: Notification.Name(R.string.notification.tableReload()), object: nil)
             }
         })
     }
@@ -328,7 +328,7 @@ extension ToDoListViewController {
     
     /// NotificationCenterを追加する
     private func setNotificationCenter() {
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadTable(notification:)), name: NSNotification.Name(rawValue: TableReload), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadTable(notification:)), name: NSNotification.Name(rawValue: R.string.notification.tableReload()), object: nil)
     }
     
     /// テーブルの更新とセパレート線の設定
@@ -366,7 +366,7 @@ extension ToDoListViewController: ToDoListViewControllerProtocol {
         let createTime = presenter?.model?[row].createTime
         
         presenter?.deleteTodo(todoId: todoid, createTime: createTime, success: {
-            NotificationCenter.default.post(name: Notification.Name(TableReload), object: nil)
+            NotificationCenter.default.post(name: Notification.Name(R.string.notification.tableReload()), object: nil)
         }, failure: { error in
             AlertManager().alertAction(self, message: error!)
         })
@@ -376,7 +376,7 @@ extension ToDoListViewController: ToDoListViewControllerProtocol {
     
     func todoAllDelete() {
         presenter?.allDelete(success: {
-            NotificationCenter.default.post(name: Notification.Name(TableReload), object: nil)
+            NotificationCenter.default.post(name: Notification.Name(R.string.notification.tableReload()), object: nil)
         }, failure: { error in
             AlertManager().alertAction(self, message: error!)
         })

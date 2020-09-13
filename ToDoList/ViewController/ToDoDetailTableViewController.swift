@@ -119,7 +119,7 @@ extension ToDoDetailTableViewController {
         let cell:UITableViewCell = UITableViewCell(style: .default, reuseIdentifier: "detailCell")
         cell.accessoryType = .none
         cell.selectionStyle = .none
-        cell.backgroundColor = cellWhite
+        cell.backgroundColor = cellColor
         
         switch indexPath.section {
         case 0:

@@ -20,18 +20,8 @@ let Geranium:UIColor = UIColor.changeAppearnceColor(light: UIColor.rgba(red: 218
 let Rubyred:UIColor = UIColor.changeAppearnceColor(light: UIColor.rgba(red: 207, green: 53, blue: 93, alpha: 1), dark: .black)
 let Beige: UIColor = UIColor.changeAppearnceColor(light: UIColor.rgba(red: 245, green: 245, blue: 220, alpha: 1), dark: .black)
 let Rose:UIColor = UIColor.changeAppearnceColor(light: UIColor.rgba(red: 244, green: 80, blue: 109, alpha: 1), dark: .darkGray)
-let cellWhite: UIColor = UIColor.changeAppearnceColor(light: .white, dark: .rgba(red: 25, green: 25, blue: 25, alpha: 25))
-
-
-
-
-// MARK: - STRINGS
-
-/// ToDoListViewControllerのテーブルを更新する
-let TableReload: String = "TableReload"
-
-/// 期限の登録に失敗した際にトーストを表示する
-let toast: String = "toast"
+let cellColor: UIColor = UIColor.changeAppearnceColor(light: .white, dark: .rgba(red: 25, green: 25, blue: 25, alpha: 1))
+let headerColor: UIColor = UIColor.changeAppearnceColor(light: .white, dark: .black)
 
 
 let realmConfig: UInt64 = 1

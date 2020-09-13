@@ -23,7 +23,7 @@ struct AlertManager {
                                                              preferredStyle: .alert
         )
         
-        controller.addAction(UIAlertAction(title: R.string.localizable.close(),
+        controller.addAction(UIAlertAction(title: R.string.message.close(),
                                            style: .cancel,
                                            handler: didTapCloseButton)
         )
@@ -47,12 +47,12 @@ struct AlertManager {
                                                              preferredStyle: .alert
         )
         
-        controller.addAction(UIAlertAction(title: R.string.localizable.delete(),
+        controller.addAction(UIAlertAction(title: R.string.message.delete(),
                                            style: .destructive,
                                            handler: didTapDeleteButton)
         )
         
-        controller.addAction(UIAlertAction(title: R.string.localizable.cancel(),
+        controller.addAction(UIAlertAction(title: R.string.message.cancel(),
                                            style: .cancel,
                                            handler: didTapCancelButton)
         )
@@ -76,17 +76,17 @@ struct AlertManager {
                                                              message: message,
                                                              preferredStyle: .actionSheet
         )
-        alertSheet.addAction(UIAlertAction(title: R.string.localizable.edit(),
+        alertSheet.addAction(UIAlertAction(title: R.string.message.edit(),
                                            style: .default,
                                            handler: didTapEditButton
         ))
         
-        alertSheet.addAction(UIAlertAction(title: R.string.localizable.delete(),
+        alertSheet.addAction(UIAlertAction(title: R.string.message.delete(),
                                            style: .destructive,
                                            handler: didTapDeleteButton
         ))
         
-        alertSheet.addAction(UIAlertAction(title: R.string.localizable.cancel(),
+        alertSheet.addAction(UIAlertAction(title: R.string.message.cancel(),
                                            style: .cancel,
                                            handler: didTapCancelButton
         ))

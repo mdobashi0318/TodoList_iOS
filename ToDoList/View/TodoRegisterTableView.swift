@@ -117,7 +117,7 @@ final class TodoRegisterTableView: UITableView, UITableViewDelegate, UITableView
         let cell:UITableViewCell = UITableViewCell(style: .default, reuseIdentifier: "inputCell")
         cell.accessoryType = .none
         cell.selectionStyle = .none
-        cell.backgroundColor = cellWhite
+        cell.backgroundColor = cellColor
         // ToDoの編集時はTextFieldに表示
         if todoId != nil {
             titletextField.text = toDoModel?.toDoName
@@ -130,16 +130,16 @@ final class TodoRegisterTableView: UITableView, UITableViewDelegate, UITableView
         case 0: /* Todoのタイトル */
             textFieldConstraint(cell, textField: titletextField)
             titletextField.delegate = self
-            titletextField.backgroundColor = cellWhite
+            titletextField.backgroundColor = cellColor
         case 1: /* Todoの期限 */
             dateTextField.inputView = datePicker
             dateTextField.delegate = self
-            dateTextField.backgroundColor = cellWhite
+            dateTextField.backgroundColor = cellColor
             cell.addSubview(dateTextField)
             
             textFieldConstraint(cell, textField: dateTextField)
         case 2: /* Todoの詳細 */
-            detailTextViwe.backgroundColor = cellWhite
+            detailTextViwe.backgroundColor = cellColor
             cell.addSubview(detailTextViwe)
             
             detailTextViwe.translatesAutoresizingMaskIntoConstraints = false

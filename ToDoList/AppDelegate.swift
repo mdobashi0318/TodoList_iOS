@@ -29,7 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window?.rootViewController = navigation
         self.window?.makeKeyAndVisible()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(showToast(notification:)), name: NSNotification.Name(rawValue: toast), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(showToast(notification:)), name: NSNotification.Name(rawValue: R.string.notification.toast()), object: nil)
         
         return true
     }
@@ -107,7 +107,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         banner.autoDismiss = false
         banner.onSwipeUp = {
             banner.dismiss()
-            NotificationCenter.default.post(name: Notification.Name(TableReload), object: nil)
+            NotificationCenter.default.post(name: Notification.Name(R.string.notification.tableReload()), object: nil)
         }
         
         banner.show(queuePosition: .front,
