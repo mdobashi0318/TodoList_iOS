@@ -220,9 +220,9 @@ extension TodoRegisterViewController: TodoRegisterViewControllerProtocol {
                                                toDo: todoRegisterTableView.detailTextViwe.text!,
                                                createTime: nil),
                            success: {
-                            AlertManager().alertAction(self, message: R.string.message.addMessage()) { action in
+                            AlertManager().alertAction(self, message: R.string.message.addMessage(), didTapCloseButton: { action in
                                 self.dismiss(animated: true)
-                            }
+                            })
         }) { error in
             AlertManager().alertAction(self, message: error!) { action in
                 return
@@ -237,9 +237,9 @@ extension TodoRegisterViewController: TodoRegisterViewControllerProtocol {
                                                     toDo: todoRegisterTableView.detailTextViwe.text!,
                                                     createTime: create_time),
                               success: {
-                                AlertManager().alertAction(self, message: R.string.message.updateMessage()) { action in
+                                AlertManager().alertAction(self, message: R.string.message.updateMessage(), didTapCloseButton: { action in
                                     self.navigationController?.popViewController(animated: true)
-                                }
+                                })
         }) { error in
             AlertManager().alertAction(self, message: error!) { action in
                 return

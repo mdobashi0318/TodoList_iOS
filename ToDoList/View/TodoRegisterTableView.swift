@@ -208,7 +208,7 @@ final class TodoRegisterTableView: UITableView, UITableViewDelegate, UITableView
     /// - Parameter cell: セル
     /// - Parameter textField: 制約を付けるテキストフィールド
     private func textFieldConstraint(_ cell: UITableViewCell, textField: UITextField) {
-        cell.addSubview(textField)
+        cell.contentView.addSubview(textField)
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.topAnchor.constraint(equalTo: cell.topAnchor).isActive = true
         textField.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: leading).isActive = true
