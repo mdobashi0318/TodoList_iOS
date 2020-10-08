@@ -19,8 +19,6 @@ final class TodoRegisterTableView: UITableView, UITableViewDelegate, UITableView
     
     private var toDoModel: ToDoModel?
     
-    private let leading:CGFloat = 15
-    
     weak var toDoregisterDelegate: TodoRegisterDelegate?
     
     /// ToDoのタイトル入力テキストフィールド
@@ -128,25 +126,19 @@ final class TodoRegisterTableView: UITableView, UITableViewDelegate, UITableView
         
         switch indexPath.section {
         case 0: /* Todoのタイトル */
-            textFieldConstraint(cell, textField: titletextField)
+            textFieldConstraint(cell, inputField: titletextField)
             titletextField.delegate = self
-            titletextField.backgroundColor = cellColor
         case 1: /* Todoの期限 */
-            dateTextField.inputView = datePicker
-            dateTextField.delegate = self
-            dateTextField.backgroundColor = cellColor
-            cell.addSubview(dateTextField)
-            
-            textFieldConstraint(cell, textField: dateTextField)
+            if #available(iOS 14, *) {
+                // TODO: - iOS14は別途対応
+                textFieldConstraint(cell, inputField: datePicker)
+            } else {
+                dateTextField.inputView = datePicker
+                dateTextField.delegate = self
+                textFieldConstraint(cell, inputField: dateTextField)
+            }
         case 2: /* Todoの詳細 */
-            detailTextViwe.backgroundColor = cellColor
-            cell.addSubview(detailTextViwe)
-            
-            detailTextViwe.translatesAutoresizingMaskIntoConstraints = false
-            detailTextViwe.topAnchor.constraint(equalTo: cell.topAnchor).isActive = true
-            detailTextViwe.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: leading).isActive = true
-            detailTextViwe.trailingAnchor.constraint(equalTo: cell.trailingAnchor).isActive = true
-            detailTextViwe.bottomAnchor.constraint(equalTo: cell.bottomAnchor).isActive = true
+            textFieldConstraint(cell, inputField: detailTextViwe)
         default:
             break
         }
@@ -204,17 +196,22 @@ final class TodoRegisterTableView: UITableView, UITableViewDelegate, UITableView
     
     
     
-    /// セルにテキストフィールドの制約を付ける
+    /// セルの上に載せるViewの制約をつける
     /// - Parameter cell: セル
-    /// - Parameter textField: 制約を付けるテキストフィールド
-    private func textFieldConstraint(_ cell: UITableViewCell, textField: UITextField) {
-        cell.contentView.addSubview(textField)
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.topAnchor.constraint(equalTo: cell.topAnchor).isActive = true
-        textField.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: leading).isActive = true
-        textField.trailingAnchor.constraint(equalTo: cell.trailingAnchor).isActive = true
-        textField.bottomAnchor.constraint(equalTo: cell.bottomAnchor).isActive = true
+    /// - Parameter inputField: 制約を付けるView
+    private func textFieldConstraint<V>(_ cell: UITableViewCell, inputField: V) {
+        guard let _inputField = inputField as? UIView else {
+            return
+        }
+        _inputField.backgroundColor = cellColor
+        cell.contentView.addSubview(_inputField)
+        _inputField.translatesAutoresizingMaskIntoConstraints = false
+        _inputField.topAnchor.constraint(equalTo: cell.topAnchor).isActive = true
+        _inputField.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 15).isActive = true
+        _inputField.trailingAnchor.constraint(equalTo: cell.trailingAnchor).isActive = true
+        _inputField.bottomAnchor.constraint(equalTo: cell.bottomAnchor).isActive = true
     }
+
     
     
     // MARK: TextField Delegate
