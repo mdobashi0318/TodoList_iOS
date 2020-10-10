@@ -15,7 +15,7 @@ protocol TodoRegisterDelegate: AnyObject {
 
 
 
-final class TodoRegisterTableView: UITableView, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIPickerViewDelegate {
+final class TodoRegisterTableView: UITableView, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIPickerViewDelegate, UITextViewDelegate {
     
     private var toDoModel: ToDoModel?
     
@@ -42,6 +42,7 @@ final class TodoRegisterTableView: UITableView, UITableViewDelegate, UITableView
     /// ToDoの詳細入力テキストフィールド
     let detailTextViwe:UITextView = {
         let textView: UITextView = UITextView()
+        textView.isScrollEnabled = false
         textView.accessibilityLabel = "detailTextViwe"
         
         return textView
@@ -62,6 +63,10 @@ final class TodoRegisterTableView: UITableView, UITableViewDelegate, UITableView
     /// 編集するToDoのID
     private var todoId: String?
     
+    /// キーボードの高さ取得
+    private var keybordHeight: CGFloat {
+        return UIApplication.shared.keyWindow?.height ?? 0
+    }
     
     // MARK: Init
     
@@ -138,6 +143,7 @@ final class TodoRegisterTableView: UITableView, UITableViewDelegate, UITableView
                 textFieldConstraint(cell, inputField: dateTextField)
             }
         case 2: /* Todoの詳細 */
+            detailTextViwe.delegate = self
             textFieldConstraint(cell, inputField: detailTextViwe)
         default:
             break
@@ -157,7 +163,7 @@ final class TodoRegisterTableView: UITableView, UITableViewDelegate, UITableView
         if indexPath.section != 2 {
             return 50
         }
-        return 100
+        return detailTextViwe.sizeThatFits(CGSize(width: UIScreen.main.bounds.width, height: .leastNormalMagnitude)).height
     }
     
     /// ヘッダー内のビューを設定
@@ -173,7 +179,10 @@ final class TodoRegisterTableView: UITableView, UITableViewDelegate, UITableView
     
     /// フッターの高さを設定
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return CGFloat.leastNormalMagnitude
+        if section != 2 {
+            return CGFloat.leastNormalMagnitude
+        }
+        return keybordHeight
     }
     
     
@@ -226,7 +235,10 @@ final class TodoRegisterTableView: UITableView, UITableViewDelegate, UITableView
     // MARK: TextView Delegate
     
     func textViewDidChange(_ textView: UITextView) {
+        beginUpdates()
         toDoregisterDelegate?.textChenge()
+        textView.heightAnchor.constraint(equalToConstant: detailTextViwe.sizeThatFits(CGSize(width: UIScreen.main.bounds.width, height: textView.frame.height)).height).isActive = true
+        endUpdates()
     }
     
 }
