@@ -8,14 +8,16 @@
 
 import UIKit
 
+// MARK: - TodoRegisterDelegate
 
 protocol TodoRegisterDelegate: AnyObject {
     func textChenge()
 }
 
 
+// MARK: - TodoRegisterTableView
 
-final class TodoRegisterTableView: UITableView, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIPickerViewDelegate, UITextViewDelegate {
+final class TodoRegisterTableView: UITableView {
     
     private var toDoModel: ToDoModel?
     
@@ -58,8 +60,6 @@ final class TodoRegisterTableView: UITableView, UITableViewDelegate, UITableView
         return datePicker
     }()
     
-    
-    
     /// 編集するToDoのID
     private var todoId: String?
     
@@ -68,8 +68,8 @@ final class TodoRegisterTableView: UITableView, UITableViewDelegate, UITableView
         return UIApplication.shared.keyWindow?.height ?? 0
     }
     
-    // MARK: Init
     
+    // MARK: Init
     
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
@@ -101,8 +101,50 @@ final class TodoRegisterTableView: UITableView, UITableViewDelegate, UITableView
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: UITableViewDataSource, UITableViewDelegate
     
+    
+    
+    //MARK: TapGesture func
+    
+    /// Viweをタップした時に
+    @objc private func tapView(_:UITapGestureRecognizer){
+        titletextField.resignFirstResponder()
+        dateTextField.resignFirstResponder()
+        detailTextViwe.resignFirstResponder()
+    }
+    
+    
+    
+    
+    // MARK: Constraint
+    
+    /// セルの上に載せるViewの制約をつける
+    /// - Parameter cell: セル
+    /// - Parameter inputField: 制約を付けるView
+    private func textFieldConstraint<V>(_ cell: UITableViewCell, inputField: V) {
+        guard let _inputField = inputField as? UIView else {
+            return
+        }
+        _inputField.backgroundColor = cellColor
+        cell.contentView.addSubview(_inputField)
+        _inputField.translatesAutoresizingMaskIntoConstraints = false
+        _inputField.topAnchor.constraint(equalTo: cell.topAnchor).isActive = true
+        _inputField.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 15).isActive = true
+        _inputField.trailingAnchor.constraint(equalTo: cell.trailingAnchor).isActive = true
+        _inputField.bottomAnchor.constraint(equalTo: cell.bottomAnchor).isActive = true
+    }
+    
+}
+
+
+
+
+
+// MARK: - UITableViewDelegate, UITableViewDataSource
+
+extension TodoRegisterTableView: UITableViewDelegate, UITableViewDataSource {
+    
+    // MARK: UITableViewDataSource, UITableViewDelegate
     
     /// セクションの数を設定
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -185,51 +227,21 @@ final class TodoRegisterTableView: UITableView, UITableViewDelegate, UITableView
         return keybordHeight
     }
     
-    
-    // MARK: UIDatePicker func
-    
-    @objc private func onDidChangeDate(sender:UIDatePicker){
-        datePicker.minimumDate = Date()
-        dateTextField.text = Format().stringFromDate(date: sender.date)
-    }
+}
 
-    
-    //MARK: TapGesture func
-    
-    /// Viweをタップした時に
-    @objc private func tapView(_:UITapGestureRecognizer){
-        titletextField.resignFirstResponder()
-        dateTextField.resignFirstResponder()
-        detailTextViwe.resignFirstResponder()
-    }
-    
-    
-    
-    /// セルの上に載せるViewの制約をつける
-    /// - Parameter cell: セル
-    /// - Parameter inputField: 制約を付けるView
-    private func textFieldConstraint<V>(_ cell: UITableViewCell, inputField: V) {
-        guard let _inputField = inputField as? UIView else {
-            return
-        }
-        _inputField.backgroundColor = cellColor
-        cell.contentView.addSubview(_inputField)
-        _inputField.translatesAutoresizingMaskIntoConstraints = false
-        _inputField.topAnchor.constraint(equalTo: cell.topAnchor).isActive = true
-        _inputField.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 15).isActive = true
-        _inputField.trailingAnchor.constraint(equalTo: cell.trailingAnchor).isActive = true
-        _inputField.bottomAnchor.constraint(equalTo: cell.bottomAnchor).isActive = true
-    }
 
-    
+
+
+
+// MARK: - Delegate  TextField, TextView, UIDatePicker
+
+extension TodoRegisterTableView: UITextFieldDelegate, UITextViewDelegate, UIPickerViewDelegate {
     
     // MARK: TextField Delegate
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
         toDoregisterDelegate?.textChenge()
     }
-    
-    
     
     
     // MARK: TextView Delegate
@@ -241,4 +253,13 @@ final class TodoRegisterTableView: UITableView, UITableViewDelegate, UITableView
         endUpdates()
     }
     
+    
+    
+    // MARK: UIDatePicker func
+    
+    @objc private func onDidChangeDate(sender:UIDatePicker){
+        datePicker.minimumDate = Date()
+        dateTextField.text = Format().stringFromDate(date: sender.date)
+    }
+
 }
