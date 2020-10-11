@@ -1,0 +1,16 @@
+/* 
+  Notification.strings
+  ToDoList
+
+  Created by 土橋正晴 on 2020/09/13.
+  Copyright © 2020 m.dobashi. All rights reserved.
+*/
+
+
+
+
+/// ToDoListViewControllerのテーブルを更新する
+"TableReload" = "TableReload";
+
+/// 期限の登録に失敗した際にトーストを表示する
+"toast" = "toast";

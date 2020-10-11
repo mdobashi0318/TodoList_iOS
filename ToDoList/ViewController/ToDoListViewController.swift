@@ -17,6 +17,13 @@ protocol ToDoListViewControllerProtocol {
 }
 
 
+enum SegmentIndex: Int, CaseIterable {
+    case all = 0
+    case active = 1
+    case expired = 2
+}
+
+
 final class ToDoListViewController: UITableViewController {
     
     // MARK: Properties
@@ -25,6 +32,15 @@ final class ToDoListViewController: UITableViewController {
     
     
     private var presenter: ToDoListPresenter?
+    
+    
+    private var segmentedControl: UISegmentedControl!
+    
+    
+    private var segmenteIndex: SegmentIndex!
+    
+    private let refreshCtr = UIRefreshControl()
+    
     
     // MARK: LifeCycle
     
@@ -36,6 +52,7 @@ final class ToDoListViewController: UITableViewController {
         
         setNavigationItem()
         setupTableView()
+        setupSegmentedControl()
         setNotificationCenter()
     }
     
@@ -61,6 +78,24 @@ final class ToDoListViewController: UITableViewController {
         tableView.separatorInset = .zero
         tableView.separatorStyle = presenter?.model?.count != 0 ? .none : .singleLine
         tableView.register(TodoListCell.self, forCellReuseIdentifier: "listCell")
+        tableView.refreshControl = refreshCtr
+        refreshCtr.addTarget(self, action: #selector(refresh(sender:)), for: .valueChanged)
+    }
+    
+    
+    
+    private func setupSegmentedControl(){
+        segmenteIndex = .all
+        segmentedControl = UISegmentedControl(items: ["全て", "アクティブ", "期限切れ"])
+        segmentedControl.selectedSegmentIndex = segmenteIndex.rawValue
+        segmentedControl.addTarget(self, action: #selector(segmentedSelect), for: .valueChanged)
+    }
+    
+    
+    @objc private func segmentedSelect(_ segment :UISegmentedControl) {
+        segmenteIndex = SegmentIndex(rawValue: segment.selectedSegmentIndex)
+        
+        reloadTableView()
     }
     
     
@@ -72,7 +107,19 @@ final class ToDoListViewController: UITableViewController {
     }
     
     
-    // MARK: NavigationItem
+    @objc func refresh(sender: UIRefreshControl) {
+        reloadTableView()
+        sender.endRefreshing()
+    }
+    
+}
+
+
+
+// MARK: - NavigationItem
+
+
+extension ToDoListViewController {
     
     /// setNavigationItemをセットする
     private func setNavigationItem() {
@@ -103,59 +150,7 @@ final class ToDoListViewController: UITableViewController {
         })
     }
     
-
-    
-    // MARK: Todo Func
-    
-    /// Todoの詳細を開く
-    ///
-    /// - Parameter indexPath: 選択したcellの行
-    private func cellTapAction(indexPath: IndexPath) {
-        let toDoDetailViewController:ToDoDetailTableViewController = ToDoDetailTableViewController(todoId: (presenter?.model?[indexPath.row].id)!, createTime: presenter?.model?[indexPath.row].createTime)
-        self.navigationController?.pushViewController(toDoDetailViewController, animated: true)
-    }
-    
-    
-    /// 選択したToDoの編集画面を開く
-    ///
-    /// - Parameter indexPath: 選択したcellの行
-    private func editAction(indexPath: IndexPath) {
-        let inputViewController:TodoRegisterViewController = TodoRegisterViewController(todoId: (presenter?.model?[indexPath.row].id)!, createTime: presenter?.model?[indexPath.row].createTime)
-        self.navigationController?.pushViewController(inputViewController, animated: true)
-    }
-    
-    
-    
-    /// 選択したToDoの削除
-    ///
-    /// - Parameter indexPath: 選択したcellの行
-    private func deleteAction(indexPath: IndexPath) {
-        AlertManager().alertAction(self, message: "削除しますか?", didTapDeleteButton: {[weak self] action in
-            self?.deleteTodo(row: indexPath.row)
-        })
-    }
-    
-    
-    
-    // MARK: Notification
-    
-    /// NotificationCenterを追加する
-    private func setNotificationCenter() {
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadTable(notification:)), name: NSNotification.Name(rawValue: TableReload), object: nil)
-    }
-    
-    /// テーブルの更新とセパレート線の設定
-    @objc func reloadTable(notification: Notification) {
-        DispatchQueue.main.async { [weak self] in
-            self?.reloadTableView()
-        }
-    }
-    
-    
 }
-
-
-
 
 
 
@@ -187,9 +182,9 @@ extension ToDoListViewController {
         
         if presenter?.model?.count == 0 || presenter?.model == nil {
             let cell:UITableViewCell = UITableViewCell(style: .default, reuseIdentifier: "cell")
-            cell.backgroundColor = cellWhite
+            cell.backgroundColor = cellColor
             cell.selectionStyle = .none
-            cell.textLabel?.text = R.string.localizable.noToDo()
+            cell.textLabel?.text = R.string.message.noToDo()
             return cell
         }
         
@@ -210,6 +205,7 @@ extension ToDoListViewController {
     }
     
     
+    
     // MARK: Select cell
     
     /// ToDoの個数が0個の時に選択させない
@@ -222,6 +218,17 @@ extension ToDoListViewController {
     }
     
     
+    
+    /// Todoの詳細を開く
+    ///
+    /// - Parameter indexPath: 選択したcellの行
+    private func cellTapAction(indexPath: IndexPath) {
+        let toDoDetailViewController:ToDoDetailTableViewController = ToDoDetailTableViewController(todoId: (presenter?.model?[indexPath.row].id)!, createTime: presenter?.model?[indexPath.row].createTime)
+        self.navigationController?.pushViewController(toDoDetailViewController, animated: true)
+    }
+    
+    
+    
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         if presenter?.model?.count == 0 {
             return nil
@@ -231,23 +238,47 @@ extension ToDoListViewController {
     }
     
     
+    
+    // MARK: Swipe cell
+    
     /// 編集と削除のスワイプをセット
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         
-        let edit = UITableViewRowAction(style: .default, title: R.string.localizable.edit()) {
+        let edit = UITableViewRowAction(style: .default, title: R.string.message.edit()) {
             (action, indexPath) in
             
             self.editAction(indexPath: indexPath)
         }
         edit.backgroundColor = .orange
         
-        let del = UITableViewRowAction(style: .destructive, title: R.string.localizable.delete()) {
+        let del = UITableViewRowAction(style: .destructive, title: R.string.message.delete()) {
             (action, indexPath) in
             
             self.deleteAction(indexPath: indexPath)
         }
         
         return [del, edit]
+    }
+    
+
+    
+    /// 選択したToDoの編集画面を開く
+    ///
+    /// - Parameter indexPath: 選択したcellの行
+    private func editAction(indexPath: IndexPath) {
+        let inputViewController:TodoRegisterViewController = TodoRegisterViewController(todoId: (presenter?.model?[indexPath.row].id)!, createTime: presenter?.model?[indexPath.row].createTime)
+        self.navigationController?.pushViewController(inputViewController, animated: true)
+    }
+    
+    
+    
+    /// 選択したToDoの削除
+    ///
+    /// - Parameter indexPath: 選択したcellの行
+    private func deleteAction(indexPath: IndexPath) {
+        AlertManager().alertAction(self, message: "削除しますか?", didTapDeleteButton: {[weak self] action in
+            self?.deleteTodo(row: indexPath.row)
+        })
     }
     
     
@@ -257,6 +288,27 @@ extension ToDoListViewController {
             return false
         }
         return true
+    }
+    
+    
+    
+    
+    // MARK: Header
+    
+    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView()
+        headerView.backgroundColor = headerColor
+        headerView.addSubview(segmentedControl)
+        segmentedControl.translatesAutoresizingMaskIntoConstraints = false
+        segmentedControl.centerXAnchor.constraint(equalTo: headerView.centerXAnchor).isActive = true
+        segmentedControl.centerYAnchor.constraint(equalTo: headerView.centerYAnchor).isActive = true
+        
+        return headerView
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 50
     }
   
 }
@@ -271,10 +323,9 @@ extension ToDoListViewController: UIAdaptivePresentationControllerDelegate {
     func presentationControllerDidAttemptToDismiss(_ presentationController: UIPresentationController) {
         AlertManager().alertAction(naviController, message: "編集途中の内容がありますが削除しますか?", didTapDeleteButton: { [weak self] action in
             self?.naviController.dismiss(animated: true) {
-                NotificationCenter.default.post(name: Notification.Name(TableReload), object: nil)
+                NotificationCenter.default.post(name: Notification.Name(R.string.notification.tableReload()), object: nil)
             }
         })
-        
     }
     
 }
@@ -282,20 +333,43 @@ extension ToDoListViewController: UIAdaptivePresentationControllerDelegate {
 
 
 
+// MARK: - Notification
+
+extension ToDoListViewController {
+    
+    /// NotificationCenterを追加する
+    private func setNotificationCenter() {
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadTable(notification:)), name: NSNotification.Name(rawValue: R.string.notification.tableReload()), object: nil)
+    }
+    
+    /// テーブルの更新とセパレート線の設定
+    @objc func reloadTable(notification: Notification) {
+        DispatchQueue.main.async { [weak self] in
+            self?.reloadTableView()
+        }
+    }
+    
+}
+
+
+
+
+
+// MARK: - ToDoListViewControllerProtocol
+
 extension ToDoListViewController: ToDoListViewControllerProtocol {
 
+    
     func fetchTodoModel() {
-        presenter?.fetchToDoList(success: {
+        presenter?.fetchToDoList(segmentIndex: segmenteIndex, success: {
             self.tableView.reloadData()
-            
         }, failure: { error in
             AlertManager().alertAction(self,
-                                       title: error, message: "") { _ in
+                                       message: error!) { _ in
                                         return
             }
         })
     }
-    
     
     
     func deleteTodo(row: Int) {
@@ -303,7 +377,7 @@ extension ToDoListViewController: ToDoListViewControllerProtocol {
         let createTime = presenter?.model?[row].createTime
         
         presenter?.deleteTodo(todoId: todoid, createTime: createTime, success: {
-            NotificationCenter.default.post(name: Notification.Name(TableReload), object: nil)
+            NotificationCenter.default.post(name: Notification.Name(R.string.notification.tableReload()), object: nil)
         }, failure: { error in
             AlertManager().alertAction(self, message: error!)
         })
@@ -313,7 +387,7 @@ extension ToDoListViewController: ToDoListViewControllerProtocol {
     
     func todoAllDelete() {
         presenter?.allDelete(success: {
-            NotificationCenter.default.post(name: Notification.Name(TableReload), object: nil)
+            NotificationCenter.default.post(name: Notification.Name(R.string.notification.tableReload()), object: nil)
         }, failure: { error in
             AlertManager().alertAction(self, message: error!)
         })

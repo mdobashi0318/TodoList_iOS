@@ -12,10 +12,19 @@ import RealmSwift
 
 final class ToDoListPresenter {
     
-    var model: Results<ToDoModel>?
+    var model: [ToDoModel]?
     
-    func fetchToDoList(success: @escaping()->(), failure: @escaping (String?)->()) {
-        model = ToDoModel.allFindToDo()
+    func fetchToDoList(segmentIndex index: SegmentIndex, success: ()->(), failure: (String?)->()) {
+        
+        switch index {
+        case .all:
+            model = ToDoModel.allFindToDo()
+        case .active:
+            model = ToDoModel.activeFindToDo(index: index)
+        case .expired:
+            model = ToDoModel.activeFindToDo(index: index)
+        }
+        
         if model == nil {
             failure("エラーが発生しました")
             return
@@ -25,8 +34,7 @@ final class ToDoListPresenter {
     }
     
     
-    
-    func allDelete(success: @escaping()->(), failure: @escaping (String?)->()) {
+    func allDelete(success: ()->(), failure: @escaping (String?)->()) {
         ToDoModel.allDeleteToDo { error in
             failure(error)
             return
@@ -44,7 +52,7 @@ final class ToDoListPresenter {
     ///   - createTime: 作成時間
     ///   - success: 検索成功時
     ///   - failure: 検索失敗時
-    func deleteTodo(todoId: String?, createTime: String?, success: @escaping()->(), failure: @escaping (String?)->()) {
+    func deleteTodo(todoId: String?, createTime: String?, success: ()->(), failure: (String?)->()) {
         
         ToDoModel.deleteToDo(todoId: todoId!, createTime: createTime) { error in
             if let _error = error {

@@ -152,17 +152,17 @@ final class TodoRegisterViewController: UIViewController {
         
         if todoRegisterTableView.titletextField.text!.isEmpty {
             AlertManager().alertAction(self,
-                                       message: R.string.localizable.titleAlert())
+                                       message: R.string.message.titleAlert())
             
             result(false)
-        } else if todoRegisterTableView.dateTextField.text!.isEmpty {
+        } else if todoRegisterTableView.todoDate.isEmpty {
             AlertManager().alertAction(self,
-                                       message: R.string.localizable.dateAlert())
+                                       message: R.string.message.dateAlert())
             
             result(false)
         } else if todoRegisterTableView.detailTextViwe.text.isEmpty {
             AlertManager().alertAction(self,
-                                       message: R.string.localizable.detailAlert())
+                                       message: R.string.message.detailAlert())
             
             result(false)
         } else {
@@ -185,7 +185,7 @@ extension TodoRegisterViewController: TodoRegisterDelegate {
     func textChenge() {
         if #available(iOS 13.0, *) {
             if todoRegisterTableView.titletextField.text!.isEmpty &&
-                todoRegisterTableView.dateTextField.text!.isEmpty &&
+                todoRegisterTableView.todoDate.isEmpty &&
                 todoRegisterTableView.detailTextViwe.text.isEmpty {
                 isModalInPresentation = false
             } else {
@@ -216,13 +216,13 @@ extension TodoRegisterViewController: TodoRegisterViewControllerProtocol {
     
     func addTodo() {
         presenter?.addTodo(addValue: ToDoModel(toDoName: todoRegisterTableView.titletextField.text!,
-                                               todoDate: todoRegisterTableView.dateTextField.text!,
+                                               todoDate: todoRegisterTableView.todoDate,
                                                toDo: todoRegisterTableView.detailTextViwe.text!,
                                                createTime: nil),
                            success: {
-                            AlertManager().alertAction(self, message: R.string.localizable.addMessage()) { action in
+                            AlertManager().alertAction(self, message: R.string.message.addMessage(), didTapCloseButton: { action in
                                 self.dismiss(animated: true)
-                            }
+                            })
         }) { error in
             AlertManager().alertAction(self, message: error!) { action in
                 return
@@ -233,13 +233,13 @@ extension TodoRegisterViewController: TodoRegisterViewControllerProtocol {
     
     func updateTodo() {
         presenter?.updateTodo(updateTodo: ToDoModel(toDoName: todoRegisterTableView.titletextField.text!,
-                                                    todoDate: todoRegisterTableView.dateTextField.text!,
+                                                    todoDate: todoRegisterTableView.todoDate,
                                                     toDo: todoRegisterTableView.detailTextViwe.text!,
                                                     createTime: create_time),
                               success: {
-                                AlertManager().alertAction(self, message: R.string.localizable.updateMessage()) { action in
+                                AlertManager().alertAction(self, message: R.string.message.updateMessage(), didTapCloseButton: { action in
                                     self.navigationController?.popViewController(animated: true)
-                                }
+                                })
         }) { error in
             AlertManager().alertAction(self, message: error!) { action in
                 return

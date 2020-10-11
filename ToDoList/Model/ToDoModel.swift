@@ -76,7 +76,7 @@ final class ToDoModel: Object {
     ///   - addError: エラー発生時のクロージャー
     class func addToDo(addValue: ToDoModel, addError:(String?) -> ()) {
         guard let realm = initRealm() else {
-            addError(R.string.localizable.errorMessage())
+            addError(R.string.message.errorMessage())
             return
         }
         
@@ -93,8 +93,8 @@ final class ToDoModel: Object {
             }
             devprint("Todoを作成しました: \(toDoModel)")
             NotificationManager().addNotification(toDoModel: toDoModel) { result in
-                NotificationCenter.default.post(name: Notification.Name(TableReload), object: nil)
-                NotificationCenter.default.post(name: Notification.Name(toast), object: result)
+                NotificationCenter.default.post(name: Notification.Name(R.string.notification.tableReload()), object: nil)
+                NotificationCenter.default.post(name: Notification.Name(R.string.notification.toast()), object: result)
             }
             
         }
@@ -114,7 +114,7 @@ final class ToDoModel: Object {
     ///   - updateError: エラー発生時のクロージャー
     class func updateToDo(updateValue: ToDoModel, updateError:(String?) -> ()) {
         guard let realm = initRealm() else {
-            updateError(R.string.localizable.errorMessage())
+            updateError(R.string.message.errorMessage())
             return
         }
         
@@ -128,8 +128,8 @@ final class ToDoModel: Object {
             }
             devprint("Todoを更新しました: \(toDoModel)")
             NotificationManager().addNotification(toDoModel: toDoModel) { result in
-                NotificationCenter.default.post(name: Notification.Name(TableReload), object: nil)
-                NotificationCenter.default.post(name: Notification.Name(toast), object: result)
+                NotificationCenter.default.post(name: Notification.Name(R.string.notification.tableReload()), object: nil)
+                NotificationCenter.default.post(name: Notification.Name(R.string.notification.toast()), object: result)
             }
               
         }
@@ -168,12 +168,47 @@ final class ToDoModel: Object {
     /// 全件取得
     /// - Parameter vc: 呼び出し元のViewController
     /// - Returns: 取得したTodoを全件返す
-    class func allFindToDo() -> Results<ToDoModel>? {
+    class func allFindToDo() -> [ToDoModel]? {
         guard let realm = initRealm() else { return nil }
+        
+        var todomodel = [ToDoModel]()
         let todo = realm.objects(ToDoModel.self)
-        devprint("Todoを全件表示します: \(todo)")
-        return todo
+        todo.forEach { value in
+            todomodel.append(value)
+        }
+        devprint("Todoを全件表示します: \(todomodel)")
+        return todomodel
     }
+    
+    
+    
+    /// 全件取得
+    class func activeFindToDo(index: SegmentIndex) -> [ToDoModel]? {
+        
+        guard let todomodel = ToDoModel.allFindToDo() else {
+            return nil
+        }
+        
+        switch index {
+        case .active:
+            let filterToDo = todomodel.filter {
+                $0.todoDate! > Format().stringFromDate(date: Date())
+            }
+            devprint("期限が過ぎていないToDoを表示します: \(filterToDo)")
+            return filterToDo
+        case .expired:
+            let filterToDo = todomodel.filter {
+                $0.todoDate! <= Format().stringFromDate(date: Date())
+            }
+            devprint("期限の過ぎたToDoを表示します: \(filterToDo)")
+            return filterToDo
+        default:
+            break
+        }
+        
+        return nil
+    }
+    
     
     
     /// ToDoの削除
