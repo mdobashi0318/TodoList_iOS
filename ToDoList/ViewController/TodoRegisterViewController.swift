@@ -155,7 +155,7 @@ final class TodoRegisterViewController: UIViewController {
                                        message: R.string.message.titleAlert())
             
             result(false)
-        } else if todoRegisterTableView.dateTextField.text!.isEmpty {
+        } else if todoRegisterTableView.todoDate.isEmpty {
             AlertManager().alertAction(self,
                                        message: R.string.message.dateAlert())
             
@@ -185,7 +185,7 @@ extension TodoRegisterViewController: TodoRegisterDelegate {
     func textChenge() {
         if #available(iOS 13.0, *) {
             if todoRegisterTableView.titletextField.text!.isEmpty &&
-                todoRegisterTableView.dateTextField.text!.isEmpty &&
+                todoRegisterTableView.todoDate.isEmpty &&
                 todoRegisterTableView.detailTextViwe.text.isEmpty {
                 isModalInPresentation = false
             } else {
@@ -216,7 +216,7 @@ extension TodoRegisterViewController: TodoRegisterViewControllerProtocol {
     
     func addTodo() {
         presenter?.addTodo(addValue: ToDoModel(toDoName: todoRegisterTableView.titletextField.text!,
-                                               todoDate: todoRegisterTableView.dateTextField.text!,
+                                               todoDate: todoRegisterTableView.todoDate,
                                                toDo: todoRegisterTableView.detailTextViwe.text!,
                                                createTime: nil),
                            success: {
@@ -233,7 +233,7 @@ extension TodoRegisterViewController: TodoRegisterViewControllerProtocol {
     
     func updateTodo() {
         presenter?.updateTodo(updateTodo: ToDoModel(toDoName: todoRegisterTableView.titletextField.text!,
-                                                    todoDate: todoRegisterTableView.dateTextField.text!,
+                                                    todoDate: todoRegisterTableView.todoDate,
                                                     toDo: todoRegisterTableView.detailTextViwe.text!,
                                                     createTime: create_time),
                               success: {

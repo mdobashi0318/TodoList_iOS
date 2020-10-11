@@ -63,6 +63,9 @@ final class TodoRegisterTableView: UITableView {
     /// 編集するToDoのID
     private var todoId: String?
     
+    /// 選択した日付を格納
+    private(set) var todoDate: String!
+    
     /// キーボードの高さ取得
     private var keybordHeight: CGFloat {
         return UIApplication.shared.keyWindow?.height ?? 0
@@ -73,6 +76,8 @@ final class TodoRegisterTableView: UITableView {
     
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
+        
+        todoDate = Format().stringFromDate(date: Date())
         
         delegate = self
         dataSource = self
@@ -93,6 +98,7 @@ final class TodoRegisterTableView: UITableView {
         if let _toDoModel = toDoModel {
             self.todoId = _toDoModel.id
             self.toDoModel = _toDoModel
+            todoDate = _toDoModel.todoDate
         }
 
     }
@@ -166,7 +172,6 @@ extension TodoRegisterTableView: UITableViewDelegate, UITableViewDataSource {
         // ToDoの編集時はTextFieldに表示
         if todoId != nil {
             titletextField.text = toDoModel?.toDoName
-            dateTextField.text = toDoModel?.todoDate
             detailTextViwe.text = toDoModel?.toDo
         }
         
@@ -177,9 +182,12 @@ extension TodoRegisterTableView: UITableViewDelegate, UITableViewDataSource {
             titletextField.delegate = self
         case 1: /* Todoの期限 */
             if #available(iOS 14, *) {
-                // TODO: - iOS14は別途対応
+                if let date = Format().dateFromString(string: todoDate) {
+                    datePicker.date = date
+                }
                 textFieldConstraint(cell, inputField: datePicker)
             } else {
+                dateTextField.text = todoDate
                 dateTextField.inputView = datePicker
                 dateTextField.delegate = self
                 textFieldConstraint(cell, inputField: dateTextField)
@@ -259,7 +267,12 @@ extension TodoRegisterTableView: UITextFieldDelegate, UITextViewDelegate, UIPick
     
     @objc private func onDidChangeDate(sender:UIDatePicker){
         datePicker.minimumDate = Date()
-        dateTextField.text = Format().stringFromDate(date: sender.date)
+        todoDate = Format().stringFromDate(date: sender.date)
+        if #available(iOS 14.0, *) {
+            /// 何もしない
+        } else {
+            dateTextField.text = todoDate
+        }
     }
 
 }
