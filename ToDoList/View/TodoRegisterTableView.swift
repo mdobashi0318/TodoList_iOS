@@ -53,7 +53,7 @@ final class TodoRegisterTableView: UITableView {
     /// ToDoの日付選択デートピッカー
     let datePicker:UIDatePicker = {
         let datePicker: UIDatePicker = UIDatePicker()
-        datePicker.accessibilityLabel = "detailPicker"
+        datePicker.accessibilityLabel = "datePicker"
         datePicker.datePickerMode = .dateAndTime
         datePicker.addTarget(self, action: #selector(onDidChangeDate(sender:)), for: .valueChanged)
         

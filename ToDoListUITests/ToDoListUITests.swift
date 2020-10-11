@@ -65,11 +65,18 @@ class ToDoListUITests: XCTestCase {
         app.cells.textFields["titleTextField"].tap()
         app.typeText("test")
         
-        app.cells.textFields["dateTextField"].tap()
+        let datePicker = app.datePickers["datePicker"]
+        if #available(iOS 14.0, *) {
+            XCTAssertTrue(app.cells.textFields["titleTextField"].exists, "期限入力用DatePickerがない")
+        } else {
+            XCTAssert(app.cells.textFields["dateTextField"].exists, "期限のテキストフィールドがない")
+            app.cells.textFields["dateTextField"].tap()
+            XCTAssert(datePicker.exists, "期限設定するデートピッカーが表示されない")
+        }
         
-        let datePicker = app.datePickers["detailPicker"]
-        XCTAssert(datePicker.exists)
-        if #available(iOS 13.0, *) {
+        if #available(iOS 14.0, *) {
+            /// 何もしない
+        } else if #available(iOS 13.0, *) {
             datePicker.pickerWheels.element(boundBy: 0).swipeUp()
             datePicker.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "5")
             datePicker.pickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: "50")
@@ -118,11 +125,17 @@ class ToDoListUITests: XCTestCase {
         XCTAssert(app.navigationBars.buttons["Save"].exists, "保存ボタンがない")
         XCTAssert(app.navigationBars.buttons["Cancel"].exists, "キャンセルボタンがない")
         XCTAssert(app.cells.textFields["titleTextField"].exists, "タイトル入力のテキストフィールドがない")
-        XCTAssert(app.cells.textFields["dateTextField"].exists, "期限のテキストフィールドがない")
+        
+        let datePicker = app.datePickers["datePicker"]
+        if #available(iOS 14.0, *) {
+            XCTAssertTrue(app.cells.textFields["titleTextField"].exists, "期限入力用DatePickerがない")
+        } else {
+            XCTAssert(app.cells.textFields["dateTextField"].exists, "期限のテキストフィールドがない")
+            app.cells.textFields["dateTextField"].tap()
+            XCTAssert(datePicker.exists, "期限設定するデートピッカーが表示されない")
+        }
         XCTAssert(app.cells.textViews["detailTextViwe"].exists, "詳細入力用のテキストビューがない")
-        app.cells.textFields["dateTextField"].tap()
-        let datePicker = app.datePickers["detailPicker"]
-        XCTAssert(datePicker.exists, "期限設定するデートピッカーが表示されない")
+        
         
         createToDo(num: 1, isOpen: false)
         
@@ -145,8 +158,16 @@ class ToDoListUITests: XCTestCase {
         app.typeText("edit")
         
         // 期限入力
-        app.cells.textFields["dateTextField"].tap()
-        if #available(iOS 13.0, *) {
+        if #available(iOS 14.0, *) {
+            // 何もしない
+        } else {
+            app.cells.textFields["dateTextField"].tap()
+            XCTAssert(datePicker.exists)
+        }
+        
+        if #available(iOS 14.0, *) {
+            // 何もしない
+        } else if #available(iOS 13.0, *) {
             datePicker.pickerWheels.element(boundBy: 0).swipeUp()
             datePicker.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "5")
             datePicker.pickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: "50")
@@ -202,11 +223,17 @@ class ToDoListUITests: XCTestCase {
         app.typeText("test\(String(num))")
         
         // 期限入力
-        app.cells.textFields["dateTextField"].tap()
-        let datePicker = app.datePickers["detailPicker"]
-        XCTAssert(datePicker.exists)
+        let datePicker = app.datePickers["datePicker"]
+        if #available(iOS 14.0, *) {
+            XCTAssertTrue(app.cells.textFields["titleTextField"].exists, "期限入力用DatePickerがない")
+        } else {
+            app.cells.textFields["dateTextField"].tap()
+            XCTAssert(datePicker.exists)
+        }
         
-        if #available(iOS 13.0, *) {
+        if #available(iOS 14.0, *) {
+            // 何もしない
+        } else if #available(iOS 13.0, *) {
             datePicker.pickerWheels.element(boundBy: 0).swipeUp()
             datePicker.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "5")
             datePicker.pickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: "50")
@@ -240,9 +267,17 @@ class ToDoListUITests: XCTestCase {
         app.typeText(title)
         
         // 期限入力
-        let datePicker = app.datePickers["detailPicker"]
-        app.cells.textFields["dateTextField"].tap()
-        if #available(iOS 13.0, *) {
+        let datePicker = app.datePickers["datePicker"]
+        if #available(iOS 14.0, *) {
+            XCTAssertTrue(app.cells.textFields["titleTextField"].exists, "期限入力用DatePickerがない")
+        } else {
+            app.cells.textFields["dateTextField"].tap()
+            XCTAssert(datePicker.exists)
+        }
+        
+        if #available(iOS 14.0, *) {
+            // 何もしない
+        } else if #available(iOS 13.0, *) {
             datePicker.pickerWheels.element(boundBy: 0).swipeUp()
             datePicker.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "5")
             datePicker.pickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: "50")
