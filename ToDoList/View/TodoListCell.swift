@@ -13,6 +13,13 @@ final class TodoListCell: UITableViewCell {
     
     // MARK: Properties
     
+    let expiredLabel: UILabel = {
+        let label: UILabel = UILabel()
+        label.text = "期限切れ"
+        label.textColor = .red
+        return label
+    }()
+    
     /// タイトルを表示するラベル
     let titleLabel: UILabel = UILabel()
     
@@ -27,9 +34,9 @@ final class TodoListCell: UITableViewCell {
     /// 日付を表示するラベル
     let dateLabel: UILabel = UILabel()
     
-    /// セルの背景のバックグラウンド
-    let layerView:UIView = UIView()
+    let vStack: UIStackView = UIStackView()
     
+    let hStack: UIStackView = UIStackView()
     
     // MARK: Init
     
@@ -39,38 +46,33 @@ final class TodoListCell: UITableViewCell {
         selectionStyle = .none
         accessoryType = .disclosureIndicator
         
-        layerView.layer.cornerRadius = 50 / 5
-        
-        let stakc:UIStackView = UIStackView()
-        stakc.axis = .vertical
-        stakc.alignment = .leading
-        stakc.spacing = 5
-        stakc.distribution = .fillEqually
-        
-        stakc.addSubview(layerView)
-        stakc.addArrangedSubview(titleLabel)
-        stakc.addArrangedSubview(detailLabel)
-        stakc.addArrangedSubview(dateLabel)
-        
-        addSubview(stakc)
+        vStack.layer.shadowOpacity = 0.5
+        vStack.layer.shadowOffset = CGSize(width: 2, height: 2)
+        vStack.backgroundColor = .todoListCell
         
         
+        hStack.axis = .horizontal
+        hStack.alignment = .leading
+        hStack.spacing = 5
+        hStack.distribution = .equalSpacing
+        hStack.addArrangedSubview(dateLabel)
+        hStack.addArrangedSubview(expiredLabel)
         
-        stakc.translatesAutoresizingMaskIntoConstraints = false
-        stakc.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
-        stakc.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
-        stakc.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10).isActive = true
-        stakc.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10).isActive = true
+        vStack.axis = .vertical
+        vStack.alignment = .leading
+        vStack.spacing = 1
+        vStack.distribution = .fill
+        vStack.addArrangedSubview(titleLabel)
+        vStack.addArrangedSubview(detailLabel)
+        vStack.addArrangedSubview(hStack)
+        addSubview(vStack)
         
-        
-        
-        layerView.translatesAutoresizingMaskIntoConstraints = false
-        layerView.topAnchor.constraint(equalTo: stakc.topAnchor, constant: -7).isActive = true
-        layerView.leadingAnchor.constraint(equalTo: stakc.leadingAnchor, constant: -5).isActive = true
-        layerView.trailingAnchor.constraint(equalTo: stakc.trailingAnchor, constant: 5).isActive = true
-        layerView.bottomAnchor.constraint(equalTo: stakc.bottomAnchor, constant: 7).isActive = true
-        
-        
+        vStack.translatesAutoresizingMaskIntoConstraints = false
+        vStack.topAnchor.constraint(equalTo: topAnchor, constant: 5).isActive = true
+        vStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
+        vStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10).isActive = true
+        vStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5).isActive = true
+   
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -87,14 +89,7 @@ final class TodoListCell: UITableViewCell {
         titleLabel.text = title
         detailLabel.text = detail
         dateLabel.text = date
-        
-        changeCellBackGroundCollor(date: dateLabel.text!)
-    }
-    
-    
-    /// 期限が切れているか、切れていないかでbackgroundColorを変える
-    private func changeCellBackGroundCollor(date: String){
-        layerView.backgroundColor = Format().stringFromDate(date: Date()) < date ? Rose : .lightGray
+        expiredLabel.isHidden = Format().stringFromDate(date: Date()) < date
     }
     
 }

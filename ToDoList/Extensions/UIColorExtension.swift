@@ -11,6 +11,8 @@ import UIKit
 
 extension UIColor {
     
+    /// TodoListのセルの背景色
+    static let todoListCell: UIColor = UIColor.changeAppearnceColor(light: .white, dark: .rgba(red: 25, green: 25, blue: 25, alpha: 1))
     
     class func rgba(red: Int, green: Int, blue: Int, alpha: CGFloat) -> UIColor{
         return UIColor(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: alpha)
