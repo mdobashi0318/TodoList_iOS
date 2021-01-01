@@ -182,7 +182,7 @@ extension ToDoListViewController {
         
         if presenter?.model?.count == 0 || presenter?.model == nil {
             let cell:UITableViewCell = UITableViewCell(style: .default, reuseIdentifier: "cell")
-            cell.backgroundColor = cellColor
+            cell.backgroundColor = .cellColor
             cell.selectionStyle = .none
             cell.textLabel?.text = R.string.message.noToDo()
             return cell
@@ -298,7 +298,7 @@ extension ToDoListViewController {
     
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView()
-        headerView.backgroundColor = headerColor
+        headerView.backgroundColor = .headerColor
         headerView.addSubview(segmentedControl)
         segmentedControl.translatesAutoresizingMaskIntoConstraints = false
         segmentedControl.centerXAnchor.constraint(equalTo: headerView.centerXAnchor).isActive = true

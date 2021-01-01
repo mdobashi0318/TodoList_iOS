@@ -131,7 +131,7 @@ final class TodoRegisterTableView: UITableView {
         guard let _inputField = inputField as? UIView else {
             return
         }
-        _inputField.backgroundColor = cellColor
+        _inputField.backgroundColor = .cellColor
         cell.contentView.addSubview(_inputField)
         _inputField.translatesAutoresizingMaskIntoConstraints = false
         _inputField.topAnchor.constraint(equalTo: cell.topAnchor).isActive = true
@@ -168,7 +168,7 @@ extension TodoRegisterTableView: UITableViewDelegate, UITableViewDataSource {
         let cell:UITableViewCell = UITableViewCell(style: .default, reuseIdentifier: "inputCell")
         cell.accessoryType = .none
         cell.selectionStyle = .none
-        cell.backgroundColor = cellColor
+        cell.backgroundColor = .cellColor
         // ToDoの編集時はTextFieldに表示
         if todoId != nil {
             titletextField.text = toDoModel?.toDoName
