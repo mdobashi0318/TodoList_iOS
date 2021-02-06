@@ -45,15 +45,12 @@ final class ToDoDetailTableViewControllerPresenter {
     ///   - success: 検索成功時
     ///   - failure: 検索失敗時
     func deleteTodo(todoId: String?, createTime: String?, success: ()->(), failure: (String?)->()) {
-        
-        ToDoModel.deleteToDo(todoId: todoId!, createTime: createTime) { error in
-            if let _error = error {
-                failure(_error)
-                return
-            }
+        switch ToDoModel.deleteToDo(todoId: todoId!, createTime: createTime) {
+        case .success:
+            success()
+        case .failure:
+            failure("削除に失敗しました")
         }
-        
-        success()
     }
     
 }

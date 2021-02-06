@@ -33,23 +33,28 @@ class TodoRegisterViewControllerTest: XCTestCase {
     
     func test_ConvenienceInit() {
         let todoDate = Format().stringFromDate(date: Date())
-        ToDoModel.addToDo(addValue: ToDoModel(id: "0",
+        switch ToDoModel.addToDo(addValue: ToDoModel(id: "0",
                                               toDoName: "UnitTest",
                                               todoDate: todoDate,
                                               toDo: "詳細",
-                                              createTime: nil)) { _ in return}
+                                              createTime: nil)) {
+        case .success(_):
+            let todoModel = ToDoModel.findToDo(todoId: "0", createTime: nil)
+            let vc = TodoRegisterViewController(todoId: todoModel!.id, createTime: todoModel?.createTime)
+            
+            
+            XCTAssert(vc.gettodoId() == "0", "idが代入されていない")
+            XCTAssert(vc.getToDoModel().id == "0", "idが代入されていない")
+            XCTAssert(vc.getToDoModel().toDoName == "UnitTest", "Todoのタイトルが代入されていない")
+            XCTAssert(vc.getToDoModel().todoDate == todoDate, "　Todoの期限が代入されていない")
+            XCTAssert(vc.getToDoModel().toDo == "詳細", "　Todoの詳細が代入されていない")
+            XCTAssert(vc.getToDoModel().createTime != nil, "Todo作成時間が代入されていない")
+        case .failure(let error):
+            XCTAssertNil(error)
+        }
         
         
-        let todoModel = ToDoModel.findToDo(todoId: "0", createTime: nil)
-        let vc = TodoRegisterViewController(todoId: todoModel!.id, createTime: todoModel?.createTime)
         
-        
-        XCTAssert(vc.gettodoId() == "0", "idが代入されていない")
-        XCTAssert(vc.getToDoModel().id == "0", "idが代入されていない")
-        XCTAssert(vc.getToDoModel().toDoName == "UnitTest", "Todoのタイトルが代入されていない")
-        XCTAssert(vc.getToDoModel().todoDate == todoDate, "　Todoの期限が代入されていない")
-        XCTAssert(vc.getToDoModel().toDo == "詳細", "　Todoの詳細が代入されていない")
-        XCTAssert(vc.getToDoModel().createTime != nil, "Todo作成時間が代入されていない")
     }
 
     

@@ -25,9 +25,7 @@ class ToDoDetailTableViewControllerPresenterTest: XCTestCase {
 
     func test_findTodo() {
 
-        ToDoModel.addToDo(addValue: ToDoModel(id: "", toDoName: "UnitTestTitle", todoDate: "UnitDate", toDo: "UnitDetile", createTime: nil)) { error in
-            XCTAssertNil(error, "エラーが入っている")
-        }
+        ToDoModel.addToDo(addValue: ToDoModel(id: "", toDoName: "UnitTestTitle", todoDate: "UnitDate", toDo: "UnitDetile", createTime: nil))
        
 
        let exp = expectation(description: "find")
@@ -52,9 +50,7 @@ class ToDoDetailTableViewControllerPresenterTest: XCTestCase {
     
     func test_deleteTodo() {
         
-        ToDoModel.addToDo(addValue: ToDoModel(id: "", toDoName: "UnitTestTitle", todoDate: "UnitDate", toDo: "UnitDetile", createTime: nil)) { error in
-            XCTAssertNil(error, "エラーが入っている")
-        }
+        ToDoModel.addToDo(addValue: ToDoModel(id: "", toDoName: "UnitTestTitle", todoDate: "UnitDate", toDo: "UnitDetile", createTime: nil))
         
         let model = ToDoModel.findToDo(todoId: "0", createTime: nil)
         let exp = expectation(description: "exp")

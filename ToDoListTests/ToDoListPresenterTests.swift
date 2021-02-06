@@ -36,9 +36,7 @@ class ToDoListPresenterTests: XCTestCase {
     
     func test_deleteTodo() {
          
-         ToDoModel.addToDo(addValue: ToDoModel(id: "", toDoName: "UnitTestTitle", todoDate: "UnitDate", toDo: "UnitDetile", createTime: nil)) { error in
-             XCTAssertNil(error, "エラーが入っている")
-         }
+         ToDoModel.addToDo(addValue: ToDoModel(id: "", toDoName: "UnitTestTitle", todoDate: "UnitDate", toDo: "UnitDetile", createTime: nil))
          
          let model = ToDoModel.findToDo(todoId: "0", createTime: nil)
          let exp = expectation(description: "exp")
@@ -58,13 +56,9 @@ class ToDoListPresenterTests: XCTestCase {
     
     func test_allDeleteTodo() {
         
-        ToDoModel.addToDo(addValue: ToDoModel(id: "", toDoName: "UnitTestTitle1", todoDate: "UnitDate", toDo: "UnitDetile", createTime: nil)) { error in
-            XCTAssertNil(error, "エラーが入っている")
-        }
+        ToDoModel.addToDo(addValue: ToDoModel(id: "", toDoName: "UnitTestTitle1", todoDate: "UnitDate", toDo: "UnitDetile", createTime: nil))
         sleep(1)
-        ToDoModel.addToDo(addValue: ToDoModel(id: "", toDoName: "UnitTestTitle2", todoDate: "UnitDate", toDo: "UnitDetile", createTime: nil)) { error in
-            XCTAssertNil(error, "エラーが入っている")
-        }
+        ToDoModel.addToDo(addValue: ToDoModel(id: "", toDoName: "UnitTestTitle2", todoDate: "UnitDate", toDo: "UnitDetile", createTime: nil))
         sleep(1)
         
         

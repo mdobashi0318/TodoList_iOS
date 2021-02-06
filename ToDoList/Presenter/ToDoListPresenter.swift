@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import RealmSwift
 
 
 final class ToDoListPresenter {
@@ -35,12 +34,12 @@ final class ToDoListPresenter {
     
     
     func allDelete(success: ()->(), failure: @escaping (String?)->()) {
-        ToDoModel.allDeleteToDo { error in
-            failure(error)
-            return
+        switch ToDoModel.allDeleteToDo() {
+        case .success:
+            success()
+        case .failure:
+            failure("削除に失敗しました")
         }
-        
-        success()
     }
     
     
@@ -54,15 +53,12 @@ final class ToDoListPresenter {
     ///   - failure: 検索失敗時
     func deleteTodo(todoId: String?, createTime: String?, success: ()->(), failure: (String?)->()) {
         
-        ToDoModel.deleteToDo(todoId: todoId!, createTime: createTime) { error in
-            if let _error = error {
-                failure(_error)
-                return
-            }
+        switch ToDoModel.deleteToDo(todoId: todoId!, createTime: createTime) {
+        case .success:
+            success()
+        case .failure:
+            failure("削除に失敗しました")
         }
-        
-        success()
     }
-    
-    
+        
 }

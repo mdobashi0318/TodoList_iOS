@@ -46,13 +46,12 @@ final class TodoRegisterPresenter {
     ///   - success: 追加成功時のクロージャ
     ///   - failure: 追加失敗時のクロージャ
     func addTodo(addValue: ToDoModel, success: ()->(), failure: (String?)->()) {
-        ToDoModel.addToDo(addValue: addValue) { error in
-            if let _error = error {
-                failure(_error)
-                return
-            }
+        switch ToDoModel.addToDo(addValue: addValue) {
+        case .success:
+            success()
+        case .failure:
+            failure("追加に失敗しました")
         }
-        success()
     }
     
     
@@ -63,14 +62,11 @@ final class TodoRegisterPresenter {
     ///   - success: 更新成功時のクロージャ
     ///   - failure: 更新失敗時のクロージャ
     func updateTodo(updateTodo: ToDoModel, success: ()->(), failure: (String?)->()) {
-        ToDoModel.updateToDo(updateValue: updateTodo) { error in
-            if let _error = error {
-                failure(_error)
-                return
-            }
+        switch ToDoModel.updateToDo(updateValue: updateTodo) {
+        case .success:
+            success()
+        case .failure:
+            failure("更新に失敗しました")
         }
-        success()
     }
-    
-    
 }
