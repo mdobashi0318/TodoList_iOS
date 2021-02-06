@@ -24,12 +24,12 @@ final class TodoRegisterViewController: UIViewController {
     /// ToDoを入力するためのView
     private lazy var todoRegisterTableView: TodoRegisterTableView = {
         if todoId == nil {
-            let view = TodoRegisterTableView(frame: frame_Size(self), toDoModel: nil)
+            let view = TodoRegisterTableView(frame: UIScreen.main.bounds, toDoModel: nil)
             
             return view
             
         } else {
-            let view = TodoRegisterTableView(frame: frame_Size(self), toDoModel: self.presenter?.model)
+            let view = TodoRegisterTableView(frame: UIScreen.main.bounds, toDoModel: self.presenter?.model)
             
             return view
         }
