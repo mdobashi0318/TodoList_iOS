@@ -38,3 +38,7 @@
 "Delete" = "削除";
 "Cancel" = "キャンセル";
 "Close" = "閉じる";
+
+
+// MARK: - Text
+"ExpiredText" = "期限切れ";

@@ -13,18 +13,22 @@ final class TodoListCell: UITableViewCell {
     
     // MARK: Properties
     
-    let expiredLabel: UILabel = {
+    /// ベースビュー
+    private let baseView: UIView = UIView()
+    
+    private let expiredLabel: UILabel = {
         let label: UILabel = UILabel()
-        label.text = "期限切れ"
+        label.text = R.string.message.expiredText()
         label.textColor = .red
+        label.font = UIFont.systemFont(ofSize: 12)
         return label
     }()
     
     /// タイトルを表示するラベル
-    let titleLabel: UILabel = UILabel()
+    private let titleLabel: UILabel = UILabel()
     
     /// ToDoの詳細を表示するラベル
-    let detailLabel: UILabel = {
+    private let detailLabel: UILabel = {
         let label: UILabel = UILabel()
         label.numberOfLines = 0
         
@@ -32,11 +36,14 @@ final class TodoListCell: UITableViewCell {
     }()
     
     /// 日付を表示するラベル
-    let dateLabel: UILabel = UILabel()
+    private let dateLabel: UILabel = UILabel()
     
-    let vStack: UIStackView = UIStackView()
+    private let vStack: UIStackView = UIStackView()
     
-    let hStack: UIStackView = UIStackView()
+    private let hStack: UIStackView = UIStackView()
+    
+    private let bottomView: UIView = UIView()
+    
     
     // MARK: Init
     
@@ -46,39 +53,21 @@ final class TodoListCell: UITableViewCell {
         selectionStyle = .none
         accessoryType = .disclosureIndicator
         
-        vStack.layer.shadowOpacity = 0.5
-        vStack.layer.shadowOffset = CGSize(width: 2, height: 2)
-        vStack.backgroundColor = .todoListCell
+        baseView.layer.cornerRadius = 8
+        addSubview(baseView)
         
+        baseView.layer.shadowOpacity = 0.5
+        baseView.layer.shadowOffset = CGSize(width: 2, height: 2)
+        baseView.backgroundColor = .todoListCell
         
-        hStack.axis = .horizontal
-        hStack.alignment = .leading
-        hStack.spacing = 5
-        hStack.distribution = .equalSpacing
-        hStack.addArrangedSubview(dateLabel)
-        hStack.addArrangedSubview(expiredLabel)
-        
-        vStack.axis = .vertical
-        vStack.alignment = .leading
-        vStack.spacing = 1
-        vStack.distribution = .fill
-        vStack.addArrangedSubview(titleLabel)
-        vStack.addArrangedSubview(detailLabel)
-        vStack.addArrangedSubview(hStack)
-        addSubview(vStack)
-        
-        vStack.translatesAutoresizingMaskIntoConstraints = false
-        vStack.topAnchor.constraint(equalTo: topAnchor, constant: 5).isActive = true
-        vStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
-        vStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10).isActive = true
-        vStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5).isActive = true
-   
+        initHStack()
+        initVStack()
+        initConstraint()
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
     
     
     /// セルにテキストを設定する
@@ -90,6 +79,51 @@ final class TodoListCell: UITableViewCell {
         detailLabel.text = detail
         dateLabel.text = date
         expiredLabel.isHidden = Format().stringFromDate(date: Date()) < date
+    }
+    
+    
+    private func initHStack() {
+        hStack.axis = .horizontal
+        hStack.alignment = .bottom
+        hStack.spacing = 5
+        hStack.distribution = .equalSpacing
+        hStack.addArrangedSubview(dateLabel)
+        hStack.addArrangedSubview(expiredLabel)
+        bottomView.addSubview(hStack)
+    }
+    
+    
+    private func initVStack() {
+        vStack.axis = .vertical
+        vStack.alignment = .leading
+        vStack.spacing = 1
+        vStack.distribution = .fill
+        vStack.addArrangedSubview(titleLabel)
+        vStack.addArrangedSubview(detailLabel)
+        vStack.addArrangedSubview(bottomView)
+        baseView.addSubview(vStack)
+    }
+    
+    
+    
+    private func initConstraint() {
+        hStack.translatesAutoresizingMaskIntoConstraints = false
+        hStack.topAnchor.constraint(equalTo: bottomView.topAnchor).isActive = true
+        hStack.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor).isActive = true
+        hStack.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor).isActive = true
+        hStack.bottomAnchor.constraint(equalTo: bottomView.bottomAnchor).isActive = true
+        
+        baseView.translatesAutoresizingMaskIntoConstraints = false
+        baseView.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
+        baseView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
+        baseView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10).isActive = true
+        baseView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5).isActive = true
+        
+        vStack.translatesAutoresizingMaskIntoConstraints = false
+        vStack.topAnchor.constraint(equalTo: baseView.topAnchor, constant: 5).isActive = true
+        vStack.leadingAnchor.constraint(equalTo: baseView.leadingAnchor, constant: 10).isActive = true
+        vStack.trailingAnchor.constraint(equalTo: baseView.trailingAnchor, constant: -10).isActive = true
+        vStack.bottomAnchor.constraint(equalTo: baseView.bottomAnchor, constant: -5).isActive = true
     }
     
 }
