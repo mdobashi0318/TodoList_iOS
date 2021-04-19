@@ -30,7 +30,7 @@ final class TodoListCell: UITableViewCell {
     /// ToDoの詳細を表示するラベル
     private let detailLabel: UILabel = {
         let label: UILabel = UILabel()
-        label.numberOfLines = 0
+        label.numberOfLines = 2
         
         return label
     }()
@@ -76,7 +76,7 @@ final class TodoListCell: UITableViewCell {
     /// - Parameter detail: ToDoの詳細
     func setText(title:String, date:String, detail:String){
         titleLabel.text = title
-        detailLabel.text = detail
+        detailLabel.text = detail.replacingOccurrences(of: "\n", with: "")
         dateLabel.text = date
         expiredLabel.isHidden = Format().stringFromDate(date: Date()) < date
     }
@@ -122,7 +122,7 @@ final class TodoListCell: UITableViewCell {
         vStack.translatesAutoresizingMaskIntoConstraints = false
         vStack.topAnchor.constraint(equalTo: baseView.topAnchor, constant: 5).isActive = true
         vStack.leadingAnchor.constraint(equalTo: baseView.leadingAnchor, constant: 10).isActive = true
-        vStack.trailingAnchor.constraint(equalTo: baseView.trailingAnchor, constant: -10).isActive = true
+        vStack.trailingAnchor.constraint(equalTo: baseView.trailingAnchor, constant: -20).isActive = true
         vStack.bottomAnchor.constraint(equalTo: baseView.bottomAnchor, constant: -5).isActive = true
     }
     
