@@ -60,5 +60,11 @@ final class ToDoListPresenter {
             failure("削除に失敗しました")
         }
     }
+    
+    
+    /// 期限切れかどうかの判定を返す
+    func isExpired(row: Int) -> Bool {
+        Format().stringFromDate(date: Date()) > model?[row].todoDate ?? ""
+    }
         
 }

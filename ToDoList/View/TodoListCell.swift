@@ -42,7 +42,7 @@ final class TodoListCell: UITableViewCell {
     
     private let hStack: UIStackView = UIStackView()
     
-    private let bottomView: UIView = UIView()
+    private let expiredView: UIView = UIView()
     
     
     // MARK: Init
@@ -74,11 +74,12 @@ final class TodoListCell: UITableViewCell {
     /// - Parameter title: Todoのタイトル
     /// - Parameter date: ToDoの日付
     /// - Parameter detail: ToDoの詳細
-    func setText(title:String, date:String, detail:String){
+    /// - Parameter isExpired: 期限切れラベルの表示フラグ
+    func setText(title:String, date:String, detail:String, isExpired: Bool) {
         titleLabel.text = title
         detailLabel.text = detail.replacingOccurrences(of: "\n", with: "")
         dateLabel.text = date
-        expiredLabel.isHidden = Format().stringFromDate(date: Date()) < date
+        expiredLabel.isHidden = !isExpired
     }
     
     
@@ -89,7 +90,7 @@ final class TodoListCell: UITableViewCell {
         hStack.distribution = .equalSpacing
         hStack.addArrangedSubview(dateLabel)
         hStack.addArrangedSubview(expiredLabel)
-        bottomView.addSubview(hStack)
+        expiredView.addSubview(hStack)
     }
     
     
@@ -100,7 +101,7 @@ final class TodoListCell: UITableViewCell {
         vStack.distribution = .fill
         vStack.addArrangedSubview(titleLabel)
         vStack.addArrangedSubview(detailLabel)
-        vStack.addArrangedSubview(bottomView)
+        vStack.addArrangedSubview(        expiredView)
         baseView.addSubview(vStack)
     }
     
@@ -108,10 +109,10 @@ final class TodoListCell: UITableViewCell {
     
     private func initConstraint() {
         hStack.translatesAutoresizingMaskIntoConstraints = false
-        hStack.topAnchor.constraint(equalTo: bottomView.topAnchor).isActive = true
-        hStack.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor).isActive = true
-        hStack.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor).isActive = true
-        hStack.bottomAnchor.constraint(equalTo: bottomView.bottomAnchor).isActive = true
+        hStack.topAnchor.constraint(equalTo:         expiredView.topAnchor).isActive = true
+        hStack.leadingAnchor.constraint(equalTo:         expiredView.leadingAnchor).isActive = true
+        hStack.trailingAnchor.constraint(equalTo:         expiredView.trailingAnchor).isActive = true
+        hStack.bottomAnchor.constraint(equalTo:         expiredView.bottomAnchor).isActive = true
         
         baseView.translatesAutoresizingMaskIntoConstraints = false
         baseView.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true

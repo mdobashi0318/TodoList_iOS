@@ -191,7 +191,8 @@ extension ToDoListViewController {
         let listCell = tableView.dequeueReusableCell(withIdentifier: "listCell") as! TodoListCell
         listCell.setText(title: (presenter?.model?[indexPath.row].toDoName)!,
                          date: (presenter?.model?[indexPath.row].todoDate!)!,
-                         detail: (presenter?.model?[indexPath.row].toDo)!
+                         detail: (presenter?.model?[indexPath.row].toDo)!,
+                         isExpired: (presenter?.isExpired(row: indexPath.row))!
         )
         
         return listCell
