@@ -13,6 +13,14 @@ final class ToDoDetailTableViewControllerPresenter {
     /// ToDoModel
     var model: ToDoModel?
     
+    /// 期限切れかどうかの判定を返す
+    var isExpired: Bool {
+        get {
+            return Format().stringFromDate(date: Date()) > model?.todoDate ?? ""
+        }
+    }
+    
+    
     /// ToDoを１件検索
     /// - Parameters:
     ///   - todoId: todoId

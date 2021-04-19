@@ -193,6 +193,7 @@ extension TodoRegisterTableView: UITableViewDelegate, UITableViewDataSource {
                 textFieldConstraint(cell, inputField: dateTextField)
             }
         case 2: /* Todoの詳細 */
+            detailTextViwe.font = titletextField.font
             detailTextViwe.delegate = self
             textFieldConstraint(cell, inputField: detailTextViwe)
         default:
@@ -218,7 +219,7 @@ extension TodoRegisterTableView: UITableViewDelegate, UITableViewDataSource {
     
     /// ヘッダー内のビューを設定
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return todoHeadrView(viewForHeaderInSection: section, isEditMode: true)
+        return todoHeadrView(viewForHeaderInSection: section, isEditMode: true, isExpired: false)
     }
     
     

@@ -17,7 +17,7 @@ extension ToDoDetailTableViewController: ToDoDetailProtocol {}
 protocol ToDoDetailProtocol {}
 extension ToDoDetailProtocol {
     
-    func todoHeadrView(viewForHeaderInSection section: Int, isEditMode: Bool) -> UIView {
+    func todoHeadrView(viewForHeaderInSection section: Int, isEditMode: Bool, isExpired: Bool) -> UIView {
         let headerView:UIView = UIView()
         let headerLabel:UILabel = UILabel()
         
@@ -44,6 +44,9 @@ extension ToDoDetailProtocol {
             if isEditMode {
                 headerLabel.text = "詳細 *必須"
                 setAttributes(headerLabel)
+            } else if isExpired {
+                headerLabel.text = "詳細 \(R.string.message.expiredText())"
+                setExpiredAttributes(headerLabel)
             } else {
                 headerLabel.text = "詳細"
             }
@@ -73,6 +76,18 @@ extension ToDoDetailProtocol {
             .foregroundColor : UIColor.red,
         ]
         attrText.addAttributes(attributes, range: NSMakeRange(label.text!.count - 3, 3))
+        label.attributedText = attrText
+    }
+    
+    private func setExpiredAttributes(_ label: UILabel) {
+        let attrText = NSMutableAttributedString(string: label.text!)
+        let attributes: [NSAttributedString.Key : Any] = [
+            .font : UIFont.systemFont(ofSize: 12.0),
+            .foregroundColor : UIColor.red,
+        ]
+        attrText.addAttributes(attributes,
+                               range: NSMakeRange(label.text!.count - R.string.message.expiredText().count,
+                                                  R.string.message.expiredText().count))
         label.attributedText = attrText
     }
     

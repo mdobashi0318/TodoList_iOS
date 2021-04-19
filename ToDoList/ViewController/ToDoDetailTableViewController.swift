@@ -141,7 +141,7 @@ extension ToDoDetailTableViewController {
     
     /// ヘッダー内のビューを設定
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return todoHeadrView(viewForHeaderInSection: section, isEditMode: false)
+        return todoHeadrView(viewForHeaderInSection: section, isEditMode: false, isExpired: presenter.isExpired)
     }
     
     /// ヘッダーの高さを設定
