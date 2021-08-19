@@ -11,9 +11,7 @@ import Foundation
 final class TodoRegisterPresenter {
     
     /// ToDoModel
-    var model: ToDoModel?
-    
-    
+    private(set) var model: ToDoModel?
     
     /// ToDoを１件検索
     /// - Parameters:
@@ -22,19 +20,16 @@ final class TodoRegisterPresenter {
     ///   - success: 検索成功時
     ///   - failure: 検索失敗時
     func findTodo(todoId: String?, createTime: String?, success: ()->(), failure: (String?)->()) {
-        
         guard let _todoId = todoId else {
-            failure("ToDoが見つかりませんでした")
+            failure(R.string.message.noTodoError())
             return
         }
-
-        self.model = ToDoModel.findToDo(todoId: _todoId, createTime: createTime)
+        self.model = ToDoModel.find(todoId: _todoId, createTime: createTime)
         
         if model == nil {
-            failure("ToDoが見つかりませんでした")
+            failure(R.string.message.noTodoError())
             return
         }
-        
         success()
     }
     
@@ -46,11 +41,11 @@ final class TodoRegisterPresenter {
     ///   - success: 追加成功時のクロージャ
     ///   - failure: 追加失敗時のクロージャ
     func addTodo(addValue: ToDoModel, success: ()->(), failure: (String?)->()) {
-        switch ToDoModel.addToDo(addValue: addValue) {
+        switch ToDoModel.add(addValue: addValue) {
         case .success:
             success()
-        case .failure:
-            failure("追加に失敗しました")
+        case .failure(let error):
+            failure(error.message)
         }
     }
     
@@ -62,11 +57,11 @@ final class TodoRegisterPresenter {
     ///   - success: 更新成功時のクロージャ
     ///   - failure: 更新失敗時のクロージャ
     func updateTodo(updateTodo: ToDoModel, success: ()->(), failure: (String?)->()) {
-        switch ToDoModel.updateToDo(updateValue: updateTodo) {
+        switch ToDoModel.update(updateValue: updateTodo) {
         case .success:
             success()
-        case .failure:
-            failure("更新に失敗しました")
+        case .failure(let error):
+            failure(error.message)
         }
     }
 }

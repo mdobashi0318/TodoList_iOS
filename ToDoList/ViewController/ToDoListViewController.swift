@@ -365,7 +365,7 @@ extension ToDoListViewController: ToDoListViewControllerProtocol {
             self.tableView.reloadData()
         }, failure: { error in
             AlertManager().alertAction(self,
-                                       message: error!) { _ in
+                                       message: error) { _ in
                                         return
             }
         })
@@ -373,13 +373,10 @@ extension ToDoListViewController: ToDoListViewControllerProtocol {
     
     
     func deleteTodo(row: Int) {
-        let todoid = presenter?.model![row].id
-        let createTime = presenter?.model?[row].createTime
-        
-        presenter?.deleteTodo(todoId: todoid, createTime: createTime, success: {
+        presenter?.deleteTodo(presenter?.model?[row], success: {
             NotificationCenter.default.post(name: Notification.Name(R.string.notification.tableReload()), object: nil)
         }, failure: { error in
-            AlertManager().alertAction(self, message: error!)
+            AlertManager().alertAction(self, message: error)
         })
     }
     
@@ -389,7 +386,7 @@ extension ToDoListViewController: ToDoListViewControllerProtocol {
         presenter?.allDelete(success: {
             NotificationCenter.default.post(name: Notification.Name(R.string.notification.tableReload()), object: nil)
         }, failure: { error in
-            AlertManager().alertAction(self, message: error!)
+            AlertManager().alertAction(self, message: error)
         })
     }
     

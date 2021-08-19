@@ -177,10 +177,10 @@ extension ToDoDetailTableViewController: ToDoDetailTableViewControllerProtocol {
     }
     
     func deleteTodo() {
-        presenter.deleteTodo(todoId: todoId, createTime: createTime, success: {
+        presenter.deleteTodo(success: {
             self.navigationController?.popViewController(animated: true)
         }, failure: { error in
-            AlertManager().alertAction(self, message: error!)
+            AlertManager().alertAction(self, message: error)
         })
     }
     

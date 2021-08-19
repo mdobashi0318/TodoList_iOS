@@ -11,7 +11,7 @@ import Foundation
 final class ToDoDetailTableViewControllerPresenter {
     
     /// ToDoModel
-    var model: ToDoModel?
+    private(set) var model: ToDoModel?
     
     /// 期限切れかどうかの判定を返す
     var isExpired: Bool {
@@ -28,15 +28,13 @@ final class ToDoDetailTableViewControllerPresenter {
     ///   - success: 検索成功時
     ///   - failure: 検索失敗時
     func findTodo(todoId: String?, createTime: String?, success: ()->(), failure:  (String?)->()) {
-        
         guard let _todoId = todoId else {
             failure("ToDoが見つかりませんでした")
             return
         }
-
-        self.model = ToDoModel.findToDo(todoId: _todoId, createTime: createTime)
+        self.model = ToDoModel.find(todoId: _todoId, createTime: createTime)
         
-        if model == nil {
+        if self.model == nil {
             failure("ToDoが見つかりませんでした")
             return
         }
@@ -52,8 +50,13 @@ final class ToDoDetailTableViewControllerPresenter {
     ///   - createTime: 作成時間
     ///   - success: 検索成功時
     ///   - failure: 検索失敗時
-    func deleteTodo(todoId: String?, createTime: String?, success: ()->(), failure: (String?)->()) {
-        switch ToDoModel.deleteToDo(todoId: todoId!, createTime: createTime) {
+    func deleteTodo(success: () -> (), failure: (String) -> ()) {
+        guard let _model = model else {
+            failure("削除に失敗しました")
+            return
+        }
+        
+        switch ToDoModel.delete(_model) {
         case .success:
             success()
         case .failure:

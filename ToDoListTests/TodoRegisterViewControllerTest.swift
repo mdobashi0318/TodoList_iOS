@@ -13,13 +13,13 @@ class TodoRegisterViewControllerTest: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
-        ToDoModel.allDelete()
+        let _ = ToDoModel.allDelete()
     }
 
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         
-        ToDoModel.allDelete()
+        let _ = ToDoModel.allDelete()
     }
 
     
@@ -33,13 +33,13 @@ class TodoRegisterViewControllerTest: XCTestCase {
     
     func test_ConvenienceInit() {
         let todoDate = Format().stringFromDate(date: Date())
-        switch ToDoModel.addToDo(addValue: ToDoModel(id: "0",
+        switch ToDoModel.add(addValue: ToDoModel(id: "0",
                                               toDoName: "UnitTest",
                                               todoDate: todoDate,
                                               toDo: "詳細",
                                               createTime: nil)) {
         case .success(_):
-            let todoModel = ToDoModel.findToDo(todoId: "0", createTime: nil)
+            let todoModel = ToDoModel.find(todoId: "0", createTime: nil)
             let vc = TodoRegisterViewController(todoId: todoModel!.id, createTime: todoModel?.createTime)
             
             

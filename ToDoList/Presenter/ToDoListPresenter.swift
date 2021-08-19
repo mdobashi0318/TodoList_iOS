@@ -11,13 +11,12 @@ import Foundation
 
 final class ToDoListPresenter {
     
-    var model: [ToDoModel]?
+    private(set) var model: [ToDoModel]?
     
-    func fetchToDoList(segmentIndex index: SegmentIndex, success: ()->(), failure: (String?)->()) {
-        
+    func fetchToDoList(segmentIndex index: SegmentIndex, success: ()->(), failure: (String)->()) {
         switch index {
         case .all:
-            model = ToDoModel.allFindToDo()
+            model = ToDoModel.allFind()
         case .active:
             model = ToDoModel.activeFindToDo(index: index)
         case .expired:
@@ -25,7 +24,7 @@ final class ToDoListPresenter {
         }
         
         if model == nil {
-            failure("エラーが発生しました")
+            failure(R.string.message.errorMessage())
             return
             
         }
@@ -33,12 +32,12 @@ final class ToDoListPresenter {
     }
     
     
-    func allDelete(success: ()->(), failure: @escaping (String?)->()) {
-        switch ToDoModel.allDeleteToDo() {
+    func allDelete(success: () -> (), failure: @escaping (String) -> ()) {
+        switch ToDoModel.allDelete() {
         case .success:
             success()
-        case .failure:
-            failure("削除に失敗しました")
+        case .failure(let error):
+            failure(error.message)
         }
     }
     
@@ -51,13 +50,13 @@ final class ToDoListPresenter {
     ///   - createTime: 作成時間
     ///   - success: 検索成功時
     ///   - failure: 検索失敗時
-    func deleteTodo(todoId: String?, createTime: String?, success: ()->(), failure: (String?)->()) {
-        
-        switch ToDoModel.deleteToDo(todoId: todoId!, createTime: createTime) {
+    func deleteTodo(_ model: ToDoModel?, success: () -> (), failure: (String) -> ()) {
+        guard let model = model else { return failure(R.string.message.errorMessage()) }
+        switch ToDoModel.delete(model) {
         case .success:
             success()
-        case .failure:
-            failure("削除に失敗しました")
+        case .failure(let error):
+            failure(error.message)
         }
     }
     

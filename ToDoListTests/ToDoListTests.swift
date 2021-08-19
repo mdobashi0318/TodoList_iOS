@@ -22,7 +22,7 @@ class ToDoModelTests: XCTestCase {
 
     override func tearDown() {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
-        ToDoModel.allDelete()
+        let _ = ToDoModel.allDelete()
     }
     
     
@@ -55,8 +55,8 @@ class ToDoModelTests: XCTestCase {
     func test_AddModel() {
         
         let addTodoDate = Format().stringFromDate(date: Date())
-        ToDoModel.addToDo(addValue: ToDoModel(id: "0", toDoName: "UnitTest", todoDate: addTodoDate, toDo: "詳細", createTime: nil))
-        let todoModel = ToDoModel.findToDo(todoId: "0", createTime: nil)
+        let _ = ToDoModel.add(addValue: ToDoModel(id: "0", toDoName: "UnitTest", todoDate: addTodoDate, toDo: "詳細", createTime: nil))
+        let todoModel = ToDoModel.find(todoId: "0", createTime: nil)
         
         XCTAssert(todoModel?.id == "0", "idが登録されていない")
         XCTAssert(todoModel?.toDoName == "UnitTest", "Todoのタイトルが登録されていない")
@@ -69,13 +69,13 @@ class ToDoModelTests: XCTestCase {
     
     func test_EditModel() {
         let addTodoDate = Format().stringFromDate(date: Date())
-        ToDoModel.addToDo(addValue: ToDoModel(id: "0", toDoName: "UnitTest", todoDate: addTodoDate, toDo: "詳細", createTime: nil))
+        let _ = ToDoModel.add(addValue: ToDoModel(id: "0", toDoName: "UnitTest", todoDate: addTodoDate, toDo: "詳細", createTime: nil))
     
         let updateTodoDate = Format().stringFromDate(date: Date())
-        ToDoModel.updateToDo(updateValue: ToDoModel(id: "0", toDoName: "EditUnitTest", todoDate: updateTodoDate, toDo: "詳細編集", createTime: nil))
+        let _ = ToDoModel.update(updateValue: ToDoModel(id: "0", toDoName: "EditUnitTest", todoDate: updateTodoDate, toDo: "詳細編集", createTime: nil))
         
         
-        let todoModel = ToDoModel.findToDo(todoId: "0", createTime: nil)
+        let todoModel = ToDoModel.find(todoId: "0", createTime: nil)
         XCTAssert(todoModel?.id == "0", "idが登録されていない")
         XCTAssert(todoModel?.toDoName == "EditUnitTest", "Todoのタイトルが登録されていない")
         XCTAssert(todoModel?.todoDate == updateTodoDate, "　Todoの期限が登録されていない")
@@ -88,18 +88,18 @@ class ToDoModelTests: XCTestCase {
     
     func test_DeleteModel() {
         let addTodoDate = Format().stringFromDate(date: Date())
-        ToDoModel.addToDo(addValue: ToDoModel(id: "0", toDoName: "UnitTest", todoDate: addTodoDate, toDo: "詳細", createTime: nil))
+        let _ = ToDoModel.add(addValue: ToDoModel(id: "0", toDoName: "UnitTest", todoDate: addTodoDate, toDo: "詳細", createTime: nil))
         
-        let todoModel = ToDoModel.findToDo(todoId: "0", createTime: nil)
+        let todoModel = ToDoModel.find(todoId: "0", createTime: nil)
         
-        XCTAssertTrue(ToDoModel.allFindToDo()!.count > 0, "Todoが作成されていない")
+        XCTAssertTrue(ToDoModel.allFind()!.count > 0, "Todoが作成されていない")
         XCTAssert(todoModel?.id == "0", "idが登録されていない")
         XCTAssert(todoModel?.toDoName == "UnitTest", "Todoのタイトルが登録されていない")
         XCTAssert(todoModel?.todoDate == addTodoDate, "　Todoの期限が登録されていない")
         XCTAssert(todoModel?.toDo == "詳細", "　Todoの詳細が登録されていない")
         XCTAssert(!(todoModel?.createTime!.isEmpty)!, "Todo作成時間が登録されていない")
         
-        ToDoModel.deleteToDo(todoId: todoModel!.id, createTime: todoModel?.createTime)
+        let _ = ToDoModel.delete(todoModel!)
         
     }
     
@@ -107,27 +107,27 @@ class ToDoModelTests: XCTestCase {
     
     func test_allDeleteModel() {
         let addTodoDate = Format().stringFromDate(date: Date())
-        ToDoModel.addToDo(addValue: ToDoModel(id: "0", toDoName: "UnitTest1", todoDate: addTodoDate, toDo: "詳細1", createTime: nil))
-        ToDoModel.addToDo(addValue: ToDoModel(id: "1", toDoName: "UnitTest2", todoDate: addTodoDate, toDo: "詳細2", createTime: nil))
+        let _ = ToDoModel.add(addValue: ToDoModel(id: "0", toDoName: "UnitTest1", todoDate: addTodoDate, toDo: "詳細1", createTime: nil))
+        let _ = ToDoModel.add(addValue: ToDoModel(id: "1", toDoName: "UnitTest2", todoDate: addTodoDate, toDo: "詳細2", createTime: nil))
         
-        let todoModel1 = ToDoModel.findToDo(todoId: "0", createTime: nil)
+        let todoModel1 = ToDoModel.find(todoId: "0", createTime: nil)
         
-        XCTAssertTrue(ToDoModel.allFindToDo()!.count == 2, "Todoが作成されていない")
+        XCTAssertTrue(ToDoModel.allFind()!.count == 2, "Todoが作成されていない")
         XCTAssert(todoModel1?.id == "0", "idが登録されていない")
         XCTAssert(todoModel1?.toDoName == "UnitTest1", "Todoのタイトルが登録されていない")
         XCTAssert(todoModel1?.todoDate == addTodoDate, "　Todoの期限が登録されていない")
         XCTAssert(todoModel1?.toDo == "詳細1", "　Todoの詳細が登録されていない")
         XCTAssert(!(todoModel1?.createTime!.isEmpty)!, "Todo作成時間が登録されていない")
         
-        let todoModel2 = ToDoModel.findToDo(todoId: "1", createTime: nil)
+        let todoModel2 = ToDoModel.find(todoId: "1", createTime: nil)
         XCTAssert(todoModel2?.id == "1", "idが登録されていない")
         XCTAssert(todoModel2?.toDoName == "UnitTest2", "Todoのタイトルが登録されていない")
         XCTAssert(todoModel2?.todoDate == addTodoDate, "　Todoの期限が登録されていない")
         XCTAssert(todoModel2?.toDo == "詳細2", "　Todoの詳細が登録されていない")
         XCTAssert(!(todoModel2?.createTime!.isEmpty)!, "Todo作成時間が登録されていない")
         
-        ToDoModel.allDeleteToDo()
-        XCTAssertFalse(ToDoModel.allFindToDo()!.count > 0, "Todoが削除されていない")
+        let _ = ToDoModel.allDelete()
+        XCTAssertFalse(ToDoModel.allFind()!.count > 0, "Todoが削除されていない")
         
     }
     

@@ -14,13 +14,13 @@ class ToDoListPresenterTests: XCTestCase {
     var presenter: ToDoListPresenter?
 
     override func setUpWithError() throws {
-        ToDoModel.allDelete()
+        let _ = ToDoModel.allDelete()
         presenter = ToDoListPresenter()
     }
 
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
-        ToDoModel.allDelete()
+        let _ = ToDoModel.allDelete()
     }
     
     func test_fetchUsers() {
@@ -36,12 +36,12 @@ class ToDoListPresenterTests: XCTestCase {
     
     func test_deleteTodo() {
          
-         ToDoModel.addToDo(addValue: ToDoModel(id: "", toDoName: "UnitTestTitle", todoDate: "UnitDate", toDo: "UnitDetile", createTime: nil))
+        let _ = ToDoModel.add(addValue: ToDoModel(id: "", toDoName: "UnitTestTitle", todoDate: "UnitDate", toDo: "UnitDetile", createTime: nil))
          
-         let model = ToDoModel.findToDo(todoId: "0", createTime: nil)
+         let model = ToDoModel.find(todoId: "0", createTime: nil)
          let exp = expectation(description: "exp")
-         presenter?.deleteTodo(todoId: model?.id, createTime: model?.createTime, success: {
-             XCTAssertTrue(ToDoModel.allFindToDo()?.count == 0, "ToDoが残っている")
+         presenter?.deleteTodo(model, success: {
+             XCTAssertTrue(ToDoModel.allFind()?.count == 0, "ToDoが残っている")
              exp.fulfill()
              
          }, failure: { error in
@@ -56,14 +56,14 @@ class ToDoListPresenterTests: XCTestCase {
     
     func test_allDeleteTodo() {
         
-        ToDoModel.addToDo(addValue: ToDoModel(id: "", toDoName: "UnitTestTitle1", todoDate: "UnitDate", toDo: "UnitDetile", createTime: nil))
+        let _ = ToDoModel.add(addValue: ToDoModel(id: "", toDoName: "UnitTestTitle1", todoDate: "UnitDate", toDo: "UnitDetile", createTime: nil))
         sleep(1)
-        ToDoModel.addToDo(addValue: ToDoModel(id: "", toDoName: "UnitTestTitle2", todoDate: "UnitDate", toDo: "UnitDetile", createTime: nil))
+        let _ = ToDoModel.add(addValue: ToDoModel(id: "", toDoName: "UnitTestTitle2", todoDate: "UnitDate", toDo: "UnitDetile", createTime: nil))
         sleep(1)
         
         
         presenter?.allDelete(success: {
-            XCTAssertTrue(ToDoModel.allFindToDo()?.count == 0, "ToDoが残っている")
+            XCTAssertTrue(ToDoModel.allFind()?.count == 0, "ToDoが残っている")
             
         }, failure: { error in
             XCTAssertNil(error, "エラーが入っている")
