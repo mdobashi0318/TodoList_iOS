@@ -151,17 +151,17 @@ final class TodoRegisterViewController: UIViewController {
     private func validateCheck(result: (Bool) -> ()) {
         
         if todoRegisterTableView.titletextField.text!.isEmpty {
-            AlertManager().alertAction(self,
+            AlertManager().showAlert(self, type: .close,
                                        message: R.string.message.titleAlert())
             
             result(false)
         } else if todoRegisterTableView.todoDate.isEmpty {
-            AlertManager().alertAction(self,
+            AlertManager().showAlert(self, type: .close,
                                        message: R.string.message.dateAlert())
             
             result(false)
         } else if todoRegisterTableView.detailTextViwe.text.isEmpty {
-            AlertManager().alertAction(self,
+            AlertManager().showAlert(self, type: .close,
                                        message: R.string.message.detailAlert())
             
             result(false)
@@ -207,9 +207,9 @@ extension TodoRegisterViewController: TodoRegisterViewControllerProtocol {
         presenter?.findTodo(todoId: todoId, createTime: create_time, success: {
             print("Todoを検索: \(String(describing: self.presenter?.model))")
         }) { error in
-            AlertManager().alertAction(self, message: error!) { action in
+            AlertManager().showAlert(self, type: .close, message: error, didTapPositiveButton: { action in
                 return
-            }
+            })
         }
     }
     
@@ -220,13 +220,13 @@ extension TodoRegisterViewController: TodoRegisterViewControllerProtocol {
                                                toDo: todoRegisterTableView.detailTextViwe.text!,
                                                createTime: nil),
                            success: {
-                            AlertManager().alertAction(self, message: R.string.message.addMessage(), didTapCloseButton: { action in
+                            AlertManager().showAlert(self, type: .close, message: R.string.message.addMessage(), didTapPositiveButton: { action in
                                 self.dismiss(animated: true)
                             })
         }) { error in
-            AlertManager().alertAction(self, message: error!) { action in
+            AlertManager().showAlert(self, type: .close, message: error, didTapPositiveButton: { action in
                 return
-            }
+            })
         }
     }
     
@@ -237,13 +237,13 @@ extension TodoRegisterViewController: TodoRegisterViewControllerProtocol {
                                                     toDo: todoRegisterTableView.detailTextViwe.text!,
                                                     createTime: create_time),
                               success: {
-                                AlertManager().alertAction(self, message: R.string.message.updateMessage(), didTapCloseButton: { action in
+                                AlertManager().showAlert(self, type: .close, message: R.string.message.updateMessage(), didTapPositiveButton: { action in
                                     self.navigationController?.popViewController(animated: true)
                                 })
         }) { error in
-            AlertManager().alertAction(self, message: error!) { action in
+            AlertManager().showAlert(self, type: .close, message: error, didTapPositiveButton: { action in
                 return
-            }
+            })
         }
     }
     

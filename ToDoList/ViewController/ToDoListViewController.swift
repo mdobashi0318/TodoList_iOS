@@ -144,7 +144,7 @@ extension ToDoListViewController {
     
     /// データベース内の全件削除(Debug)
     @objc override func leftButtonAction() {
-        AlertManager().alertAction(self, message: "ToDoを全件削除しますか?", didTapDeleteButton: { _ in
+        AlertManager().showAlert(self, type: .delete, message: "ToDoを全件削除しますか?", didTapPositiveButton: { _ in
             self.todoAllDelete()
         })
     }
@@ -276,7 +276,7 @@ extension ToDoListViewController {
     ///
     /// - Parameter indexPath: 選択したcellの行
     private func deleteAction(indexPath: IndexPath) {
-        AlertManager().alertAction(self, message: "削除しますか?", didTapDeleteButton: {[weak self] action in
+        AlertManager().showAlert(self, type: .delete, message: "削除しますか?", didTapPositiveButton: {[weak self] action in
             self?.deleteTodo(row: indexPath.row)
         })
     }
@@ -321,7 +321,7 @@ extension ToDoListViewController {
 extension ToDoListViewController: UIAdaptivePresentationControllerDelegate {
 
     func presentationControllerDidAttemptToDismiss(_ presentationController: UIPresentationController) {
-        AlertManager().alertAction(naviController, message: "編集途中の内容がありますが削除しますか?", didTapDeleteButton: { [weak self] action in
+        AlertManager().showAlert(presentationController.presentedViewController, type: .delete, message: "編集途中の内容がありますが削除しますか?", didTapPositiveButton: { [weak self] action in
             self?.naviController.dismiss(animated: true) {
                 NotificationCenter.default.post(name: Notification.Name(R.string.notification.tableReload()), object: nil)
             }
@@ -364,10 +364,7 @@ extension ToDoListViewController: ToDoListViewControllerProtocol {
         presenter?.fetchToDoList(segmentIndex: segmenteIndex, success: {
             self.tableView.reloadData()
         }, failure: { error in
-            AlertManager().alertAction(self,
-                                       message: error) { _ in
-                                        return
-            }
+            AlertManager().showAlert(self, type: .close, message: error)
         })
     }
     
@@ -376,7 +373,7 @@ extension ToDoListViewController: ToDoListViewControllerProtocol {
         presenter?.deleteTodo(presenter?.model?[row], success: {
             NotificationCenter.default.post(name: Notification.Name(R.string.notification.tableReload()), object: nil)
         }, failure: { error in
-            AlertManager().alertAction(self, message: error)
+            AlertManager().showAlert(self, type: .close, message: error)
         })
     }
     
@@ -386,7 +383,7 @@ extension ToDoListViewController: ToDoListViewControllerProtocol {
         presenter?.allDelete(success: {
             NotificationCenter.default.post(name: Notification.Name(R.string.notification.tableReload()), object: nil)
         }, failure: { error in
-            AlertManager().alertAction(self, message: error)
+            AlertManager().showAlert(self, type: .close, message: error)
         })
     }
     

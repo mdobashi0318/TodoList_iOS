@@ -19,7 +19,7 @@ final class TodoRegisterPresenter {
     ///   - createTime: 作成時間
     ///   - success: 検索成功時
     ///   - failure: 検索失敗時
-    func findTodo(todoId: String?, createTime: String?, success: ()->(), failure: (String?)->()) {
+    func findTodo(todoId: String?, createTime: String?, success: () -> (), failure: (String) -> ()) {
         guard let _todoId = todoId else {
             failure(R.string.message.noTodoError())
             return
@@ -40,7 +40,7 @@ final class TodoRegisterPresenter {
     ///   - addValue: 追加するToDoの値
     ///   - success: 追加成功時のクロージャ
     ///   - failure: 追加失敗時のクロージャ
-    func addTodo(addValue: ToDoModel, success: ()->(), failure: (String?)->()) {
+    func addTodo(addValue: ToDoModel, success: () -> (), failure: (String) -> ()) {
         switch ToDoModel.add(addValue: addValue) {
         case .success:
             success()
@@ -56,7 +56,7 @@ final class TodoRegisterPresenter {
     ///   - addValue: 更新するToDoの値
     ///   - success: 更新成功時のクロージャ
     ///   - failure: 更新失敗時のクロージャ
-    func updateTodo(updateTodo: ToDoModel, success: ()->(), failure: (String?)->()) {
+    func updateTodo(updateTodo: ToDoModel, success: () -> (), failure: (String) -> ()) {
         switch ToDoModel.update(updateValue: updateTodo) {
         case .success:
             success()

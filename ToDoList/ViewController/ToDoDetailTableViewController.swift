@@ -169,9 +169,8 @@ extension ToDoDetailTableViewController {
 extension ToDoDetailTableViewController: ToDoDetailTableViewControllerProtocol {
     func findTodo() {
         presenter.findTodo(todoId: todoId, createTime: createTime, success: {
-            
         }) { error in
-            AlertManager().alertAction(self, message: error!)
+            AlertManager().showAlert(self, type: .close, message: error)
             
         }
     }
@@ -180,7 +179,7 @@ extension ToDoDetailTableViewController: ToDoDetailTableViewControllerProtocol {
         presenter.deleteTodo(success: {
             self.navigationController?.popViewController(animated: true)
         }, failure: { error in
-            AlertManager().alertAction(self, message: error)
+            AlertManager().showAlert(self, type: .close, message: error)
         })
     }
     

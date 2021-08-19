@@ -10,55 +10,39 @@ import UIKit
 
 struct AlertManager {
     
-    /// 閉じるボタンが付いたアラート
-    /// - Parameters:
-    ///   - viewController: 表示するViewController
-    ///   - title: タイトル
-    ///   - message: メッセージ
-    ///   - didTapCloseButton: 閉じるボタンタップ時の動作
-    func alertAction(_ viewController:UIViewController, title: String? = nil, message: String, didTapCloseButton: ((UIAlertAction) -> Void)? = nil) {
-        
-        let controller:UIAlertController = UIAlertController(title: title,
-                                                             message: message,
-                                                             preferredStyle: .alert
-        )
-        
-        controller.addAction(UIAlertAction(title: R.string.message.close(),
-                                           style: .cancel,
-                                           handler: didTapCloseButton)
-        )
-        viewController.present(controller, animated: true, completion: nil)
+    enum AlertType: CaseIterable {
+        case delete, close
     }
     
     
-    
-    
-    /// 「削除」、「キャンセル」が付いたアラート
+    /// アラートを表示する
     /// - Parameters:
-    ///   - viewController: 表示するViewController
-    ///   - title: タイトル
-    ///   - message: メッセージ
-    ///   - didTapDeleteButton: 削除ボタンタップ時の動作
-    ///   - didTapCancelButton: キャンセルボタンタップ時の動作
-    func alertAction(_ viewController:UIViewController, title: String? = nil, message: String, didTapDeleteButton: @escaping (UIAlertAction) -> (), didTapCancelButton: ((UIAlertAction) -> Void)? = nil) {
+    ///   - vc: ViewController
+    ///   - type: 出すアラートのタイプを設定する
+    func showAlert(_ vc: UIViewController, type: AlertType, title: String? = nil, message: String, didTapPositiveButton: ((UIAlertAction) -> Void)? = nil, didTapNegativeButton: ((UIAlertAction) -> Void)? = nil) {
         
-        let controller:UIAlertController = UIAlertController(title: title,
-                                                             message: message,
-                                                             preferredStyle: .alert
-        )
+        let controller: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
-        controller.addAction(UIAlertAction(title: R.string.message.delete(),
-                                           style: .destructive,
-                                           handler: didTapDeleteButton)
-        )
+        switch type {
+        case .delete:
+            controller.addAction(UIAlertAction(title: R.string.message.delete(),
+                                               style: .destructive,
+                                               handler: didTapPositiveButton)
+            )
+            
+            controller.addAction(UIAlertAction(title: R.string.message.cancel(),
+                                               style: .cancel,
+                                               handler: didTapNegativeButton)
+            )
+        case .close:
+            controller.addAction(UIAlertAction(title: R.string.message.close(),
+                                               style: .cancel,
+                                               handler: didTapPositiveButton))
+        }
         
-        controller.addAction(UIAlertAction(title: R.string.message.cancel(),
-                                           style: .cancel,
-                                           handler: didTapCancelButton)
-        )
-        viewController.present(controller, animated: true, completion: nil)
+        vc.present(controller, animated: true, completion: nil)
     }
-    
+
     
     
     
