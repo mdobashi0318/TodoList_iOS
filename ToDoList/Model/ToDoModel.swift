@@ -10,6 +10,8 @@ import Foundation
 import RealmSwift
 
 
+// MARK: - TodoListError
+
 struct TodoListError: Error {
     
     var type: ErrorType
@@ -38,8 +40,7 @@ struct TodoListError: Error {
     
 }
 
-
-
+// MARK: - ToDoModel
 final class ToDoModel: Object {
 
     // MARK: Properties
@@ -119,7 +120,7 @@ final class ToDoModel: Object {
                     realm.add(toDoModel)
                 }
                 
-                devprint("Todoを作成しました: \(toDoModel)")
+                Log.devprint("Todoを作成しました: \(toDoModel)")
                 NotificationManager().addNotification(toDoModel: toDoModel) { result in
                     NotificationCenter.default.post(name: Notification.Name(R.string.notification.tableReload()), object: nil)
                     NotificationCenter.default.post(name: Notification.Name(R.string.notification.toast()), object: result)
@@ -127,11 +128,11 @@ final class ToDoModel: Object {
                 return .success(Void())
             }
             catch {
-                print(error.localizedDescription)
+                Log.devprint(error.localizedDescription)
                 return .failure(TodoListError(type: .add))
             }
         case .failure(let error):
-            print(error.localizedDescription)
+            Log.devprint(error.localizedDescription)
             return .failure(TodoListError(type: .add))
         }
     }
@@ -156,7 +157,7 @@ final class ToDoModel: Object {
                     toDoModel.todoDate = updateValue.todoDate
                     toDoModel.toDo = updateValue.toDo
                 }
-                devprint("Todoを更新しました: \(toDoModel)")
+                Log.devprint("Todoを更新しました: \(toDoModel)")
                 NotificationManager().addNotification(toDoModel: toDoModel) { result in
                     NotificationCenter.default.post(name: Notification.Name(R.string.notification.tableReload()), object: nil)
                     NotificationCenter.default.post(name: Notification.Name(R.string.notification.toast()), object: result)
@@ -164,11 +165,11 @@ final class ToDoModel: Object {
                 return .success(Void())
             }
             catch {
-                print(error.localizedDescription)
+                Log.devprint(error.localizedDescription)
                 return .failure(TodoListError(type: .update))
             }
         case .failure(let error):
-            print(error.localizedDescription)
+            Log.devprint(error.localizedDescription)
             return .failure(TodoListError(type: .update))
         }
     }
@@ -186,15 +187,15 @@ final class ToDoModel: Object {
         case .success(let realm):
             if let _createTime = createTime {
                 let todo = (realm.objects(ToDoModel.self).filter("createTime == '\(String(describing: _createTime))'").first)
-                devprint("Todoを１件表示します: \(String(describing: todo))")
+                Log.devprint("Todoを１件表示します: \(String(describing: todo))")
                 return todo
             } else {
                 let todo = (realm.objects(ToDoModel.self).filter("id == '\(todoId)'").first!)
-                devprint("Todoを１件表示します: \(todo)")
+                Log.devprint("Todoを１件表示します: \(todo)")
                 return todo
             }
         case .failure(let error):
-            print(error.localizedDescription)
+            Log.devprint(error.localizedDescription)
             return nil
         }
     }
@@ -211,10 +212,10 @@ final class ToDoModel: Object {
             todo.forEach { value in
                 todomodel.append(value)
             }
-            devprint("Todoを全件表示します: \(todomodel)")
+            Log.devprint("Todoを全件表示します: \(todomodel)")
             return todomodel
         case .failure(let error):
-            print(error.localizedDescription)
+            Log.devprint(error.localizedDescription)
             return nil
         }
     }
@@ -231,13 +232,13 @@ final class ToDoModel: Object {
             let filterToDo = todomodel.filter {
                 $0.todoDate! > Format().stringFromDate(date: Date())
             }
-            devprint("期限が過ぎていないToDoを表示します: \(filterToDo)")
+            Log.devprint("期限が過ぎていないToDoを表示します: \(filterToDo)")
             return filterToDo
         case .expired:
             let filterToDo = todomodel.filter {
                 $0.todoDate! <= Format().stringFromDate(date: Date())
             }
-            devprint("期限の過ぎたToDoを表示します: \(filterToDo)")
+            Log.devprint("期限の過ぎたToDoを表示します: \(filterToDo)")
             return filterToDo
         default:
             break
@@ -260,19 +261,19 @@ final class ToDoModel: Object {
             }
             NotificationManager().removeNotification([toDoModel.createTime!])
             do {
-                devprint("Todoを削除します: \(toDoModel)")
+                Log.devprint("Todoを削除します: \(toDoModel)")
                 try realm.write() {
                     realm.delete(toDoModel)
                 }
-                devprint("Todoを削除しました")
+                Log.devprint("Todoを削除しました")
                 return .success(Void())
             }
             catch {
-                print(error.localizedDescription)
+                Log.devprint(error.localizedDescription)
                 return .failure(TodoListError(type: .delete))
             }
         case .failure(let error):
-            print(error.localizedDescription)
+            Log.devprint(error.localizedDescription)
             return .failure(TodoListError(type: .delete))
         }
     }
@@ -288,27 +289,24 @@ final class ToDoModel: Object {
             do {
                 try realm.write {
                     realm.deleteAll()
-                    devprint("ToDoを全件削除しました")
+                    Log.devprint("ToDoを全件削除しました")
                     NotificationManager().allRemoveNotification()
                 }
                 return .success(Void())
             } catch {
-                print(error.localizedDescription)
+                Log.devprint(error.localizedDescription)
                 return .failure(TodoListError(type: .delete))
             }
         case .failure(let error):
-            print(error.localizedDescription)
+            Log.devprint(error.localizedDescription)
             return .failure(TodoListError(type: .delete))
         }
     }
     
     
-    
-    class func devprint(_ message: String) {
-        #if DEBUG
-        print("\(message)")
-        #endif
-    }
+  
     
 
 }
+
+

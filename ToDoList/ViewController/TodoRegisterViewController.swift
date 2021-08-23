@@ -205,7 +205,7 @@ extension TodoRegisterViewController: TodoRegisterViewControllerProtocol {
     
     func findTodo() {
         presenter?.findTodo(todoId: todoId, createTime: create_time, success: {
-            print("Todoを検索: \(String(describing: self.presenter?.model))")
+            Log.devprint("Todoを検索: \(String(describing: self.presenter?.model))")
         }) { error in
             AlertManager().showAlert(self, type: .close, message: error, didTapPositiveButton: { action in
                 return

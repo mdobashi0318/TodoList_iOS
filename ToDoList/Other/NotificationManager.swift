@@ -14,7 +14,7 @@ struct NotificationManager {
     /// 通知を全件削除する
     let allRemoveNotification = {
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
-        print("ToDoの通知を全件削除しました")
+        Log.devprint("ToDoの通知を全件削除しました")
     }
     
     
@@ -23,7 +23,7 @@ struct NotificationManager {
         UNUserNotificationCenter
         .current()
         .removePendingNotificationRequests(withIdentifiers: identifiers)
-        print("ToDoの通知を\(identifiers.count)件削除しました")
+        Log.devprint("ToDoの通知を\(identifiers.count)件削除しました")
     }
     
     
@@ -41,9 +41,8 @@ struct NotificationManager {
         
         //通知する日付を設定
         guard let date:Date = Format().dateFromString(string: toDoModel.todoDate!) else {
-            print("期限の登録に失敗しました")
+            Log.devprint("期限の登録に失敗しました")
             isRequestResponse(false)
-            
             return
         }
         
@@ -54,17 +53,14 @@ struct NotificationManager {
         let center:UNUserNotificationCenter = UNUserNotificationCenter.current()
         
         center.add(request) { (error) in
-            print("request: \(request)")
-            
-            if error != nil {
-                print("通知の登録に失敗しました: \(error!)")
-                isRequestResponse(false)
-                
-            } else {
-                print("通知の登録をしました")
+            Log.devprint("request: \(request)")
+            guard let _error = error else {
+                Log.devprint("通知の登録をしました")
                 isRequestResponse(true)
-                
+                return
             }
+            Log.devprint("通知の登録に失敗しました: \(_error)")
+            isRequestResponse(false)
         }
     }
     
