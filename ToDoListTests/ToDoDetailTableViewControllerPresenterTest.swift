@@ -10,22 +10,22 @@ import XCTest
 @testable import ToDoList
 
 class ToDoDetailTableViewControllerPresenterTest: XCTestCase {
-    
+
     var presenter: ToDoDetailTableViewControllerPresenter?
-    
+
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
-        let _ = ToDoModel.allDelete()
+        _ = ToDoModel.allDelete()
         presenter = ToDoDetailTableViewControllerPresenter()
     }
-    
+
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
-    
+
     func test_findTodo() {
         let find = expectation(description: "find")
-        let _ = ToDoModel.add(addValue: ToDoModel(id: "", toDoName: "UnitTestTitle", todoDate: "UnitDate", toDo: "UnitDetile", createTime: nil))
+        _ = ToDoModel.add(addValue: ToDoModel(id: "", toDoName: "UnitTestTitle", todoDate: "UnitDate", toDo: "UnitDetile", createTime: nil))
 
         presenter?.findTodo(todoId: "0", createTime: nil, success: {
             XCTAssert(self.presenter?.model?.id == "0", "idが作成されていない")
@@ -39,20 +39,18 @@ class ToDoDetailTableViewControllerPresenterTest: XCTestCase {
         })
         wait(for: [find], timeout: 3.0)
     }
-    
-    
-    
+
     func test_deleteTodo() {
         let find = expectation(description: "find")
         let delete = expectation(description: "delete")
-        let _ = ToDoModel.add(addValue: ToDoModel(id: "", toDoName: "UnitTestTitle", todoDate: "UnitDate", toDo: "UnitDetile", createTime: nil))
+        _ = ToDoModel.add(addValue: ToDoModel(id: "", toDoName: "UnitTestTitle", todoDate: "UnitDate", toDo: "UnitDetile", createTime: nil))
         presenter?.findTodo(todoId: "0", createTime: nil, success: {
             find.fulfill()
         }, failure: { error in
             XCTAssertNil(error, "エラーが入っている")
         })
         wait(for: [find], timeout: 3.0)
-        
+
         presenter?.deleteTodo(success: {
             XCTAssertTrue(ToDoModel.allFind()?.count == 0, "ToDoが残っている")
             delete.fulfill()

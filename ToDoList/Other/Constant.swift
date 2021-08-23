@@ -9,5 +9,4 @@
 import Foundation
 import UIKit
 
-
 let realmConfig: UInt64 = 1

@@ -9,12 +9,9 @@
 import Foundation
 import UIKit
 
-
 extension UIViewController {
-    
-    @objc func leftButtonAction(){
+
+    @objc func leftButtonAction() {
         self.dismiss(animated: true, completion: nil)
     }
 }
-
-

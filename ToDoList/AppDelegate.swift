@@ -16,21 +16,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
+
         requestAuthorization()
-        
-        let toDoListViewController:ToDoListViewController = ToDoListViewController()
-        let navigation:UINavigationController = UINavigationController(rootViewController: toDoListViewController)
-        
-//        navigation.navigationBar.barTintColor = .white
+
+        let toDoListViewController: ToDoListViewController = ToDoListViewController()
+        let navigation: UINavigationController = UINavigationController(rootViewController: toDoListViewController)
+
+        //        navigation.navigationBar.barTintColor = .white
         self.window = UIWindow(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
         self.window?.rootViewController = navigation
         self.window?.makeKeyAndVisible()
-        
+
         NotificationCenter.default.addObserver(self, selector: #selector(showToast(notification:)), name: NSNotification.Name(rawValue: R.string.notification.toast()), object: nil)
-        
+
         return true
     }
 
@@ -56,50 +55,39 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
-
 }
-
-
-
-
-
 
 // MARK: - Toast_Swift
 
 extension AppDelegate {
-    
+
     @objc func showToast(notification: Notification) {
         if notification.object as! Bool == false {
             self.window?.makeToast("期限の登録に失敗しました", duration: 5.0, position: .bottom)
         }
     }
-    
+
 }
-
-
-
 
 // MARK: - UNUserNotificationCenterDelegate
 
 extension AppDelegate: UNUserNotificationCenterDelegate {
-    
+
     /// 通知の許可
     fileprivate func requestAuthorization() {
         let center = UNUserNotificationCenter.current()
-        center.requestAuthorization(options: [.alert, .sound]) { (granted, error) in
+        center.requestAuthorization(options: [.alert, .sound]) { (_, _) in
             center.delegate = self
         }
     }
-    
-    
+
     /// フォアグラウンドでローカル通知を出す
     func userNotificationCenter(_ center: UNUserNotificationCenter,
-    willPresent notification: UNNotification,
-    withCompletionHandler completionHandler: (UNNotificationPresentationOptions) -> Void) {
-        
-        
+                                willPresent notification: UNNotification,
+                                withCompletionHandler completionHandler: (UNNotificationPresentationOptions) -> Void) {
+
         completionHandler([.sound])
-        
+
         let banner = FloatingNotificationBanner(title: notification.request.content.title,
                                                 subtitle: notification.request.content.body,
                                                 style: .success
@@ -109,12 +97,10 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             banner.dismiss()
             NotificationCenter.default.post(name: Notification.Name(R.string.notification.tableReload()), object: nil)
         }
-        
+
         banner.show(queuePosition: .front,
                     bannerPosition: .top,
                     cornerRadius: 10)
     }
-    
-    
-    
+
 }

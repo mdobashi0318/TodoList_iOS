@@ -11,7 +11,7 @@ target 'ToDoList' do
   pod 'NotificationBannerSwift', '~> 3.0.6'
   pod 'Toast-Swift', '~> 5.0.1'
   pod 'R.swift','5.3.1'
-
+  pod 'SwiftLint','0.43.1'
   
   
   target 'ToDoListTests' do

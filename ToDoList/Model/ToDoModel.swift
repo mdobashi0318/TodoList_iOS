@@ -9,19 +9,18 @@
 import Foundation
 import RealmSwift
 
-
 // MARK: - TodoListError
 
 struct TodoListError: Error {
-    
+
     var type: ErrorType
-    
+
     private(set) var message: String = ""
-    
+
     enum ErrorType: CaseIterable {
         case add, update, delete, allDelete
     }
-    
+
     init(type: ErrorType) {
         self.type = type
         switch type {
@@ -35,71 +34,57 @@ struct TodoListError: Error {
             message = R.string.message.allDeleteError()
         }
     }
-    
-    
-    
+
 }
 
 // MARK: - ToDoModel
 final class ToDoModel: Object {
 
     // MARK: Properties
-    
+
     /// todoのid(非推奨)
     @objc dynamic var id: String = ""
-    
+
     /// Todoの期限
     @objc dynamic var todoDate: String?
-    
+
     /// Todoのタイトル
     @objc dynamic var toDoName: String = ""
-    
+
     /// Todoの詳細
     @objc dynamic var toDo: String = ""
-    
+
     /// Todoの作成日時(プライマリキー)
     @objc dynamic var createTime: String?
-    
-    
+
     // createTimeをプライマリキーに設定
     override static func primaryKey() -> String? {
-        return "createTime"
+        "createTime"
     }
-    
-    
-    
+
     // MARK: init
-    
+
     convenience init(id: String = "", toDoName: String, todoDate: String?, toDo: String, createTime: String?) {
         self.init()
-        
+
         self.id = id
         self.toDoName = toDoName
         self.todoDate = todoDate
         self.toDo = toDo
         self.createTime = createTime
     }
-    
-    
-    
-    
-    
+
     /// Realmのインスタンス化
     private static var initRealm: Result<Realm, Error> {
         let realm: Realm
         do {
             realm = try Realm()
             return .success(realm)
-        }
-        catch {
+        } catch {
             return .failure(error)
         }
     }
-    
-    
-    
-    
-    
+
     /// ToDoを追加する
     /// - Parameters:
     ///   - addValue: 追加するToDo
@@ -107,27 +92,26 @@ final class ToDoModel: Object {
     class func add(addValue: ToDoModel) -> Result<Void, TodoListError> {
         switch ToDoModel.initRealm {
         case .success(let realm):
-            let toDoModel: ToDoModel = ToDoModel(id: String(allFind()!.count),
-                                                 toDoName: addValue.toDoName,
-                                                 todoDate: addValue.todoDate,
-                                                 toDo: addValue.toDo,
-                                                 createTime: Format().stringFromDate(date: Date(), addSec: true)
+            let toDoModel = ToDoModel(id: String(allFind()!.count),
+                                      toDoName: addValue.toDoName,
+                                      todoDate: addValue.todoDate,
+                                      toDo: addValue.toDo,
+                                      createTime: Format().stringFromDate(date: Date(), addSec: true)
             )
-            
+
             do {
-                
-                try realm.write() {
+
+                try realm.write {
                     realm.add(toDoModel)
                 }
-                
+
                 Log.devprint("Todoを作成しました: \(toDoModel)")
                 NotificationManager().addNotification(toDoModel: toDoModel) { result in
                     NotificationCenter.default.post(name: Notification.Name(R.string.notification.tableReload()), object: nil)
                     NotificationCenter.default.post(name: Notification.Name(R.string.notification.toast()), object: result)
                 }
                 return .success(Void())
-            }
-            catch {
+            } catch {
                 Log.devprint(error.localizedDescription)
                 return .failure(TodoListError(type: .add))
             }
@@ -136,11 +120,7 @@ final class ToDoModel: Object {
             return .failure(TodoListError(type: .add))
         }
     }
-    
-    
-    
-    
-    
+
     /// ToDoの更新
     /// - Parameters:
     ///   - updateValue: 更新するToDo
@@ -148,11 +128,11 @@ final class ToDoModel: Object {
     class func update(updateValue: ToDoModel) -> Result<Void, TodoListError> {
         switch ToDoModel.initRealm {
         case .success(let realm):
-            
-            let toDoModel: ToDoModel = ToDoModel.find(todoId: updateValue.id, createTime: updateValue.createTime)!
-            
+
+            let toDoModel = ToDoModel.find(todoId: updateValue.id, createTime: updateValue.createTime)!
+
             do {
-                try realm.write() {
+                try realm.write {
                     toDoModel.toDoName = updateValue.toDoName
                     toDoModel.todoDate = updateValue.todoDate
                     toDoModel.toDo = updateValue.toDo
@@ -163,8 +143,7 @@ final class ToDoModel: Object {
                     NotificationCenter.default.post(name: Notification.Name(R.string.notification.toast()), object: result)
                 }
                 return .success(Void())
-            }
-            catch {
+            } catch {
                 Log.devprint(error.localizedDescription)
                 return .failure(TodoListError(type: .update))
             }
@@ -173,11 +152,7 @@ final class ToDoModel: Object {
             return .failure(TodoListError(type: .update))
         }
     }
-    
-    
-    
-    
-    
+
     /// １件取得
     /// - Parameters:
     ///   - todoId: todoId
@@ -199,8 +174,7 @@ final class ToDoModel: Object {
             return nil
         }
     }
-    
-    
+
     /// 全件取得
     /// - Parameter vc: 呼び出し元のViewController
     /// - Returns: 取得したTodoを全件返す
@@ -219,14 +193,13 @@ final class ToDoModel: Object {
             return nil
         }
     }
-    
-    
+
     /// 全件取得
     class func activeFindToDo(index: SegmentIndex) -> [ToDoModel]? {
         guard let todomodel = ToDoModel.allFind() else {
             return nil
         }
-        
+
         switch index {
         case .active:
             let filterToDo = todomodel.filter {
@@ -243,10 +216,10 @@ final class ToDoModel: Object {
         default:
             break
         }
-        
+
         return nil
     }
-    
+
     /// ToDoの削除
     /// - Parameters:
     ///   - vc: 呼び出し元のViewController
@@ -256,19 +229,18 @@ final class ToDoModel: Object {
     class func delete(_ model: ToDoModel) -> Result<Void, TodoListError> {
         switch ToDoModel.initRealm {
         case .success(let realm):
-            guard let toDoModel: ToDoModel = ToDoModel.find(todoId: model.id, createTime: model.createTime) else {
+            guard let toDoModel = ToDoModel.find(todoId: model.id, createTime: model.createTime) else {
                 return .failure(TodoListError(type: .delete))
             }
             NotificationManager().removeNotification([toDoModel.createTime!])
             do {
                 Log.devprint("Todoを削除します: \(toDoModel)")
-                try realm.write() {
+                try realm.write {
                     realm.delete(toDoModel)
                 }
                 Log.devprint("Todoを削除しました")
                 return .success(Void())
-            }
-            catch {
+            } catch {
                 Log.devprint(error.localizedDescription)
                 return .failure(TodoListError(type: .delete))
             }
@@ -277,8 +249,7 @@ final class ToDoModel: Object {
             return .failure(TodoListError(type: .delete))
         }
     }
-    
-    
+
     /// 全件削除
     /// - Parameters:
     ///   - vc: 呼び出し元のViewController
@@ -302,11 +273,5 @@ final class ToDoModel: Object {
             return .failure(TodoListError(type: .delete))
         }
     }
-    
-    
-  
-    
 
 }
-
-

@@ -8,7 +8,7 @@
 
 import Foundation
 
-
+// convenience_type
 struct Log {
     static func devprint(_ message: String) {
         #if DEBUG

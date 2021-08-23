@@ -1,0 +1,94 @@
+# デフォルト有効で無効にするルール
+disabled_rules:
+  - identifier_name
+  - cyclomatic_complexity
+  - implicit_getter
+  - nesting
+  - first_where
+  - function_parameter_count
+  
+# デフォルト無効で有効にするルール
+opt_in_rules:
+  - anyobject_protocol
+  - array_init
+  - closure_body_length
+  - closure_end_indentation
+  - closure_spacing
+  - collection_alignment
+  - contains_over_first_not_nil
+  - convenience_type
+  - discouraged_optional_boolean
+  - discouraged_optional_collection
+  - empty_string
+  - empty_xctest_method
+  - explicit_init
+  - fallthrough
+  - fatal_error_message
+  - file_name
+  - first_where
+  - force_unwrapping
+  - identical_operands
+  - implicit_return
+  - joined_default_parameter
+  - last_where
+#  - legacy_random
+  - literal_expression_end_indentation
+  - lower_acl_than_parent
+  - missing_docs
+  - modifier_order
+  - nimble_operator
+  - nslocalizedstring_key
+  - operator_usage_whitespace
+  - overridden_super_call
+  - override_in_extension
+  - pattern_matching_keywords
+  - private_action
+  - prohibited_super_call
+  - quick_discouraged_call
+  - quick_discouraged_focused_test
+  - quick_discouraged_pending_test
+  - redundant_nil_coalescing
+  - redundant_type_annotation
+  - required_enum_case
+  - single_test_class
+  - sorted_first_last
+  - static_operator
+  - strict_fileprivate
+  - switch_case_on_newline
+  - toggle_bool
+  - unneeded_parentheses_in_closure_argument
+  - untyped_error_in_catch
+  - unused_import
+  - vertical_parameter_alignment_on_call
+  - xct_specific_matcher
+  - yoda_condition
+
+# 対象のファイル・フォルダ
+included:
+  - ToDoList
+
+# 対象外のファイル・フォルダ
+excluded:
+  - ToDoListUITests
+  - ToDoListTests
+  - Pods
+  - SourcePackages
+  - ToDoList/AppDelegate.swift
+  - ToDoList/Extensions/
+
+line_length:
+  warning: 300
+  error: 500
+
+file_length:
+  warning: 500
+
+identifier_name:
+  min_length:
+    warning: 1 # `r` `g` `b` などを使いたいため
+
+
+force_cast: warning
+
+force_try: warning
+
