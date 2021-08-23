@@ -207,9 +207,7 @@ extension TodoRegisterViewController: TodoRegisterViewControllerProtocol {
         presenter?.findTodo(todoId: todoId, createTime: create_time, success: {
             Log.devprint("Todoを検索: \(String(describing: self.presenter?.model))")
         }) { error in
-            AlertManager().showAlert(self, type: .close, message: error, didTapPositiveButton: { action in
-                return
-            })
+            AlertManager().showAlert(self, type: .close, message: error)
         }
     }
     
@@ -224,9 +222,7 @@ extension TodoRegisterViewController: TodoRegisterViewControllerProtocol {
                                 self.dismiss(animated: true)
                             })
         }) { error in
-            AlertManager().showAlert(self, type: .close, message: error, didTapPositiveButton: { action in
-                return
-            })
+            AlertManager().showAlert(self, type: .close, message: error)
         }
     }
     
@@ -241,9 +237,7 @@ extension TodoRegisterViewController: TodoRegisterViewControllerProtocol {
                                     self.navigationController?.popViewController(animated: true)
                                 })
         }) { error in
-            AlertManager().showAlert(self, type: .close, message: error, didTapPositiveButton: { action in
-                return
-            })
+            AlertManager().showAlert(self, type: .close, message: error)
         }
     }
     
