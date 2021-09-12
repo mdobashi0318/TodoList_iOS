@@ -12,7 +12,7 @@ final class ToDoListPresenter {
 
     private(set) var model: [ToDoModel]?
 
-    func fetchToDoList(segmentIndex index: SegmentIndex, success: () -> Void, failure: (String) -> Void) {
+    func fetchToDoList(segmentIndex index: PageType, success: () -> Void, failure: (String) -> Void) {
         switch index {
         case .all:
             model = ToDoModel.allFind()
@@ -28,15 +28,6 @@ final class ToDoListPresenter {
 
         }
         success()
-    }
-
-    func allDelete(success: () -> Void, failure: @escaping (String) -> Void) {
-        switch ToDoModel.allDelete() {
-        case .success:
-            success()
-        case .failure(let error):
-            failure(error.message)
-        }
     }
 
     /// ToDoを１件削除
