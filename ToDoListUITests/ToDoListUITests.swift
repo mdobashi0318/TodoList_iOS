@@ -90,85 +90,8 @@ class ToDoListUITests: XCTestCase {
         XCTAssertEqual(app.tables.staticTexts["test"].label, "test", "登録したタイトルが表示されていない")
         XCTAssertEqual(app.tables.staticTexts["testDetail"].label, "testDetail", "登録した詳細が表示されていない")
 
-        app.tables.cells.firstMatch.swipeLeft()
-        let edit = app.tables.buttons["編集"]
-        let delete = app.tables.buttons["削除"]
-        XCTAssert(edit.exists)
-        XCTAssert(delete.exists)
-
-        edit.tap()
-        app.navigationBars.buttons["Cancel"].tap()
-
-        app.tables.cells.firstMatch.swipeLeft()
-        delete.tap()
-        app.alerts.buttons["削除"].tap()
-
     }
 
-    func testTodoInputTableView() {
-        let app: XCUIApplication = XCUIApplication()
-        let navigationTitle = app.navigationBars["ToDoリスト"]
-        navigationTitle.buttons["Add"].tap()
-
-        XCTAssert(app.navigationBars.buttons["Save"].exists, "保存ボタンがない")
-        XCTAssert(app.navigationBars.buttons["Cancel"].exists, "キャンセルボタンがない")
-        XCTAssert(app.cells.textFields["titleTextField"].exists, "タイトル入力のテキストフィールドがない")
-
-        let datePicker = app.datePickers["datePicker"]
-        if #available(iOS 14.0, *) {
-            XCTAssertTrue(app.cells.textFields["titleTextField"].exists, "期限入力用DatePickerがない")
-        } else {
-            XCTAssert(app.cells.textFields["dateTextField"].exists, "期限のテキストフィールドがない")
-            app.cells.textFields["dateTextField"].tap()
-            XCTAssert(datePicker.exists, "期限設定するデートピッカーが表示されない")
-        }
-        XCTAssert(app.cells.textViews["detailTextViwe"].exists, "詳細入力用のテキストビューがない")
-
-        createToDo(num: 1, isOpen: false)
-
-        sleep(1)
-        app.tables.cells.firstMatch.swipeLeft()
-        sleep(1)
-        let edit = app.tables.buttons["編集"]
-        if app.waitForExistence(timeout: 1.0) {
-            edit.tap()
-        }
-
-        // タイトル入力
-        app.cells.textFields["titleTextField"].tap()
-        for _ in 0...3 {
-            app.keys["delete"].tap()
-        }
-        app.typeText("edit")
-
-        // 期限入力
-        if #available(iOS 14.0, *) {
-            // 何もしない
-        } else {
-            app.cells.textFields["dateTextField"].tap()
-            XCTAssert(datePicker.exists)
-        }
-
-        if #available(iOS 14.0, *) {
-            // 何もしない
-        } else if #available(iOS 13.0, *) {
-            datePicker.pickerWheels.element(boundBy: 0).swipeUp()
-            datePicker.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "5")
-            datePicker.pickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: "50")
-        } else {
-            datePicker.pickerWheels.element(boundBy: 0).swipeDown()
-            datePicker.pickerWheels.element(boundBy: 1).swipeDown()
-            datePicker.pickerWheels.element(boundBy: 2).swipeDown()
-        }
-
-        // 詳細入力
-        app.cells.textViews["detailTextViwe"].tap()
-        app.typeText("detailEdit")
-
-        // 保存
-        app.navigationBars.buttons["Save"].tap()
-        app.alerts.buttons["閉じる"].tap()
-    }
 
     func testDetailEdit() {
 
