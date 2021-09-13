@@ -49,7 +49,7 @@ final class ToDoDetailTableViewControllerPresenter {
     ///   - failure: 検索失敗時
     func deleteTodo(success: () -> Void, failure: (String) -> Void) {
         guard let _model = model else {
-            failure("削除に失敗しました")
+            failure(R.string.message.deleteError())
             return
         }
 
@@ -57,8 +57,17 @@ final class ToDoDetailTableViewControllerPresenter {
         case .success:
             success()
         case .failure:
-            failure("削除に失敗しました")
+            failure(R.string.message.deleteError())
         }
+    }
+
+    func changeCompleteFlag(flag: Bool, success: () -> Void, failure: (String) -> Void) {
+        guard let _model = model else {
+            failure(R.string.message.updateError())
+            return
+        }
+        let completionFlag: CompletionFlag = flag ? .completion : .unfinished
+        ToDoModel.updateCompletionFlag(updateTodo: _model, flag: completionFlag)
     }
 
 }

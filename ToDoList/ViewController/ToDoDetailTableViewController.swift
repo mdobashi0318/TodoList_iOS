@@ -11,6 +11,7 @@ import UIKit
 protocol ToDoDetailTableViewControllerProtocol {
     func findTodo()
     func deleteTodo()
+    func updateFlag(_ flag: Bool)
 }
 
 class ToDoDetailTableViewController: UITableViewController {
@@ -23,20 +24,21 @@ class ToDoDetailTableViewController: UITableViewController {
 
     private var presenter: ToDoDetailTableViewControllerPresenter!
 
+    private var completSwitch: UISwitch?
+
     // MARK: Init
 
     override init(style: UITableView.Style) {
         super.init(style: style)
 
         presenter = ToDoDetailTableViewControllerPresenter()
+        completSwitch = UISwitch()
     }
 
     convenience init(todoId: String, createTime: String?) {
         self.init(style: .grouped)
         self.todoId = todoId
         self.createTime = createTime
-
-        findTodo()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -54,9 +56,8 @@ class ToDoDetailTableViewController: UITableViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        findTodo()
 
-        // テーブルビューの更新
-        tableView.reloadData()
     }
 
     // MARK: Private Func
@@ -90,7 +91,7 @@ extension ToDoDetailTableViewController {
 
     /// セクションの数を設定
     override func numberOfSections(in tableView: UITableView) -> Int {
-        3
+        4
     }
 
     /// セクションの行数を設定
@@ -112,14 +113,30 @@ extension ToDoDetailTableViewController {
             cell.textLabel!.text = presenter.model?.toDoName
         case 1:
             cell.textLabel!.text = presenter.model?.todoDate
-        default:
+        case 2:
             cell.textLabel!.text = presenter.model?.toDo
             cell.textLabel?.numberOfLines = 0
+        default:
+            cell.textLabel!.text = "完了"
+            guard let completSwitch = completSwitch else {
+                break
+            }
+            completSwitch.addTarget(self, action: #selector(changeCompleteValue), for: .touchUpInside)
+            cell.contentView.addSubview(completSwitch)
+            completSwitch.translatesAutoresizingMaskIntoConstraints = false
+            completSwitch.topAnchor.constraint(equalTo: cell.topAnchor, constant: 10).isActive = true
+            completSwitch.trailingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -20).isActive = true
+            completSwitch.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        //            completSwitch.heightAnchor.constraint(equalToConstant: 30).isActive = true
+
         }
 
         return cell
     }
 
+    @objc func changeCompleteValue(_ sender: UISwitch) {
+        updateFlag(sender.isOn)
+    }
     /// セルの選択はさせない
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         nil
@@ -150,15 +167,27 @@ extension ToDoDetailTableViewController {
 extension ToDoDetailTableViewController: ToDoDetailTableViewControllerProtocol {
     func findTodo() {
         presenter.findTodo(todoId: todoId, createTime: createTime, success: {
-        }) { error in
+            if let completSwitch = completSwitch {
+                completSwitch.isOn = presenter.model?.completionFlag == CompletionFlag.completion.rawValue ? true : false
+            }
+            // テーブルビューの更新
+            self.tableView.reloadData()
+        }, failure: { error in
             AlertManager().showAlert(self, type: .close, message: error)
-
-        }
+        })
     }
 
     func deleteTodo() {
         presenter.deleteTodo(success: {
             self.navigationController?.popViewController(animated: true)
+        }, failure: { error in
+            AlertManager().showAlert(self, type: .close, message: error)
+        })
+    }
+
+    func updateFlag(_ flag: Bool) {
+        presenter.changeCompleteFlag(flag: flag, success: {
+            /// 何もしない
         }, failure: { error in
             AlertManager().showAlert(self, type: .close, message: error)
         })

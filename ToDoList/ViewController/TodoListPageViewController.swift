@@ -13,15 +13,13 @@ class TodoListPageViewController: UIPageViewController {
 
     private var naviController: UINavigationController!
 
-    private var pageType: PageType = .all
-
     override func viewDidLoad() {
         super.viewDidLoad()
         setNavigationItem()
         setPageControl()
         dataSource = self
         view.backgroundColor = .backgroundColor
-        setViewControllers([ToDoListViewController(page: .all)], direction: .forward, animated: true)
+        setViewControllers([ToDoListViewController(page: .unfinished)], direction: .forward, animated: true)
 
     }
 
@@ -33,7 +31,7 @@ class TodoListPageViewController: UIPageViewController {
     }
 
     func presentationCount(for pageViewController: UIPageViewController) -> Int {
-        PageType.allCases.count
+        CompletionFlag.allCases.count
     }
 
     func presentationIndex(for pageViewController: UIPageViewController) -> Int {
@@ -51,11 +49,11 @@ extension TodoListPageViewController: UIPageViewControllerDataSource {
             return nil
         }
 
-        switch vc.pageType {
-        case .active:
-            return ToDoListViewController(page: .all)
+        switch vc.completionFlag {
         case .expired:
-            return ToDoListViewController(page: .active)
+            return ToDoListViewController(page: .unfinished)
+        case .completion:
+            return ToDoListViewController(page: .expired)
         default:
             return nil
         }
@@ -66,11 +64,11 @@ extension TodoListPageViewController: UIPageViewControllerDataSource {
             return nil
         }
 
-        switch vc.pageType {
-        case .all:
-            return ToDoListViewController(page: .active)
-        case .active:
+        switch vc.completionFlag {
+        case .unfinished:
             return ToDoListViewController(page: .expired)
+        case .expired:
+            return ToDoListViewController(page: .completion)
         default:
             return nil
         }

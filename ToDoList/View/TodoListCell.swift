@@ -71,12 +71,17 @@ final class TodoListCell: UITableViewCell {
     /// - Parameter date: ToDoの日付
     /// - Parameter detail: ToDoの詳細
     /// - Parameter isExpired: 期限切れラベルの表示フラグ
-    func setText(title: String, date: String, detail: String, isExpired: Bool) {
+    func setText(title: String, date: String, detail: String, isExpired: CompletionFlag) {
         titleLabel.text = title
         detailLabel.text = detail.replacingOccurrences(of: "\n", with: "")
         dateLabel.text = date
-        expiredLabel.text = !isExpired ? R.string.message.unfinished() : R.string.message.expiredText()
-        expiredLabel.textColor = expiredLabel.text == R.string.message.unfinished() ? nil : .red
+        switch isExpired {
+        case .completion:
+            expiredLabel.text = R.string.message.completion()
+        default:
+            expiredLabel.text = isExpired == .unfinished ? R.string.message.unfinished() : R.string.message.expiredText()
+        }
+        expiredLabel.textColor = expiredLabel.text == R.string.message.expiredText() ? .red : nil
     }
 
     private func initHStack() {
