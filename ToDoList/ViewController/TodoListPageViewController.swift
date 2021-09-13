@@ -18,9 +18,26 @@ class TodoListPageViewController: UIPageViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setNavigationItem()
+        setPageControl()
         dataSource = self
-
+        view.backgroundColor = .backgroundColor
         setViewControllers([ToDoListViewController(page: .all)], direction: .forward, animated: true)
+
+    }
+
+    // MARK: UIPageControl
+
+    private func setPageControl() {
+        UIPageControl.appearance().pageIndicatorTintColor = .lightGray
+        UIPageControl.appearance().currentPageIndicatorTintColor = .systemBlue
+    }
+
+    func presentationCount(for pageViewController: UIPageViewController) -> Int {
+        PageType.allCases.count
+    }
+
+    func presentationIndex(for pageViewController: UIPageViewController) -> Int {
+        0
     }
 
 }

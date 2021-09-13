@@ -18,6 +18,8 @@ extension UIColor {
 
     /// Todoの登録、詳細の画面のヘッダーの色
     static let headerColor: UIColor = UIColor.changeAppearnceColor(light: .white, dark: .black)
+    
+    static let backgroundColor: UIColor = UIColor.changeAppearnceColor(light: .white, dark: .black)
 
     class func rgba(red: Int, green: Int, blue: Int, alpha: CGFloat) -> UIColor {
         return UIColor(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: alpha)
