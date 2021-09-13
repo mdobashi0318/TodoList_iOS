@@ -25,7 +25,7 @@ class ToDoListPresenterTests: XCTestCase {
 
     func test_fetchUsers() {
         let exp = expectation(description: "fetch")
-        presenter?.fetchToDoList(segmentIndex: .all, success: {
+        presenter?.fetchToDoList(segmentIndex: .unfinished, success: {
             XCTAssertNotNil(self.presenter?.model, "モデルに格納されていない")
             exp.fulfill()
         }, failure: { error in

@@ -252,13 +252,13 @@ final class ToDoModel: Object {
             return filterToDo
         case .unfinished:
             let filterToDo = todomodel.filter {
-                $0.todoDate! > Format().stringFromDate(date: Date()) && $0.completionFlag != CompletionFlag.completion.rawValue
+                $0.todoDate! >= Format().stringFromDate(date: Date()) && $0.completionFlag != CompletionFlag.completion.rawValue
             }
             Log.devprint("未完了のToDoを表示します: \(filterToDo)")
             return filterToDo
         case .expired:
             let filterToDo = todomodel.filter {
-                $0.todoDate! <= Format().stringFromDate(date: Date()) && $0.completionFlag != CompletionFlag.completion.rawValue
+                $0.todoDate! < Format().stringFromDate(date: Date()) && $0.completionFlag != CompletionFlag.completion.rawValue
             }
             Log.devprint("期限の過ぎたToDoを表示します: \(filterToDo)")
             return filterToDo
