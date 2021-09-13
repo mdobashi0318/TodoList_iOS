@@ -20,8 +20,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         requestAuthorization()
 
-        let toDoListViewController: ToDoListViewController = ToDoListViewController()
-        let navigation: UINavigationController = UINavigationController(rootViewController: toDoListViewController)
+        let todoListPageViewController: TodoListPageViewController = TodoListPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+        let navigation: UINavigationController = UINavigationController(rootViewController: todoListPageViewController)
 
         //        navigation.navigationBar.barTintColor = .white
         self.window = UIWindow(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))

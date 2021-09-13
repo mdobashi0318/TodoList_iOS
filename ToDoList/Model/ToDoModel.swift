@@ -195,7 +195,7 @@ final class ToDoModel: Object {
     }
 
     /// 全件取得
-    class func activeFindToDo(index: SegmentIndex) -> [ToDoModel]? {
+    class func activeFindToDo(index: PageType) -> [ToDoModel]? {
         guard let todomodel = ToDoModel.allFind() else {
             return nil
         }

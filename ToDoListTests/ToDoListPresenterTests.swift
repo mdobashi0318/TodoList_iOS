@@ -34,37 +34,4 @@ class ToDoListPresenterTests: XCTestCase {
         wait(for: [exp], timeout: 3.0)
     }
 
-    func test_deleteTodo() {
-
-        _ = ToDoModel.add(addValue: ToDoModel(id: "", toDoName: "UnitTestTitle", todoDate: "UnitDate", toDo: "UnitDetile", createTime: nil))
-
-        let model = ToDoModel.find(todoId: "0", createTime: nil)
-        let exp = expectation(description: "exp")
-        presenter?.deleteTodo(model, success: {
-            XCTAssertTrue(ToDoModel.allFind()?.count == 0, "ToDoが残っている")
-            exp.fulfill()
-
-        }, failure: { error in
-            XCTAssertNil(error, "エラーが入っている")
-        })
-        wait(for: [exp], timeout: 3.0)
-
-    }
-
-    func test_allDeleteTodo() {
-
-        _ = ToDoModel.add(addValue: ToDoModel(id: "", toDoName: "UnitTestTitle1", todoDate: "UnitDate", toDo: "UnitDetile", createTime: nil))
-        sleep(1)
-        _ = ToDoModel.add(addValue: ToDoModel(id: "", toDoName: "UnitTestTitle2", todoDate: "UnitDate", toDo: "UnitDetile", createTime: nil))
-        sleep(1)
-
-        presenter?.allDelete(success: {
-            XCTAssertTrue(ToDoModel.allFind()?.count == 0, "ToDoが残っている")
-
-        }, failure: { error in
-            XCTAssertNil(error, "エラーが入っている")
-        })
-
-    }
-
 }
