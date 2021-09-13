@@ -10,91 +10,119 @@ import UIKit
 
 /// Todoを表示するセル
 final class TodoListCell: UITableViewCell {
-    
+
     // MARK: Properties
-    
-    /// タイトルを表示するラベル
-    let titleLabel: UILabel = UILabel()
-    
-    /// ToDoの詳細を表示するラベル
-    let detailLabel: UILabel = {
-        let label: UILabel = UILabel()
-        label.numberOfLines = 0
-        
+
+    /// ベースビュー
+    private let baseView = UIView()
+
+    private let expiredLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 12)
         return label
     }()
-    
+
+    /// タイトルを表示するラベル
+    private let titleLabel = UILabel()
+
+    /// ToDoの詳細を表示するラベル
+    private let detailLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 2
+
+        return label
+    }()
+
     /// 日付を表示するラベル
-    let dateLabel: UILabel = UILabel()
-    
-    /// セルの背景のバックグラウンド
-    let layerView:UIView = UIView()
-    
-    
+    private let dateLabel = UILabel()
+
+    private let vStack = UIStackView()
+
+    private let hStack = UIStackView()
+
+    private let expiredView = UIView()
+
     // MARK: Init
-    
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
+
         selectionStyle = .none
         accessoryType = .disclosureIndicator
-        
-        layerView.layer.cornerRadius = 50 / 5
-        
-        let stakc:UIStackView = UIStackView()
-        stakc.axis = .vertical
-        stakc.alignment = .leading
-        stakc.spacing = 5
-        stakc.distribution = .fillEqually
-        
-        stakc.addSubview(layerView)
-        stakc.addArrangedSubview(titleLabel)
-        stakc.addArrangedSubview(detailLabel)
-        stakc.addArrangedSubview(dateLabel)
-        
-        addSubview(stakc)
-        
-        
-        
-        stakc.translatesAutoresizingMaskIntoConstraints = false
-        stakc.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
-        stakc.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
-        stakc.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10).isActive = true
-        stakc.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10).isActive = true
-        
-        
-        
-        layerView.translatesAutoresizingMaskIntoConstraints = false
-        layerView.topAnchor.constraint(equalTo: stakc.topAnchor, constant: -7).isActive = true
-        layerView.leadingAnchor.constraint(equalTo: stakc.leadingAnchor, constant: -5).isActive = true
-        layerView.trailingAnchor.constraint(equalTo: stakc.trailingAnchor, constant: 5).isActive = true
-        layerView.bottomAnchor.constraint(equalTo: stakc.bottomAnchor, constant: 7).isActive = true
-        
-        
+
+        baseView.layer.cornerRadius = 8
+        addSubview(baseView)
+
+        baseView.layer.shadowOpacity = 0.5
+        baseView.layer.shadowOffset = CGSize(width: 2, height: 2)
+        baseView.backgroundColor = .todoListCell
+
+        initHStack()
+        initVStack()
+        initConstraint()
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    
-    
+
     /// セルにテキストを設定する
     /// - Parameter title: Todoのタイトル
     /// - Parameter date: ToDoの日付
     /// - Parameter detail: ToDoの詳細
-    func setText(title:String, date:String, detail:String){
+    /// - Parameter isExpired: 期限切れラベルの表示フラグ
+    func setText(title: String, date: String, detail: String, isExpired: CompletionFlag) {
         titleLabel.text = title
-        detailLabel.text = detail
+        detailLabel.text = detail.replacingOccurrences(of: "\n", with: "")
         dateLabel.text = date
-        
-        changeCellBackGroundCollor(date: dateLabel.text!)
+        switch isExpired {
+        case .completion:
+            expiredLabel.text = R.string.message.completion()
+        default:
+            expiredLabel.text = isExpired == .unfinished ? R.string.message.unfinished() : R.string.message.expiredText()
+        }
+        expiredLabel.textColor = expiredLabel.text == R.string.message.expiredText() ? .red : nil
     }
-    
-    
-    /// 期限が切れているか、切れていないかでbackgroundColorを変える
-    private func changeCellBackGroundCollor(date: String){
-        layerView.backgroundColor = Format().stringFromDate(date: Date()) < date ? Rose : .lightGray
+
+    private func initHStack() {
+        hStack.axis = .horizontal
+        hStack.alignment = .bottom
+        hStack.spacing = 5
+        hStack.distribution = .equalSpacing
+        hStack.addArrangedSubview(dateLabel)
+        hStack.addArrangedSubview(expiredLabel)
+        expiredView.addSubview(hStack)
     }
-    
+
+    private func initVStack() {
+        vStack.axis = .vertical
+        vStack.alignment = .leading
+        vStack.spacing = 1
+        vStack.distribution = .fill
+        vStack.addArrangedSubview(titleLabel)
+        vStack.addArrangedSubview(detailLabel)
+        vStack.addArrangedSubview(        expiredView)
+        baseView.addSubview(vStack)
+    }
+
+    private func initConstraint() {
+        hStack.translatesAutoresizingMaskIntoConstraints = false
+        hStack.topAnchor.constraint(equalTo: expiredView.topAnchor).isActive = true
+        hStack.leadingAnchor.constraint(equalTo: expiredView.leadingAnchor).isActive = true
+        hStack.trailingAnchor.constraint(equalTo: expiredView.trailingAnchor).isActive = true
+        hStack.bottomAnchor.constraint(equalTo: expiredView.bottomAnchor).isActive = true
+
+        baseView.translatesAutoresizingMaskIntoConstraints = false
+        baseView.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
+        baseView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
+        baseView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10).isActive = true
+        baseView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5).isActive = true
+
+        vStack.translatesAutoresizingMaskIntoConstraints = false
+        vStack.topAnchor.constraint(equalTo: baseView.topAnchor, constant: 5).isActive = true
+        vStack.leadingAnchor.constraint(equalTo: baseView.leadingAnchor, constant: 10).isActive = true
+        vStack.trailingAnchor.constraint(equalTo: baseView.trailingAnchor, constant: -20).isActive = true
+        vStack.bottomAnchor.constraint(equalTo: baseView.bottomAnchor, constant: -5).isActive = true
+    }
+
 }

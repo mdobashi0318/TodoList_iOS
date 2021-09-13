@@ -24,7 +24,13 @@
 
 // MARK: - Error
 
+"InitEror" = "システムエラーが発生しました";
 "ErrorMessage" = "エラーが発生しました";
+"AddError" = "追加に失敗しました";
+"UpdateError" = "更新に失敗しました";
+"DeleteError" = "削除に失敗しました";
+"AllDeleteError" = "全件削除に失敗しました";
+"NoTodoError" = "ToDoが見つかりませんでした";
 
 
 // MARK: - Cell
@@ -38,3 +44,9 @@
 "Delete" = "削除";
 "Cancel" = "キャンセル";
 "Close" = "閉じる";
+
+
+// MARK: - Text
+"ExpiredText" = "期限切れ";
+"Unfinished" = "未完了";
+"Completion" = "完了";

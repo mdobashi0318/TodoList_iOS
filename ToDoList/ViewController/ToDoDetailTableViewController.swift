@@ -8,66 +8,60 @@
 
 import UIKit
 
-
 protocol ToDoDetailTableViewControllerProtocol {
     func findTodo()
     func deleteTodo()
+    func updateFlag(_ flag: Bool)
 }
 
-
 class ToDoDetailTableViewController: UITableViewController {
-    
+
     // MARK: Properties
-    
-    private var todoId:String?
-    
-    private var createTime:String?
-    
+
+    private var todoId: String?
+
+    private var createTime: String?
+
     private var presenter: ToDoDetailTableViewControllerPresenter!
-    
-    
+
+    private var completSwitch: UISwitch?
+
     // MARK: Init
-    
+
     override init(style: UITableView.Style) {
         super.init(style: style)
-        
+
         presenter = ToDoDetailTableViewControllerPresenter()
+        completSwitch = UISwitch()
     }
-    
-    convenience init(todoId:String, createTime: String?) {
+
+    convenience init(todoId: String, createTime: String?) {
         self.init(style: .grouped)
         self.todoId = todoId
         self.createTime = createTime
-        
-        findTodo()
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    
+
     // MARK: LifeCycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(self.didTapRightButton))
         setupTableView()
     }
-    
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        // テーブルビューの更新
-        tableView.reloadData()
+        findTodo()
+
     }
-    
-    
-    
+
     // MARK: Private Func
-    
+
     private func setupTableView() {
         tableView.delegate = self
         tableView.dataSource = self
@@ -76,116 +70,127 @@ class ToDoDetailTableViewController: UITableViewController {
         tableView.estimatedSectionHeaderHeight = 0
         tableView.estimatedSectionFooterHeight = 0
     }
-    
-    
+
     /// アクションシートを開く
     @objc private func didTapRightButton() {
         AlertManager().alertSheetAction(self, message: "Todoをどうしますか?",
-                                        didTapEditButton: { [weak self] action in
-                                            let inputViewController:TodoRegisterViewController = TodoRegisterViewController(todoId: (self?.todoId!)!, createTime: self?.createTime)
+                                        didTapEditButton: { [weak self] _ in
+                                            let inputViewController = TodoRegisterViewController(todoId: (self?.todoId!)!, createTime: self?.createTime)
                                             self?.navigationController?.pushViewController(inputViewController, animated: true)
-            },
-                                        didTapDeleteButton: { [weak self] action in
+                                        },
+                                        didTapDeleteButton: { [weak self] _ in
                                             self?.deleteTodo()
-        })
+                                        })
     }
-    
+
 }
-
-
-
-
 
 // MARK: - UITableViewDelegate, UITableViewDataSource
 
-
 extension ToDoDetailTableViewController {
-    
+
     /// セクションの数を設定
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
+        4
     }
-    
+
     /// セクションの行数を設定
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        1
     }
-    
-    
+
     // MARK: UITableViewDelegate
-    
+
     /// セル内の設定
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell:UITableViewCell = UITableViewCell(style: .default, reuseIdentifier: "detailCell")
+        let cell = UITableViewCell(style: .default, reuseIdentifier: "detailCell")
         cell.accessoryType = .none
         cell.selectionStyle = .none
-        cell.backgroundColor = cellColor
-        
+        cell.backgroundColor = .cellColor
+
         switch indexPath.section {
         case 0:
             cell.textLabel!.text = presenter.model?.toDoName
         case 1:
             cell.textLabel!.text = presenter.model?.todoDate
-        default:
+        case 2:
             cell.textLabel!.text = presenter.model?.toDo
             cell.textLabel?.numberOfLines = 0
+        default:
+            cell.textLabel!.text = "完了"
+            guard let completSwitch = completSwitch else {
+                break
+            }
+            completSwitch.addTarget(self, action: #selector(changeCompleteValue), for: .touchUpInside)
+            cell.contentView.addSubview(completSwitch)
+            completSwitch.translatesAutoresizingMaskIntoConstraints = false
+            completSwitch.topAnchor.constraint(equalTo: cell.topAnchor, constant: 10).isActive = true
+            completSwitch.trailingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -20).isActive = true
+            completSwitch.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        //            completSwitch.heightAnchor.constraint(equalToConstant: 30).isActive = true
+
         }
-        
+
         return cell
     }
-    
+
+    @objc func changeCompleteValue(_ sender: UISwitch) {
+        updateFlag(sender.isOn)
+    }
     /// セルの選択はさせない
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        return nil
+        nil
     }
-    
+
     /// ヘッダー内のビューを設定
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return todoHeadrView(viewForHeaderInSection: section, isEditMode: false)
+        todoHeadrView(viewForHeaderInSection: section, isEditMode: false, isExpired: presenter.isExpired)
     }
-    
+
     /// ヘッダーの高さを設定
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 30
+        30
     }
-    
-    
+
     /// セルの高さを設定
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
+        UITableView.automaticDimension
     }
-    
-    
+
     /// フッターの高さを設定
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return CGFloat.leastNormalMagnitude
+        CGFloat.leastNormalMagnitude
     }
-    
+
 }
-
-
-
 
 extension ToDoDetailTableViewController: ToDoDetailTableViewControllerProtocol {
     func findTodo() {
         presenter.findTodo(todoId: todoId, createTime: createTime, success: {
-            
-        }) { error in
-            AlertManager().alertAction(self, message: error!)
-            
-        }
-    }
-    
-    func deleteTodo() {
-        presenter.deleteTodo(todoId: todoId, createTime: createTime, success: {
-            self.navigationController?.popViewController(animated: true)
+            if let completSwitch = completSwitch {
+                completSwitch.isOn = presenter.model?.completionFlag == CompletionFlag.completion.rawValue ? true : false
+            }
+            // テーブルビューの更新
+            self.tableView.reloadData()
         }, failure: { error in
-            AlertManager().alertAction(self, message: error!)
+            AlertManager().showAlert(self, type: .close, message: error)
         })
     }
-    
-    
-    
-    
-}
 
+    func deleteTodo() {
+        presenter.deleteTodo(success: {
+            self.navigationController?.popViewController(animated: true)
+        }, failure: { error in
+            AlertManager().showAlert(self, type: .close, message: error)
+        })
+    }
+
+    func updateFlag(_ flag: Bool) {
+        presenter.changeCompleteFlag(flag: flag, success: {
+            /// 何もしない
+        }, failure: { error in
+            AlertManager().showAlert(self, type: .close, message: error)
+        })
+    }
+
+}

@@ -9,18 +9,9 @@
 import Foundation
 import UIKit
 
-
 extension UIViewController {
-    
-    func frame_Size( _ viewController:UIViewController) -> CGRect {
-        
-        return CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-    }
-    
-    
-    @objc func leftButtonAction(){
+
+    @objc func leftButtonAction() {
         self.dismiss(animated: true, completion: nil)
     }
 }
-
-

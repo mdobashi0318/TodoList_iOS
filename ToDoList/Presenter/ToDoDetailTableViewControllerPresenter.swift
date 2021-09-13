@@ -9,51 +9,65 @@
 import Foundation
 
 final class ToDoDetailTableViewControllerPresenter {
-    
+
     /// ToDoModel
-    var model: ToDoModel?
-    
+    private(set) var model: ToDoModel?
+
+    /// 期限切れかどうかの判定を返す
+    var isExpired: Bool {
+        get {
+            Format().stringFromDate(date: Date()) > model?.todoDate ?? ""
+        }
+    }
+
     /// ToDoを１件検索
     /// - Parameters:
     ///   - todoId: todoId
     ///   - createTime: 作成時間
     ///   - success: 検索成功時
     ///   - failure: 検索失敗時
-    func findTodo(todoId: String?, createTime: String?, success: ()->(), failure:  (String?)->()) {
-        
+    func findTodo(todoId: String?, createTime: String?, success: () -> Void, failure: (String) -> Void) {
         guard let _todoId = todoId else {
             failure("ToDoが見つかりませんでした")
             return
         }
+        self.model = ToDoModel.find(todoId: _todoId, createTime: createTime)
 
-        self.model = ToDoModel.findToDo(todoId: _todoId, createTime: createTime)
-        
-        if model == nil {
+        if self.model == nil {
             failure("ToDoが見つかりませんでした")
             return
         }
-        
+
         success()
     }
-    
-    
-    
+
     /// ToDoを１件削除
     /// - Parameters:
     ///   - todoId: todoId
     ///   - createTime: 作成時間
     ///   - success: 検索成功時
     ///   - failure: 検索失敗時
-    func deleteTodo(todoId: String?, createTime: String?, success: ()->(), failure: (String?)->()) {
-        
-        ToDoModel.deleteToDo(todoId: todoId!, createTime: createTime) { error in
-            if let _error = error {
-                failure(_error)
-                return
-            }
+    func deleteTodo(success: () -> Void, failure: (String) -> Void) {
+        guard let _model = model else {
+            failure(R.string.message.deleteError())
+            return
         }
-        
-        success()
+
+        switch ToDoModel.delete(_model) {
+        case .success:
+            success()
+        case .failure:
+            failure(R.string.message.deleteError())
+        }
     }
-    
+
+    func changeCompleteFlag(flag: Bool, success: () -> Void, failure: (String) -> Void) {
+        guard let _model = model else {
+            failure(R.string.message.updateError())
+            return
+        }
+        let completionFlag: CompletionFlag = flag ? .completion : .unfinished
+        ToDoModel.updateCompletionFlag(updateTodo: _model, flag: completionFlag)
+    }
+
 }

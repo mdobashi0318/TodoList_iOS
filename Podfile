@@ -7,22 +7,22 @@ target 'ToDoList' do
   
   
   # Pods for ToDoList
-  pod 'RealmSwift', '5.3.3'
-  pod 'NotificationBannerSwift', '~> 3.0.0'
+  pod 'RealmSwift', '10.8.1'
+  pod 'NotificationBannerSwift', '~> 3.0.6'
   pod 'Toast-Swift', '~> 5.0.1'
-  pod 'R.swift','5.1.0'
-
+  pod 'R.swift','5.3.1'
+  pod 'SwiftLint','0.43.1'
   
   
   target 'ToDoListTests' do
      inherit! :search_paths
      # Pods for testing
-     pod 'RealmSwift', '5.3.3'
+     pod 'RealmSwift', '10.8.1'
    end
 
    target 'ToDoListUITests' do
      # Pods for testing
-     pod 'RealmSwift', '5.3.3'
+     pod 'RealmSwift', '10.8.1'
    end
 
 end
