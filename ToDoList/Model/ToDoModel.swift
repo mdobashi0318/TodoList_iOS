@@ -85,6 +85,7 @@ final class ToDoModel: Object {
         self.toDoName = toDoName
         self.todoDate = todoDate
         self.toDo = toDo
+        self.completionFlag = completionFlag
         self.createTime = createTime
     }
 
@@ -113,7 +114,7 @@ final class ToDoModel: Object {
                                       toDoName: addValue.toDoName,
                                       todoDate: addValue.todoDate,
                                       toDo: addValue.toDo,
-                                      completionFlag: addValue.completionFlag,
+                                      completionFlag: CompletionFlag.unfinished.rawValue,
                                       createTime: Format().stringFromDate(date: Date(), addSec: true)
             )
 
