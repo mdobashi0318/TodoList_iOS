@@ -18,8 +18,6 @@ final class TodoListCell: UITableViewCell {
 
     private let expiredLabel: UILabel = {
         let label = UILabel()
-        label.text = R.string.message.expiredText()
-        label.textColor = .red
         label.font = UIFont.systemFont(ofSize: 12)
         return label
     }()
@@ -77,7 +75,8 @@ final class TodoListCell: UITableViewCell {
         titleLabel.text = title
         detailLabel.text = detail.replacingOccurrences(of: "\n", with: "")
         dateLabel.text = date
-        expiredLabel.isHidden = !isExpired
+        expiredLabel.text = !isExpired ? R.string.message.unfinished() : R.string.message.expiredText()
+        expiredLabel.textColor = expiredLabel.text == R.string.message.unfinished() ? nil : .red
     }
 
     private func initHStack() {
