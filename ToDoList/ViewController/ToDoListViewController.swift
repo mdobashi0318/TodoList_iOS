@@ -10,7 +10,6 @@ import UIKit
 
 protocol ToDoListViewControllerProtocol {
     func fetchTodoModel()
-    func deleteTodo(row: Int)
 }
 
 enum PageType: Int, CaseIterable {
@@ -182,14 +181,6 @@ extension ToDoListViewController: ToDoListViewControllerProtocol {
     func fetchTodoModel() {
         presenter?.fetchToDoList(segmentIndex: pageType, success: {
             self.tableView.reloadData()
-        }, failure: { error in
-            AlertManager().showAlert(self, type: .close, message: error)
-        })
-    }
-
-    func deleteTodo(row: Int) {
-        presenter?.deleteTodo(presenter?.model?[row], success: {
-            NotificationCenter.default.post(name: Notification.Name(R.string.notification.tableReload()), object: nil)
         }, failure: { error in
             AlertManager().showAlert(self, type: .close, message: error)
         })
