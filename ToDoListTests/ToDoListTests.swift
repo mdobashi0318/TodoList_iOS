@@ -27,7 +27,7 @@ class ToDoModelTests: XCTestCase {
     /// ToDoModelのInitTest
     func test_initTodoModel() {
         let todoDate = Format().stringFromDate(date: Date())
-        let todoModel1 = ToDoModel(id: "0", toDoName: "UnitTest", todoDate: todoDate, toDo: "詳細", createTime: nil)
+        let todoModel1 = ToDoModel(id: "0", toDoName: "UnitTest", todoDate: todoDate, toDo: "詳細", completionFlag: CompletionFlag.unfinished.rawValue,  createTime: nil)
 
         XCTAssert(todoModel1.id == "0", "idが代入されていない")
         XCTAssert(todoModel1.toDoName == "UnitTest", "Todoのタイトルが代入されていない")
@@ -35,7 +35,7 @@ class ToDoModelTests: XCTestCase {
         XCTAssert(todoModel1.toDo == "詳細", "　Todoの詳細が代入されていない")
         XCTAssertNil(todoModel1.createTime, "Todo作成時間が作成されている")
 
-        let todoModel2 = ToDoModel(id: "0", toDoName: "UnitTest", todoDate: todoDate, toDo: "詳細", createTime: "createTime")
+        let todoModel2 = ToDoModel(id: "0", toDoName: "UnitTest", todoDate: todoDate, toDo: "詳細", completionFlag: CompletionFlag.unfinished.rawValue,  createTime: "createTime")
 
         XCTAssert(todoModel2.id == "0", "idが代入されていない")
         XCTAssert(todoModel2.toDoName == "UnitTest", "Todoのタイトルが代入されていない")
@@ -47,7 +47,7 @@ class ToDoModelTests: XCTestCase {
     func test_AddModel() {
 
         let addTodoDate = Format().stringFromDate(date: Date())
-        _ = ToDoModel.add(addValue: ToDoModel(id: "0", toDoName: "UnitTest", todoDate: addTodoDate, toDo: "詳細", createTime: nil))
+        _ = ToDoModel.add(addValue: ToDoModel(id: "0", toDoName: "UnitTest", todoDate: addTodoDate, toDo: "詳細", completionFlag: CompletionFlag.unfinished.rawValue,  createTime: nil))
         let todoModel = ToDoModel.find(todoId: "0", createTime: nil)
 
         XCTAssert(todoModel?.id == "0", "idが登録されていない")
@@ -59,10 +59,10 @@ class ToDoModelTests: XCTestCase {
 
     func test_EditModel() {
         let addTodoDate = Format().stringFromDate(date: Date())
-        _ = ToDoModel.add(addValue: ToDoModel(id: "0", toDoName: "UnitTest", todoDate: addTodoDate, toDo: "詳細", createTime: nil))
+        _ = ToDoModel.add(addValue: ToDoModel(id: "0", toDoName: "UnitTest", todoDate: addTodoDate, toDo: "詳細", completionFlag: CompletionFlag.unfinished.rawValue,  createTime: nil))
 
         let updateTodoDate = Format().stringFromDate(date: Date())
-        _ = ToDoModel.update(updateValue: ToDoModel(id: "0", toDoName: "EditUnitTest", todoDate: updateTodoDate, toDo: "詳細編集", createTime: nil))
+        _ = ToDoModel.update(updateValue: ToDoModel(id: "0", toDoName: "EditUnitTest", todoDate: updateTodoDate, toDo: "詳細編集", completionFlag: CompletionFlag.unfinished.rawValue, createTime: nil))
 
         let todoModel = ToDoModel.find(todoId: "0", createTime: nil)
         XCTAssert(todoModel?.id == "0", "idが登録されていない")
@@ -74,7 +74,7 @@ class ToDoModelTests: XCTestCase {
 
     func test_DeleteModel() {
         let addTodoDate = Format().stringFromDate(date: Date())
-        _ = ToDoModel.add(addValue: ToDoModel(id: "0", toDoName: "UnitTest", todoDate: addTodoDate, toDo: "詳細", createTime: nil))
+        _ = ToDoModel.add(addValue: ToDoModel(id: "0", toDoName: "UnitTest", todoDate: addTodoDate, toDo: "詳細", completionFlag: CompletionFlag.unfinished.rawValue, createTime: nil))
 
         let todoModel = ToDoModel.find(todoId: "0", createTime: nil)
 
@@ -91,8 +91,8 @@ class ToDoModelTests: XCTestCase {
 
     func test_allDeleteModel() {
         let addTodoDate = Format().stringFromDate(date: Date())
-        _ = ToDoModel.add(addValue: ToDoModel(id: "0", toDoName: "UnitTest1", todoDate: addTodoDate, toDo: "詳細1", createTime: nil))
-        _ = ToDoModel.add(addValue: ToDoModel(id: "1", toDoName: "UnitTest2", todoDate: addTodoDate, toDo: "詳細2", createTime: nil))
+        _ = ToDoModel.add(addValue: ToDoModel(id: "0", toDoName: "UnitTest1", todoDate: addTodoDate, toDo: "詳細1", completionFlag: CompletionFlag.unfinished.rawValue, createTime: nil))
+        _ = ToDoModel.add(addValue: ToDoModel(id: "1", toDoName: "UnitTest2", todoDate: addTodoDate, toDo: "詳細2", completionFlag: CompletionFlag.unfinished.rawValue, createTime: nil))
 
         let todoModel1 = ToDoModel.find(todoId: "0", createTime: nil)
 

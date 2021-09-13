@@ -190,6 +190,7 @@ extension TodoRegisterViewController: TodoRegisterViewControllerProtocol {
         presenter?.addTodo(addValue: ToDoModel(toDoName: todoRegisterTableView.titletextField.text!,
                                                todoDate: todoRegisterTableView.todoDate,
                                                toDo: todoRegisterTableView.detailTextViwe.text!,
+                                               completionFlag: CompletionFlag.unfinished.rawValue,
                                                createTime: nil),
                            success: {
                             AlertManager().showAlert(self, type: .close, message: R.string.message.addMessage(), didTapPositiveButton: { _ in
@@ -204,6 +205,7 @@ extension TodoRegisterViewController: TodoRegisterViewControllerProtocol {
         presenter?.updateTodo(updateTodo: ToDoModel(toDoName: todoRegisterTableView.titletextField.text!,
                                                     todoDate: todoRegisterTableView.todoDate,
                                                     toDo: todoRegisterTableView.detailTextViwe.text!,
+                                                    completionFlag: "",
                                                     createTime: create_time),
                               success: {
                                 AlertManager().showAlert(self, type: .close, message: R.string.message.updateMessage(), didTapPositiveButton: { _ in

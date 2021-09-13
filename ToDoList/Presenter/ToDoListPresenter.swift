@@ -12,15 +12,8 @@ final class ToDoListPresenter {
 
     private(set) var model: [ToDoModel]?
 
-    func fetchToDoList(segmentIndex index: PageType, success: () -> Void, failure: (String) -> Void) {
-        switch index {
-        case .all:
-            model = ToDoModel.allFind()
-        case .active:
-            model = ToDoModel.activeFindToDo(index: index)
-        case .expired:
-            model = ToDoModel.activeFindToDo(index: index)
-        }
+    func fetchToDoList(segmentIndex index: CompletionFlag, success: () -> Void, failure: (String) -> Void) {
+        model = ToDoModel.activeFindToDo(index: index)
 
         if model == nil {
             failure(R.string.message.errorMessage())
@@ -31,8 +24,13 @@ final class ToDoListPresenter {
     }
 
     /// 期限切れかどうかの判定を返す
-    func isExpired(row: Int) -> Bool {
-        Format().stringFromDate(date: Date()) > model?[row].todoDate ?? ""
+    func isExpired(row: Int) -> CompletionFlag {
+        if  model?[row].completionFlag == CompletionFlag.completion.rawValue {
+            return CompletionFlag.completion
+        } else {
+            let flag = Format().stringFromDate(date: Date()) > model?[row].todoDate ?? ""
+            return flag ? CompletionFlag.expired : CompletionFlag.unfinished
+        }
     }
 
 }

@@ -12,12 +12,6 @@ protocol ToDoListViewControllerProtocol {
     func fetchTodoModel()
 }
 
-enum PageType: Int, CaseIterable {
-    case all = 0
-    case active = 1
-    case expired = 2
-}
-
 final class ToDoListViewController: UITableViewController {
 
     // MARK: Properties
@@ -26,11 +20,11 @@ final class ToDoListViewController: UITableViewController {
 
     private let refreshCtr = UIRefreshControl()
 
-    private(set) var pageType: PageType!
+    private(set) var completionFlag: CompletionFlag!
 
-    convenience init(page: PageType) {
+    convenience init(page: CompletionFlag) {
         self.init(style: .plain)
-        self.pageType = page
+        self.completionFlag = page
         fetchTodoModel()
     }
 
@@ -179,7 +173,7 @@ extension ToDoListViewController {
 extension ToDoListViewController: ToDoListViewControllerProtocol {
 
     func fetchTodoModel() {
-        presenter?.fetchToDoList(segmentIndex: pageType, success: {
+        presenter?.fetchToDoList(segmentIndex: completionFlag, success: {
             self.tableView.reloadData()
         }, failure: { error in
             AlertManager().showAlert(self, type: .close, message: error)

@@ -35,6 +35,7 @@ class TodoRegisterViewControllerTest: XCTestCase {
                                                  toDoName: "UnitTest",
                                                  todoDate: todoDate,
                                                  toDo: "詳細",
+                                                 completionFlag: CompletionFlag.unfinished.rawValue,
                                                  createTime: nil)) {
         case .success(_):
             let todoModel = ToDoModel.find(todoId: "0", createTime: nil)

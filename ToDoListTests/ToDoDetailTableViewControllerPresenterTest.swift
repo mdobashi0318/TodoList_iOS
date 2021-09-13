@@ -25,7 +25,7 @@ class ToDoDetailTableViewControllerPresenterTest: XCTestCase {
 
     func test_findTodo() {
         let find = expectation(description: "find")
-        _ = ToDoModel.add(addValue: ToDoModel(id: "", toDoName: "UnitTestTitle", todoDate: "UnitDate", toDo: "UnitDetile", createTime: nil))
+        _ = ToDoModel.add(addValue: ToDoModel(id: "", toDoName: "UnitTestTitle", todoDate: "UnitDate", toDo: "UnitDetile", completionFlag: CompletionFlag.unfinished.rawValue, createTime: nil))
 
         presenter?.findTodo(todoId: "0", createTime: nil, success: {
             XCTAssert(self.presenter?.model?.id == "0", "idが作成されていない")
@@ -43,7 +43,7 @@ class ToDoDetailTableViewControllerPresenterTest: XCTestCase {
     func test_deleteTodo() {
         let find = expectation(description: "find")
         let delete = expectation(description: "delete")
-        _ = ToDoModel.add(addValue: ToDoModel(id: "", toDoName: "UnitTestTitle", todoDate: "UnitDate", toDo: "UnitDetile", createTime: nil))
+        _ = ToDoModel.add(addValue: ToDoModel(id: "", toDoName: "UnitTestTitle", todoDate: "UnitDate", toDo: "UnitDetile", completionFlag: CompletionFlag.unfinished.rawValue, createTime: nil))
         presenter?.findTodo(todoId: "0", createTime: nil, success: {
             find.fulfill()
         }, failure: { error in

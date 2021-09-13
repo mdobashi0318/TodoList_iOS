@@ -26,7 +26,7 @@ class TodoRegisterPresenterTests: XCTestCase {
 
     func test_addTodo() {
         var exp = expectation(description: "add")
-        presenter?.addTodo(addValue: ToDoModel(id: "", toDoName: "UnitTestTitle", todoDate: "UnitDate", toDo: "UnitDetile", createTime: nil), success: {
+        presenter?.addTodo(addValue: ToDoModel(id: "", toDoName: "UnitTestTitle", todoDate: "UnitDate", toDo: "UnitDetile", completionFlag: CompletionFlag.unfinished.rawValue, createTime: nil), success: {
             exp.fulfill()
         }, failure: { error in
             XCTAssertNil(error, "エラーが入っている")
