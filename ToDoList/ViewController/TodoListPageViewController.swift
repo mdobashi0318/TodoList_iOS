@@ -125,12 +125,15 @@ extension TodoListPageViewController {
     }
 
     func allDelete(success: () -> Void, failure: @escaping (String) -> Void) {
-        switch ToDoModel.allDelete() {
-        case .success:
+        do {
+            try ToDoModel.allDelete()
             success()
-        case .failure(let error):
+        } catch let error as TodoListError {
             failure(error.message)
+        } catch {
+            failure(R.string.message.deleteError())
         }
+
     }
 
 }
