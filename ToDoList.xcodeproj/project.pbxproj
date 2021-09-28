@@ -150,6 +150,60 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		6D213DFC27036DE3008E283C /* Screen */ = {
+			isa = PBXGroup;
+			children = (
+				6D213DFD27036DFB008E283C /* ToDoList */,
+				6D213DFE27036E2C008E283C /* TodoRegister */,
+				6D213DFF27036E49008E283C /* ToDoDetail */,
+			);
+			path = Screen;
+			sourceTree = "<group>";
+		};
+		6D213DFD27036DFB008E283C /* ToDoList */ = {
+			isa = PBXGroup;
+			children = (
+				6D213E0027036E8C008E283C /* Page */,
+				6D213E0127036E96008E283C /* List */,
+			);
+			path = ToDoList;
+			sourceTree = "<group>";
+		};
+		6D213DFE27036E2C008E283C /* TodoRegister */ = {
+			isa = PBXGroup;
+			children = (
+				D0B3BA0224EC08EB003BEC2D /* TodoRegisterPresenter.swift */,
+				D0F9CC4B214A8F5900C51BD6 /* TodoRegisterViewController.swift */,
+			);
+			path = TodoRegister;
+			sourceTree = "<group>";
+		};
+		6D213DFF27036E49008E283C /* ToDoDetail */ = {
+			isa = PBXGroup;
+			children = (
+				D0F8327B24FBB598005B851F /* ToDoDetailTableViewControllerPresenter.swift */,
+				D0EAD27121999D23006D43E6 /* ToDoDetailTableViewController.swift */,
+			);
+			path = ToDoDetail;
+			sourceTree = "<group>";
+		};
+		6D213E0027036E8C008E283C /* Page */ = {
+			isa = PBXGroup;
+			children = (
+				D0A8BB8F26ECA73200C624F3 /* TodoListPageViewController.swift */,
+			);
+			path = Page;
+			sourceTree = "<group>";
+		};
+		6D213E0127036E96008E283C /* List */ = {
+			isa = PBXGroup;
+			children = (
+				D0F9CC4D214A8FCF00C51BD6 /* ToDoListViewController.swift */,
+				D05FD4AB24EAB6C800355C6D /* ToDoListPresenter.swift */,
+			);
+			path = List;
+			sourceTree = "<group>";
+		};
 		D047D565250E3D01007319A7 /* Strings */ = {
 			isa = PBXGroup;
 			children = (
@@ -173,16 +227,6 @@
 			path = Other;
 			sourceTree = "<group>";
 		};
-		D05FD4AA24EAB4D200355C6D /* Presenter */ = {
-			isa = PBXGroup;
-			children = (
-				D05FD4AB24EAB6C800355C6D /* ToDoListPresenter.swift */,
-				D0B3BA0224EC08EB003BEC2D /* TodoRegisterPresenter.swift */,
-				D0F8327B24FBB598005B851F /* ToDoDetailTableViewControllerPresenter.swift */,
-			);
-			path = Presenter;
-			sourceTree = "<group>";
-		};
 		D0A6A5F1219C4D0200D6A526 /* ToDoListTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -195,17 +239,6 @@
 				D0A6A5F4219C4D0200D6A526 /* Info.plist */,
 			);
 			path = ToDoListTests;
-			sourceTree = "<group>";
-		};
-		D0A6A5FA219C4D2200D6A526 /* ViewController */ = {
-			isa = PBXGroup;
-			children = (
-				D0A8BB8F26ECA73200C624F3 /* TodoListPageViewController.swift */,
-				D0F9CC4D214A8FCF00C51BD6 /* ToDoListViewController.swift */,
-				D0F9CC4B214A8F5900C51BD6 /* TodoRegisterViewController.swift */,
-				D0EAD27121999D23006D43E6 /* ToDoDetailTableViewController.swift */,
-			);
-			path = ViewController;
 			sourceTree = "<group>";
 		};
 		D0A6A5FB219C4D3D00D6A526 /* View */ = {
@@ -271,8 +304,7 @@
 			children = (
 				D0F9CC39214A8E6000C51BD6 /* AppDelegate.swift */,
 				D05566FB22509409002EA61A /* LaunchScreen.storyboard */,
-				D05FD4AA24EAB4D200355C6D /* Presenter */,
-				D0A6A5FA219C4D2200D6A526 /* ViewController */,
+				6D213DFC27036DE3008E283C /* Screen */,
 				D0A6A5FB219C4D3D00D6A526 /* View */,
 				D0A86F7A21BBB30100C2B1CF /* Model */,
 				D0E57E13221930E00001D1C3 /* Extensions */,
