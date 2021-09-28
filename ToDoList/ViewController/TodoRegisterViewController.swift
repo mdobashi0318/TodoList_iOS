@@ -132,7 +132,7 @@ final class TodoRegisterViewController: UIViewController {
     /// - Returns: 入力項目が全て入力されていればtrue、一つでも入力されていなければfalse
     private func validateCheck(result: (Bool) -> Void) {
 
-        if todoRegisterTableView.titletextField.text!.isEmpty {
+        if todoRegisterTableView.titletextField.text?.isEmpty ?? true {
             AlertManager().showAlert(self, type: .close,
                                      message: R.string.message.titleAlert())
 
@@ -162,7 +162,7 @@ extension TodoRegisterViewController: TodoRegisterDelegate {
     /// Todoの追加時にテキスト入力中だったらモーダルを本当に閉じるかの確認フラグをtrueにする
     func textChenge() {
         if #available(iOS 13.0, *) {
-            if todoRegisterTableView.titletextField.text!.isEmpty &&
+            if todoRegisterTableView.titletextField.text?.isEmpty ?? true &&
                 todoRegisterTableView.todoDate.isEmpty &&
                 todoRegisterTableView.detailTextViwe.text.isEmpty {
                 isModalInPresentation = false
@@ -187,9 +187,9 @@ extension TodoRegisterViewController: TodoRegisterViewControllerProtocol {
     }
 
     func addTodo() {
-        presenter?.addTodo(addValue: ToDoModel(toDoName: todoRegisterTableView.titletextField.text!,
+        presenter?.addTodo(addValue: ToDoModel(toDoName: todoRegisterTableView.titletextField.text ?? "",
                                                todoDate: todoRegisterTableView.todoDate,
-                                               toDo: todoRegisterTableView.detailTextViwe.text!,
+                                               toDo: todoRegisterTableView.detailTextViwe.text ?? "",
                                                completionFlag: CompletionFlag.unfinished.rawValue,
                                                createTime: nil),
                            success: {
@@ -202,9 +202,9 @@ extension TodoRegisterViewController: TodoRegisterViewControllerProtocol {
     }
 
     func updateTodo() {
-        presenter?.updateTodo(updateTodo: ToDoModel(toDoName: todoRegisterTableView.titletextField.text!,
+        presenter?.updateTodo(updateTodo: ToDoModel(id: todoId ?? "", toDoName: todoRegisterTableView.titletextField.text ?? "",
                                                     todoDate: todoRegisterTableView.todoDate,
-                                                    toDo: todoRegisterTableView.detailTextViwe.text!,
+                                                    toDo: todoRegisterTableView.detailTextViwe.text ?? "",
                                                     completionFlag: "",
                                                     createTime: create_time),
                               success: {

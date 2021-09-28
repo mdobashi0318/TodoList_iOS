@@ -18,7 +18,7 @@ class TodoRegisterViewControllerTest: XCTestCase {
 
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
-
+sleep(1)
         try? ToDoModel.allDelete()
     }
 

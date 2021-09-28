@@ -55,7 +55,7 @@ final class ToDoListViewController: UITableViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.separatorInset = .zero
-        tableView.separatorStyle = presenter?.model?.count != 0 ? .none : .singleLine
+        tableView.separatorStyle = presenter?.model.count != 0 ? .none : .singleLine
         tableView.register(TodoListCell.self, forCellReuseIdentifier: "listCell")
         tableView.refreshControl = refreshCtr
         refreshCtr.addTarget(self, action: #selector(refresh(sender:)), for: .valueChanged)
@@ -64,7 +64,7 @@ final class ToDoListViewController: UITableViewController {
     /// テーブルとセパレート線を更新する
     func reloadTableView() {
         fetchTodoModel()
-        tableView.separatorStyle = presenter?.model?.count != 0 ? .none : .singleLine
+        tableView.separatorStyle = presenter?.model.count != 0 ? .none : .singleLine
         tableView.reloadData()
     }
 
@@ -85,11 +85,8 @@ extension ToDoListViewController {
 
     /// セクションの行数を設定
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if presenter?.model?.count == 0 || presenter?.model == nil {
-            return 1
-        }
-
-        return (presenter?.model!.count)!
+        guard let count = presenter?.model.count else { return 1 }
+        return count > 0 ? count : 1
     }
 
     // MARK: Cell
@@ -97,7 +94,7 @@ extension ToDoListViewController {
     /// セル内の設定
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        if presenter?.model?.count == 0 || presenter?.model == nil {
+        if presenter?.model.count == 0 {
             let cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
             cell.backgroundColor = .cellColor
             cell.selectionStyle = .none
@@ -106,11 +103,13 @@ extension ToDoListViewController {
         }
 
         /// ToDoを表示するセル
-        let listCell = tableView.dequeueReusableCell(withIdentifier: "listCell") as! TodoListCell
-        listCell.setText(title: (presenter?.model?[indexPath.row].toDoName)!,
-                         date: (presenter?.model?[indexPath.row].todoDate!)!,
-                         detail: (presenter?.model?[indexPath.row].toDo)!,
-                         isExpired: (presenter?.isExpired(row: indexPath.row))!
+        guard let listCell = tableView.dequeueReusableCell(withIdentifier: "listCell") as? TodoListCell else {
+            return UITableViewCell()
+        }
+        listCell.setText(title: (presenter?.model[indexPath.row].toDoName) ?? "",
+                         date: (presenter?.model[indexPath.row].todoDate) ?? "",
+                         detail: (presenter?.model[indexPath.row].toDo) ?? "",
+                         isExpired: (presenter?.isExpired(row: indexPath.row))
         )
 
         return listCell
@@ -125,7 +124,7 @@ extension ToDoListViewController {
 
     /// ToDoの個数が0個の時に選択させない
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if presenter?.model?.count == 0 {
+        if presenter?.model.count == 0 {
             return
         }
         tableView.deselectRow(at: indexPath, animated: true)
@@ -136,12 +135,12 @@ extension ToDoListViewController {
     ///
     /// - Parameter indexPath: 選択したcellの行
     private func cellTapAction(indexPath: IndexPath) {
-        let toDoDetailViewController = ToDoDetailTableViewController(todoId: (presenter?.model?[indexPath.row].id)!, createTime: presenter?.model?[indexPath.row].createTime)
+        let toDoDetailViewController = ToDoDetailTableViewController(todoId: (presenter?.model[indexPath.row].id ?? ""), createTime: presenter?.model[indexPath.row].createTime)
         self.navigationController?.pushViewController(toDoDetailViewController, animated: true)
     }
 
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        if presenter?.model?.count == 0 {
+        if presenter?.model.count == 0 {
             return nil
         }
 

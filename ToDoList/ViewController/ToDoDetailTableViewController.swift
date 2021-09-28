@@ -75,7 +75,7 @@ class ToDoDetailTableViewController: UITableViewController {
     @objc private func didTapRightButton() {
         AlertManager().alertSheetAction(self, message: "Todoをどうしますか?",
                                         didTapEditButton: { [weak self] _ in
-                                            let inputViewController = TodoRegisterViewController(todoId: (self?.todoId!)!, createTime: self?.createTime)
+                                            let inputViewController = TodoRegisterViewController(todoId: self?.todoId ?? "", createTime: self?.createTime)
                                             self?.navigationController?.pushViewController(inputViewController, animated: true)
                                         },
                                         didTapDeleteButton: { [weak self] _ in
@@ -110,14 +110,14 @@ extension ToDoDetailTableViewController {
 
         switch indexPath.section {
         case 0:
-            cell.textLabel!.text = presenter.model?.toDoName
+            cell.textLabel?.text = presenter.model?.toDoName
         case 1:
-            cell.textLabel!.text = presenter.model?.todoDate
+            cell.textLabel?.text = presenter.model?.todoDate
         case 2:
-            cell.textLabel!.text = presenter.model?.toDo
+            cell.textLabel?.text = presenter.model?.toDo
             cell.textLabel?.numberOfLines = 0
         default:
-            cell.textLabel!.text = "完了"
+            cell.textLabel?.text = "完了"
             guard let completSwitch = completSwitch else {
                 break
             }

@@ -196,7 +196,8 @@ final class ToDoModel: Object {
     ///   - todoId: todoId
     ///   - createTime: 作成時間
     class func find(todoId: String, createTime: String?) -> ToDoModel? {
-        guard let realm = ToDoModel.initRealm else {
+        guard let realm = ToDoModel.initRealm,
+              !todoId.isEmpty else {
             print(TodoListError(type: .initError).message)
             return nil
         }
@@ -235,26 +236,18 @@ final class ToDoModel: Object {
 
         switch index {
         case .completion:
-            let filterToDo = todomodel.filter {
+            return todomodel.filter {
                 $0.completionFlag == CompletionFlag.completion.rawValue
             }
-            Log.devprint("完了したToDoを表示します: \(filterToDo)")
-            return filterToDo
         case .unfinished:
-            let filterToDo = todomodel.filter {
-                $0.todoDate! >= Format().stringFromDate(date: Date()) && $0.completionFlag != CompletionFlag.completion.rawValue
+            return todomodel.filter {
+                $0.todoDate ?? "" >= Format().stringFromDate(date: Date()) && $0.completionFlag != CompletionFlag.completion.rawValue
             }
-            Log.devprint("未完了のToDoを表示します: \(filterToDo)")
-            return filterToDo
         case .expired:
-            let filterToDo = todomodel.filter {
-                $0.todoDate! < Format().stringFromDate(date: Date()) && $0.completionFlag != CompletionFlag.completion.rawValue
+            return todomodel.filter {
+                $0.todoDate ?? "" < Format().stringFromDate(date: Date()) && $0.completionFlag != CompletionFlag.completion.rawValue
             }
-            Log.devprint("期限の過ぎたToDoを表示します: \(filterToDo)")
-            return filterToDo
         }
-
-        return []
     }
 
     /// ToDoの削除
