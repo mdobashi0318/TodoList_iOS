@@ -203,7 +203,36 @@ extension TodoRegisterTableView: UITableViewDelegate, UITableViewDataSource {
 
     /// ヘッダー内のビューを設定
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        todoHeadrView(viewForHeaderInSection: section, isEditMode: true, isExpired: false)
+        let headerView = UIView()
+        let headerLabel = UILabel()
+
+        switch section {
+        case 0:
+            headerLabel.text = "タイトル *必須"
+            headerLabel.setAttributes()
+            headerLabel.accessibilityLabel = "titleLabel"
+        case 1:
+            headerLabel.text = "期限 *必須"
+            headerLabel.setAttributes()
+            headerLabel.accessibilityLabel = "dateLabel"
+        case 2:
+            headerLabel.text = "詳細 *必須"
+            headerLabel.setAttributes()
+            headerLabel.accessibilityLabel = "detailLabel"
+
+        default:
+            break
+        }
+
+        headerView.addSubview(headerLabel)
+
+        headerLabel.translatesAutoresizingMaskIntoConstraints = false
+        headerLabel.topAnchor.constraint(equalTo: headerView.topAnchor).isActive = true
+        headerLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 15).isActive = true
+        headerLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor).isActive = true
+        headerLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor).isActive = true
+
+        return headerView
     }
 
     /// ヘッダーの高さを設定

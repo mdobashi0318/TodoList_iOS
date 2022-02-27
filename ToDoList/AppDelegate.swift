@@ -17,17 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-
         requestAuthorization()
-
-        let todoListPageViewController: TodoListPageViewController = TodoListPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
-        let navigation: UINavigationController = UINavigationController(rootViewController: todoListPageViewController)
-
-        //        navigation.navigationBar.barTintColor = .white
-        self.window = UIWindow(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
-        self.window?.rootViewController = navigation
-        self.window?.makeKeyAndVisible()
-
         NotificationCenter.default.addObserver(self, selector: #selector(showToast(notification:)), name: NSNotification.Name(rawValue: R.string.notification.toast()), object: nil)
 
         return true

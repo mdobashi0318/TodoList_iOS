@@ -49,7 +49,9 @@ class ToDoDetailTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.navigationItem.largeTitleDisplayMode = .always
+        navigationController?.navigationBar.prefersLargeTitles = true
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(self.didTapLeftButton))
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(self.didTapRightButton))
         setupTableView()
     }
@@ -57,7 +59,6 @@ class ToDoDetailTableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         findTodo()
-
     }
 
     // MARK: Private Func
@@ -83,6 +84,10 @@ class ToDoDetailTableViewController: UITableViewController {
                                         })
     }
 
+    @objc private func didTapLeftButton() {
+        self.navigationController?.popViewController(animated: true)
+    }
+
 }
 
 // MARK: - UITableViewDelegate, UITableViewDataSource
@@ -91,7 +96,7 @@ extension ToDoDetailTableViewController {
 
     /// セクションの数を設定
     override func numberOfSections(in tableView: UITableView) -> Int {
-        4
+        3
     }
 
     /// セクションの行数を設定
@@ -110,10 +115,8 @@ extension ToDoDetailTableViewController {
 
         switch indexPath.section {
         case 0:
-            cell.textLabel?.text = presenter.model?.toDoName
-        case 1:
             cell.textLabel?.text = presenter.model?.todoDate
-        case 2:
+        case 1:
             cell.textLabel?.text = presenter.model?.toDo
             cell.textLabel?.numberOfLines = 0
         default:
@@ -144,7 +147,34 @@ extension ToDoDetailTableViewController {
 
     /// ヘッダー内のビューを設定
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        todoHeadrView(viewForHeaderInSection: section, isEditMode: false, isExpired: presenter.isExpired)
+        let headerView = UIView()
+        let headerLabel = UILabel()
+
+        switch section {
+        case 0:
+            if presenter.isExpired {
+                headerLabel.text = "期限 \(R.string.message.expiredText())"
+                headerLabel.setExpiredAttributes()
+            } else {
+                headerLabel.text = "期限"
+                headerLabel.accessibilityLabel = "dateLabel"
+            }
+        case 1:
+            headerLabel.text = "詳細"
+            headerLabel.accessibilityLabel = "detailLabel"
+        default:
+            break
+        }
+
+        headerView.addSubview(headerLabel)
+
+        headerLabel.translatesAutoresizingMaskIntoConstraints = false
+        headerLabel.topAnchor.constraint(equalTo: headerView.topAnchor).isActive = true
+        headerLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 15).isActive = true
+        headerLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor).isActive = true
+        headerLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor).isActive = true
+
+        return headerView
     }
 
     /// ヘッダーの高さを設定
@@ -170,8 +200,11 @@ extension ToDoDetailTableViewController: ToDoDetailTableViewControllerProtocol {
             if let completSwitch = completSwitch {
                 completSwitch.isOn = presenter.model?.completionFlag == CompletionFlag.completion.rawValue ? true : false
             }
-            // テーブルビューの更新
+            /// テーブルビューの更新
             self.tableView.reloadData()
+
+            // タイトルをセット
+            self.navigationItem.title = presenter.model?.toDoName
         }, failure: { error in
             AlertManager().showAlert(self, type: .close, message: error)
         })

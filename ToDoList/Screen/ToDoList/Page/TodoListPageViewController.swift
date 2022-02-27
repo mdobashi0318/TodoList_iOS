@@ -96,6 +96,7 @@ extension TodoListPageViewController {
     /// setNavigationItemをセットする
     private func setNavigationItem() {
         self.title = "ToDoリスト"
+
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.rightButtonAction))
 
         #if DEBUG
