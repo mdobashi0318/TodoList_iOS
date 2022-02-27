@@ -75,7 +75,6 @@ excluded:
   - Pods
   - SourcePackages
   - ToDoList/AppDelegate.swift
-  - ToDoList/Extensions/
 
 line_length:
   warning: 300
