@@ -3,7 +3,7 @@ PODS:
   - NotificationBannerSwift (3.0.6):
     - MarqueeLabel (~> 4.0.5)
     - SnapKit (~> 5.0.1)
-  - R.swift (5.3.1):
+  - R.swift (6.1.0):
     - R.swift.Library (~> 5.3.0)
   - R.swift.Library (5.3.0)
   - Realm (10.15.1):
@@ -12,14 +12,14 @@ PODS:
   - RealmSwift (10.15.1):
     - Realm (= 10.15.1)
   - SnapKit (5.0.1)
-  - SwiftLint (0.43.1)
+  - SwiftLint (0.46.3)
   - Toast-Swift (5.0.1)
 
 DEPENDENCIES:
   - NotificationBannerSwift (~> 3.0.6)
-  - R.swift (= 5.3.1)
+  - R.swift (= 6.1.0)
   - RealmSwift (= 10.15.1)
-  - SwiftLint (= 0.43.1)
+  - SwiftLint (= 0.46.3)
   - Toast-Swift (~> 5.0.1)
 
 SPEC REPOS:
@@ -37,14 +37,14 @@ SPEC REPOS:
 SPEC CHECKSUMS:
   MarqueeLabel: 00cc0bcd087111dca575878b3531af980559707d
   NotificationBannerSwift: 7021be2338f8f29cf424b0aca43da462bf9e2a1a
-  R.swift: 56ec7e3aef34b9eee47a659e42462db2c1cc5ac3
+  R.swift: ec98ff71c4ab2f6fd01dd077e5afd15e63a4834c
   R.swift.Library: 0fc583cb55a99e28901299cc451614cad1161962
   Realm: fbcbde2620d51623cc5b18e28f5b165c39abef52
   RealmSwift: e4bea8e42efad3d543aea23b56504069c6faaea2
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
-  SwiftLint: 99f82d07b837b942dd563c668de129a03fc3fb52
+  SwiftLint: ae76d82f056734f853c8cd0371503252c606c482
   Toast-Swift: 9b6a70f28b3bf0b96c40d46c0c4b9d6639846711
 
-PODFILE CHECKSUM: 0300c19322f10a609cc31b0267541208adc7f9a8
+PODFILE CHECKSUM: c5ec1e0e5b90c091832adf80406dd4c075760a06
 
 COCOAPODS: 1.11.2

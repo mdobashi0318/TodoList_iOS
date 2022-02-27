@@ -67,7 +67,7 @@ final class TodoRegisterTableView: UITableView {
 
     /// キーボードの高さ取得
     private var keybordHeight: CGFloat {
-        UIApplication.shared.keyWindow?.height ?? 0
+        UIApplication.shared.windows.first { $0.isKeyWindow }?.height ?? 0
     }
 
     // MARK: Init

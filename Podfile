@@ -10,8 +10,8 @@ target 'ToDoList' do
   pod 'RealmSwift', '10.15.1'
   pod 'NotificationBannerSwift', '~> 3.0.6'
   pod 'Toast-Swift', '~> 5.0.1'
-  pod 'R.swift','5.3.1'
-  pod 'SwiftLint','0.43.1'
+  pod 'R.swift','6.1.0'
+  pod 'SwiftLint','0.46.3'
   
   
   target 'ToDoListTests' do
