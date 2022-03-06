@@ -8,8 +8,6 @@
 
 import UIKit
 import UserNotifications
-import Toast_Swift
-import NotificationBannerSwift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -47,13 +45,34 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
-// MARK: - Toast_Swift
+// MARK: - Toast
 
 extension AppDelegate {
 
     @objc func showToast(notification: Notification) {
-        if notification.object as! Bool == false {
-            self.window?.makeToast("期限の登録に失敗しました", duration: 5.0, position: .bottom)
+        if notification.object as? Bool == false {
+            DispatchQueue.main.async {
+                let toast = ToastView(frame: CGRect(x: 0, y: UIScreen.main.bounds.height - 100, width: UIScreen.main.bounds.width / 1.1, height: 50))
+                toast.center.x = UIScreen.main.bounds.width / 2
+                toast.view.alpha = 0
+                self.window?.addSubview(toast)
+                
+                
+                /// toastを表示
+                UIView.animate(withDuration: 2, delay: 0, options: .curveEaseIn, animations: {
+                    toast.view.alpha = 1
+                }, completion: { _ in
+                    /// toastを削除
+                    UIView.animate(withDuration: 1, delay: 2, options: .curveEaseOut, animations: {
+                        toast.view.alpha = 0
+                    }, completion: { _ in
+                        toast.removeFromSuperview()
+                    })
+                    
+                })
+                
+                
+            }
         }
     }
 
@@ -75,22 +94,13 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 willPresent notification: UNNotification,
                                 withCompletionHandler completionHandler: (UNNotificationPresentationOptions) -> Void) {
-
-        completionHandler([.sound])
-
-        let banner = FloatingNotificationBanner(title: notification.request.content.title,
-                                                subtitle: notification.request.content.body,
-                                                style: .success
-        )
-        banner.autoDismiss = false
-        banner.onSwipeUp = {
-            banner.dismiss()
-            NotificationCenter.default.post(name: Notification.Name(R.string.notification.tableReload()), object: nil)
+        
+        if #available(iOS 14, *) {
+            completionHandler([.banner, .sound])
+        } else {
+            completionHandler([.alert, .sound])
         }
-
-        banner.show(queuePosition: .front,
-                    bannerPosition: .top,
-                    cornerRadius: 10)
+        
     }
 
 }
