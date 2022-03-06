@@ -71,7 +71,7 @@ final class TodoListCell: UITableViewCell {
     /// - Parameter date: ToDoの日付
     /// - Parameter detail: ToDoの詳細
     /// - Parameter isExpired: 期限切れラベルの表示フラグ
-    func setText(title: String, date: String, detail: String, isExpired: CompletionFlag) {
+    func setText(title: String, date: String, detail: String, isExpired: CompletionFlag? = .unfinished) {
         titleLabel.text = title
         detailLabel.text = detail.replacingOccurrences(of: "\n", with: "")
         dateLabel.text = date

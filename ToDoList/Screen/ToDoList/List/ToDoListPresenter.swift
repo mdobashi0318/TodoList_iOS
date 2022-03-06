@@ -10,25 +10,20 @@ import Foundation
 
 final class ToDoListPresenter {
 
-    private(set) var model: [ToDoModel]?
+    private(set) var model: [ToDoModel] = []
 
     func fetchToDoList(segmentIndex index: CompletionFlag, success: () -> Void, failure: (String) -> Void) {
         model = ToDoModel.activeFindToDo(index: index)
-
-        if model == nil {
-            failure(R.string.message.errorMessage())
-            return
-
-        }
+        Log.devprint("\(index)のToDoを表示します: \(model)")
         success()
     }
 
     /// 期限切れかどうかの判定を返す
     func isExpired(row: Int) -> CompletionFlag {
-        if  model?[row].completionFlag == CompletionFlag.completion.rawValue {
+        if  model[row].completionFlag == CompletionFlag.completion.rawValue {
             return CompletionFlag.completion
         } else {
-            let flag = Format().stringFromDate(date: Date()) > model?[row].todoDate ?? ""
+            let flag = Format().stringFromDate(date: Date()) > model[row].todoDate ?? ""
             return flag ? CompletionFlag.expired : CompletionFlag.unfinished
         }
     }

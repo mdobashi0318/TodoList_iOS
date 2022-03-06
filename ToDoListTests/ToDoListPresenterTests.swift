@@ -14,13 +14,13 @@ class ToDoListPresenterTests: XCTestCase {
     var presenter: ToDoListPresenter?
 
     override func setUpWithError() throws {
-        _ = ToDoModel.allDelete()
+        try? ToDoModel.allDelete()
         presenter = ToDoListPresenter()
     }
 
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
-        _ = ToDoModel.allDelete()
+        try? ToDoModel.allDelete()
     }
 
     func test_fetchUsers() {

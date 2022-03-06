@@ -96,6 +96,7 @@ extension TodoListPageViewController {
     /// setNavigationItemをセットする
     private func setNavigationItem() {
         self.title = "ToDoリスト"
+
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(self.rightButtonAction))
 
         #if DEBUG
@@ -125,12 +126,15 @@ extension TodoListPageViewController {
     }
 
     func allDelete(success: () -> Void, failure: @escaping (String) -> Void) {
-        switch ToDoModel.allDelete() {
-        case .success:
+        do {
+            try ToDoModel.allDelete()
             success()
-        case .failure(let error):
+        } catch let error as TodoListError {
             failure(error.message)
+        } catch {
+            failure(R.string.message.deleteError())
         }
+
     }
 
 }

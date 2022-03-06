@@ -53,10 +53,12 @@ final class ToDoDetailTableViewControllerPresenter {
             return
         }
 
-        switch ToDoModel.delete(_model) {
-        case .success:
+        do {
+            try ToDoModel.delete(_model)
             success()
-        case .failure:
+        } catch let error as TodoListError {
+            failure(error.message)
+        } catch {
             failure(R.string.message.deleteError())
         }
     }
@@ -67,7 +69,13 @@ final class ToDoDetailTableViewControllerPresenter {
             return
         }
         let completionFlag: CompletionFlag = flag ? .completion : .unfinished
-        ToDoModel.updateCompletionFlag(updateTodo: _model, flag: completionFlag)
+        do {
+            try ToDoModel.updateCompletionFlag(updateTodo: _model, flag: completionFlag)
+        } catch let error as TodoListError {
+            failure(error.message)
+        } catch {
+            failure(R.string.message.updateError())
+        }
     }
 
 }

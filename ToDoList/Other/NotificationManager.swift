@@ -37,7 +37,8 @@ struct NotificationManager {
         content.sound = UNNotificationSound.default
 
         // 通知する日付を設定
-        guard let date: Date = Format().dateFromString(string: toDoModel.todoDate!) else {
+        guard let todoDate = toDoModel.todoDate,
+              let date: Date = Format().dateFromString(string: todoDate) else {
             Log.devprint("期限の登録に失敗しました")
             isRequestResponse(false)
             return
@@ -46,7 +47,7 @@ struct NotificationManager {
         let calendar = Calendar.current
         let dateComponent = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: date)
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponent, repeats: false)
-        let request = UNNotificationRequest(identifier: toDoModel.createTime!, content: content, trigger: trigger)
+        let request = UNNotificationRequest(identifier: toDoModel.createTime ?? "", content: content, trigger: trigger)
         let center = UNUserNotificationCenter.current()
 
         center.add(request) { error in
