@@ -147,6 +147,36 @@ extension ToDoListViewController {
         return indexPath
     }
 
+    /// ヘッダー内のビューを設定
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView()
+        let headerLabel = UILabel()
+
+        switch completionFlag {
+        case .unfinished:
+            headerLabel.text = "未完了"
+
+        case .completion:
+            headerLabel.text = "完了"
+
+        case .expired:
+            headerLabel.text = "期限切れ"
+
+        default:
+            break
+        }
+
+        headerView.addSubview(headerLabel)
+
+        headerLabel.translatesAutoresizingMaskIntoConstraints = false
+        headerLabel.topAnchor.constraint(equalTo: headerView.topAnchor).isActive = true
+        headerLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 15).isActive = true
+        headerLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor).isActive = true
+        headerLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -5).isActive = true
+
+        return headerView
+    }
+
 }
 
 // MARK: - Notification
