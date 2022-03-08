@@ -118,17 +118,14 @@ final class TodoRegisterTableView: UITableView {
     /// セルの上に載せるViewの制約をつける
     /// - Parameter cell: セル
     /// - Parameter inputField: 制約を付けるView
-    private func textFieldConstraint<V>(_ cell: UITableViewCell, inputField: V) {
-        guard let _inputField = inputField as? UIView else {
-            return
-        }
-        _inputField.backgroundColor = .cellColor
-        cell.contentView.addSubview(_inputField)
-        _inputField.translatesAutoresizingMaskIntoConstraints = false
-        _inputField.topAnchor.constraint(equalTo: cell.topAnchor).isActive = true
-        _inputField.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 15).isActive = true
-        _inputField.trailingAnchor.constraint(equalTo: cell.trailingAnchor).isActive = true
-        _inputField.bottomAnchor.constraint(equalTo: cell.bottomAnchor).isActive = true
+    private func textFieldConstraint(_ cell: UITableViewCell, inputField: UIView) {
+        inputField.backgroundColor = .cellColor
+        cell.contentView.addSubview(inputField)
+        inputField.translatesAutoresizingMaskIntoConstraints = false
+        inputField.topAnchor.constraint(equalTo: cell.topAnchor).isActive = true
+        inputField.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 15).isActive = true
+        inputField.trailingAnchor.constraint(equalTo: cell.trailingAnchor).isActive = true
+        inputField.bottomAnchor.constraint(equalTo: cell.bottomAnchor).isActive = true
     }
 
 }
