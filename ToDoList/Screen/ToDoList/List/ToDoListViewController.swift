@@ -166,6 +166,7 @@ extension ToDoListViewController {
             break
         }
 
+        headerView.backgroundColor = .systemBackground
         headerView.addSubview(headerLabel)
 
         headerLabel.translatesAutoresizingMaskIntoConstraints = false
