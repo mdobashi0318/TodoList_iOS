@@ -20,16 +20,7 @@ final class TodoRegisterViewController: UIViewController {
 
     /// ToDoを入力するためのView
     private lazy var todoRegisterTableView: TodoRegisterTableView = {
-        if todoId == nil {
-            let view = TodoRegisterTableView(frame: UIScreen.main.bounds, toDoModel: nil)
-
-            return view
-
-        } else {
-            let view = TodoRegisterTableView(frame: UIScreen.main.bounds, toDoModel: self.presenter?.model)
-
-            return view
-        }
+        TodoRegisterTableView(frame: UIScreen.main.bounds, toDoModel: self.presenter?.model)
     }()
 
     /// ToDoのIDを格納
@@ -70,7 +61,7 @@ final class TodoRegisterViewController: UIViewController {
         view.backgroundColor = UIColor.white
         setNavigationItem()
 
-        todoRegisterTableView.toDoregisterDelegate = self
+        todoRegisterTableView.registerDelegate = self
         view.addSubview(todoRegisterTableView)
     }
 

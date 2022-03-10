@@ -20,7 +20,7 @@ final class TodoRegisterTableView: UITableView {
 
     private var toDoModel: ToDoModel?
 
-    weak var toDoregisterDelegate: TodoRegisterDelegate?
+    weak var registerDelegate: TodoRegisterDelegate?
 
     /// ToDoのタイトル入力テキストフィールド
     let titletextField: UITextField = {
@@ -254,14 +254,14 @@ extension TodoRegisterTableView: UITextFieldDelegate, UITextViewDelegate, UIPick
     // MARK: TextField Delegate
 
     func textFieldDidChangeSelection(_ textField: UITextField) {
-        toDoregisterDelegate?.textChenge()
+        registerDelegate?.textChenge()
     }
 
     // MARK: TextView Delegate
 
     func textViewDidChange(_ textView: UITextView) {
         beginUpdates()
-        toDoregisterDelegate?.textChenge()
+        registerDelegate?.textChenge()
         textView.heightAnchor.constraint(equalToConstant: detailTextViwe.sizeThatFits(CGSize(width: UIScreen.main.bounds.width, height: textView.frame.height)).height).isActive = true
         endUpdates()
     }
