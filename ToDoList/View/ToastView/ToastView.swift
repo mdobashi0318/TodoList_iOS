@@ -43,7 +43,7 @@ final class ToastView: UIView {
 
     // MARK: private func
 
-    func loadNib() {
+    private func loadNib() {
         if let view = R.nib.toastView(owner: self) {
             view.frame = self.bounds
             self.addSubview(view)
