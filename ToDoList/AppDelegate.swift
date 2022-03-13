@@ -53,25 +53,8 @@ extension AppDelegate {
         if notification.object as? Bool == false {
             DispatchQueue.main.async {
                 let toast = ToastView(frame: CGRect(x: 0, y: UIScreen.main.bounds.height - 100, width: UIScreen.main.bounds.width / 1.1, height: 50))
-                toast.center.x = UIScreen.main.bounds.width / 2
-                toast.view.alpha = 0
                 self.window?.addSubview(toast)
-                
-                
-                /// toastを表示
-                UIView.animate(withDuration: 2, delay: 0, options: .curveEaseIn, animations: {
-                    toast.view.alpha = 1
-                }, completion: { _ in
-                    /// toastを削除
-                    UIView.animate(withDuration: 1, delay: 2, options: .curveEaseOut, animations: {
-                        toast.view.alpha = 0
-                    }, completion: { _ in
-                        toast.removeFromSuperview()
-                    })
-                    
-                })
-                
-                
+                toast.show()
             }
         }
     }

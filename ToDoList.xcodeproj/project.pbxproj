@@ -10,6 +10,8 @@
 		6D3E6AC127D4B9970097535C /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D3E6AC027D4B9970097535C /* ToastView.swift */; };
 		6D3E6AC327D4BA080097535C /* ToastView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6D3E6AC227D4BA080097535C /* ToastView.xib */; };
 		6D4FE9D827CB31F400EB5CDE /* TodoListPageViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6D4FE9D727CB31F400EB5CDE /* TodoListPageViewController.storyboard */; };
+		6DA192AA27DD8B9C0046A43D /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 6DA192A927DD8B9C0046A43D /* Realm */; };
+		6DA192AC27DD8B9C0046A43D /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 6DA192AB27DD8B9C0046A43D /* RealmSwift */; };
 		6DAEB42526FF3ECD00402F83 /* ToDoListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DAEB42426FF3ECD00402F83 /* ToDoListTests.swift */; };
 		6DECE9DF27CB72E9000D9488 /* UILabelExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DECE9DE27CB72E9000D9488 /* UILabelExtension.swift */; };
 		6FF02EB15D5049DC099C5648 /* Pods_ToDoList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07953119CD910C907A014925 /* Pods_ToDoList.framework */; };
@@ -136,6 +138,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6DA192AC27DD8B9C0046A43D /* RealmSwift in Frameworks */,
+				6DA192AA27DD8B9C0046A43D /* Realm in Frameworks */,
 				6FF02EB15D5049DC099C5648 /* Pods_ToDoList.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -353,7 +357,6 @@
 				D0A6A5EC219C4D0200D6A526 /* Sources */,
 				D0A6A5ED219C4D0200D6A526 /* Frameworks */,
 				D0A6A5EE219C4D0200D6A526 /* Resources */,
-				4C997973D64AAC87806E77CE /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -402,6 +405,10 @@
 			dependencies = (
 			);
 			name = ToDoList;
+			packageProductDependencies = (
+				6DA192A927DD8B9C0046A43D /* Realm */,
+				6DA192AB27DD8B9C0046A43D /* RealmSwift */,
+			);
 			productName = ToDoList;
 			productReference = D0F9CC36214A8E6000C51BD6 /* ToDoList.app */;
 			productType = "com.apple.product-type.application";
@@ -441,6 +448,9 @@
 				Base,
 			);
 			mainGroup = D0F9CC2D214A8E6000C51BD6;
+			packageReferences = (
+				6DA192A827DD8B9C0046A43D /* XCRemoteSwiftPackageReference "realm-swift" */,
+			);
 			productRefGroup = D0F9CC37214A8E6000C51BD6 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -498,23 +508,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ToDoList/Pods-ToDoList-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		4C997973D64AAC87806E77CE /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ToDoListTests/Pods-ToDoListTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-ToDoListTests/Pods-ToDoListTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ToDoListTests/Pods-ToDoListTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		643EE300C5DAFA52BD665522 /* [CP] Check Pods Manifest.lock */ = {
@@ -953,7 +946,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8.1;
+				MARKETING_VERSION = 1.8.2;
 				PRODUCT_BUNDLE_IDENTIFIER = m.dobashi.ToDoList;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -974,7 +967,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.8.1;
+				MARKETING_VERSION = 1.8.2;
 				PRODUCT_BUNDLE_IDENTIFIER = m.dobashi.ToDoList;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1022,6 +1015,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		6DA192A827DD8B9C0046A43D /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-swift";
+			requirement = {
+				kind = exactVersion;
+				version = 10.24.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		6DA192A927DD8B9C0046A43D /* Realm */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6DA192A827DD8B9C0046A43D /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = Realm;
+		};
+		6DA192AB27DD8B9C0046A43D /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6DA192A827DD8B9C0046A43D /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = RealmSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D0F9CC2E214A8E6000C51BD6 /* Project object */;
 }
