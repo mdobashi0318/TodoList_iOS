@@ -203,11 +203,11 @@ extension ToDoListViewController {
 extension ToDoListViewController: ToDoListViewControllerProtocol {
 
     func fetchTodoModel() {
-        presenter?.fetchToDoList(segmentIndex: completionFlag, success: {
+        Task {
+            await presenter?.fetchToDoList(segmentIndex: completionFlag)
             self.tableView.reloadData()
-        }, failure: { error in
-            AlertManager().showAlert(self, type: .close, message: error)
-        })
+        }
+
     }
 
 }

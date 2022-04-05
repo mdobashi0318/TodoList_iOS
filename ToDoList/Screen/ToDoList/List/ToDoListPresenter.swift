@@ -12,10 +12,9 @@ final class ToDoListPresenter {
 
     private(set) var model: [ToDoModel] = []
 
-    func fetchToDoList(segmentIndex index: CompletionFlag, success: () -> Void, failure: (String) -> Void) {
+    func fetchToDoList(segmentIndex index: CompletionFlag) async {
         model = ToDoModel.activeFindToDo(index: index)
         Log.devprint("\(index)のToDoを表示します: \(model)")
-        success()
     }
 
     /// 期限切れかどうかの判定を返す
