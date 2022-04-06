@@ -37,7 +37,7 @@ class ToDoListPresenterTests: XCTestCase {
         XCTAssertTrue(self.presenter?.model == [], "Todoが空ではない")
     }
     
-    /// Todo未登録時にpresenter?.modelが空でないこと
+    /// Todo登録時にpresenter?.modelが空でないこと
     func test_fetchTodo() async {
         try? ToDoModel.add(addValue: ToDoModel(id: "", toDoName: "unfinishedTestTitle", todoDate: "2099/04/05 00:00", toDo: "詳細1", completionFlag: CompletionFlag.unfinished.rawValue, createTime: nil))
         
